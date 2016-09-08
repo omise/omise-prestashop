@@ -1,6 +1,9 @@
 <?php
-if (! defined('_PS_VERSION_'))
+if (! defined('_PS_VERSION_')) {
     exit();
+}
+
+require_once 'form.php';
 
 class Omise extends PaymentModule
 {
@@ -26,6 +29,8 @@ class Omise extends PaymentModule
      */
     const MODULE_VERSION = '1.6.0.0';
 
+    protected $form;
+
     public function __construct()
     {
         $this->name = self::MODULE_NAME;
@@ -40,101 +45,31 @@ class Omise extends PaymentModule
 
         $this->displayName = self::MODULE_DISPLAY_NAME;
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall ' . self::MODULE_DISPLAY_NAME . ' module?');
+
+        $this->setForm(new Form());
     }
 
     public function getContent()
     {
-        $fields_form[0]['form'] = array(
-            'legend' => array(
-                'title' => $this->l('Settings')
-            ),
-            'input' => array(
-                array(
-                    'type' => 'switch',
-                    'label' => $this->l('Enable/Disable'),
-                    'name' => 'module',
-                    'is_bool' => true,
-                    'desc' => $this->l('Enable Omise Payment Module.'),
-                    'values' => array(
-                        array(
-                            'id' => 'module_enabled',
-                            'value' => 1,
-                            'label' => 'Enabled'
-                        ),
-                        array(
-                            'id' => 'module_disabled',
-                            'value' => 0,
-                            'label' => 'Disabled'
-                        )
-                    )
-                ),
-                array(
-                    'type' => 'switch',
-                    'label' => $this->l('Sandbox'),
-                    'name' => 'sandbox',
-                    'is_bool' => true,
-                    'desc' => $this->l('Enabling sandbox means that all your transactions will be in TEST mode.'),
-                    'values' => array(
-                        array(
-                            'id' => 'sandbox_on',
-                            'value' => 1,
-                            'label' => 'Enabled'
-                        ),
-                        array(
-                            'id' => 'sandbox_off',
-                            'value' => 0,
-                            'label' => 'Disabled'
-                        )
-                    )
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Public key for test'),
-                    'name' => 'publicKeyForTest',
-                    'required' => false,
-                    'desc' => 'The "Test" mode public key can be found in Omise Dashboard.'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Secret key for test'),
-                    'name' => 'secretKeyForTest',
-                    'required' => false,
-                    'desc' => 'The "Test" mode secret key can be found in Omise Dashboard.'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Public key for live'),
-                    'name' => 'publicKeyForLive',
-                    'required' => false,
-                    'desc' => 'The "Live" mode public key can be found in Omise Dashboard.'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Secret key for live'),
-                    'name' => 'secretKeyForLive',
-                    'required' => false,
-                    'desc' => 'The "Live" mode secret key can be found in Omise Dashboard.'
-                ),
-                array(
-                    'label' => '<b>Advance Settings</b>'
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Title'),
-                    'name' => 'title',
-                    'required' => false,
-                    'desc' => 'This controls the title which the user sees during checkout.'
-                )
-            ),
-            'submit' => array(
-                'title' => $this->l('Save'),
-                'class' => 'btn btn-default pull-right'
-            )
-        );
+        $content = '';
 
-        $helper = new HelperForm();
-        $helper->submit_action = 'submit' . $this->name;
+        if ($this->form->isSubmit()) {
+            $this->form->save();
+            $content .= $this->displayConfirmation($this->l('Settings updated'));
+        }
 
-        return $helper->generateForm($fields_form);
+        $content .= $this->form->generate();
+
+        return $content;
+    }
+
+    public function getForm()
+    {
+        return $this->form;
+    }
+
+    public function setForm($form)
+    {
+        $this->form = $form;
     }
 }
