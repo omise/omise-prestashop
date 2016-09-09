@@ -3,7 +3,7 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
-require_once 'form.php';
+require_once 'setting.php';
 
 class Omise extends PaymentModule
 {
@@ -29,7 +29,7 @@ class Omise extends PaymentModule
      */
     const MODULE_VERSION = '1.6.0.0';
 
-    protected $form;
+    protected $setting;
 
     public function __construct()
     {
@@ -46,30 +46,30 @@ class Omise extends PaymentModule
         $this->displayName = self::MODULE_DISPLAY_NAME;
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall ' . self::MODULE_DISPLAY_NAME . ' module?');
 
-        $this->setForm(new Form());
+        $this->setSetting(new Setting());
     }
 
     public function getContent()
     {
         $content = '';
 
-        if ($this->form->isSubmit()) {
-            $this->form->save();
+        if ($this->setting->isSubmit()) {
+            $this->setting->save();
             $content .= $this->displayConfirmation($this->l('Settings updated'));
         }
 
-        $content .= $this->form->generate();
+        $content .= $this->setting->generateForm();
 
         return $content;
     }
 
-    public function getForm()
+    public function getSetting()
     {
-        return $this->form;
+        return $this->setting;
     }
 
-    public function setForm($form)
+    public function setSetting($setting)
     {
-        $this->form = $form;
+        $this->setting = $setting;
     }
 }
