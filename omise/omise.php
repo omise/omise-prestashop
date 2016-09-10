@@ -63,6 +63,15 @@ class Omise extends PaymentModule
         return $content;
     }
 
+    public function hookPayment($params)
+    {
+        if ($this->active == false || $this->setting->isModuleEnabled() == false) {
+            return;
+        }
+
+        return $this->display(__FILE__, 'payment.tpl');
+    }
+
     public function getSetting()
     {
         return $this->setting;
