@@ -118,6 +118,11 @@ class Setting extends PaymentModule
         return $fields;
     }
 
+    public function isModuleEnabled()
+    {
+        return Configuration::get('module_status');
+    }
+
     public function isSubmit()
     {
         if (Tools::isSubmit($this->getSubmitAction())) {
