@@ -8,4 +8,9 @@
             <directory>tests/unit/</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">omise</directory>
+        </whitelist>
+    </filter>
 </phpunit>
