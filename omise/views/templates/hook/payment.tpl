@@ -33,7 +33,7 @@
         						</div>
         					</div>
         					<div class="row">
-        						<div class="col-sm-4">
+        						<div class="col-sm-6">
         							<div class="form-group">
         								<label for="security_code">{l s='Security code' mod='omise'}</label>
         								<input type="password" class="form-control" id="security_code" placeholder="{l s='Security code' mod='omise'}" />
