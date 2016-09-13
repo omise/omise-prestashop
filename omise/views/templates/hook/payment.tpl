@@ -36,7 +36,7 @@
         						<div class="col-sm-4">
         							<div class="form-group">
         								<label for="security_code">{l s='CVC' mod='omise'}</label>
-        								<input type="text" class="form-control" id="security_code" placeholder="{l s='CVC' mod='omise'}" />
+        								<input type="password" class="form-control" id="security_code" placeholder="{l s='CVC' mod='omise'}" />
         							</div>
         						</div>
         					</div>
