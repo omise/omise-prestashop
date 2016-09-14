@@ -69,6 +69,8 @@ class Omise extends PaymentModule
             return;
         }
 
+        $this->smarty->assign('omise_title', $this->setting->getTitle());
+
         return $this->display(__FILE__, 'payment.tpl');
     }
 
@@ -80,5 +82,10 @@ class Omise extends PaymentModule
     public function setSetting($setting)
     {
         $this->setting = $setting;
+    }
+
+    public function setSmarty($smarty)
+    {
+        $this->smarty = $smarty;
     }
 }
