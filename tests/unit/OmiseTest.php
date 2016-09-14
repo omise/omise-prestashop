@@ -27,6 +27,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->setMethods(
                 array(
                     'generateForm',
+                    'getPublicKey',
                     'getTitle',
                     'isModuleEnabled',
                     'isSubmit',
@@ -105,11 +106,15 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     {
         $this->omise->active = true;
         $this->setting->method('isModuleEnabled')->willReturn(true);
+        $this->setting->method('getPublicKey')->willReturn('public_key');
         $this->setting->method('getTitle')->willReturn('title_at_header_of_checkout_form');
 
-        $this->smarty->expects($this->once())
+        $this->smarty->expects($this->exactly(2))
             ->method('assign')
-            ->with('omise_title', 'title_at_header_of_checkout_form');
+            ->withConsecutive(
+                 array('omise_public_key', 'public_key'),
+                 array('omise_title', 'title_at_header_of_checkout_form')
+             );
 
         $this->omise->hookPayment('');
     }

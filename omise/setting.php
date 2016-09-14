@@ -118,6 +118,20 @@ class Setting extends PaymentModule
         return $fields;
     }
 
+    public function getPublicKey()
+    {
+        if ($this->isSandboxEnabled()) {
+            return Configuration::get('test_public_key');
+        }
+
+        return Configuration::get('live_public_key');
+    }
+
+    public function getSubmitAction()
+    {
+        return $this->submit_action;
+    }
+
     public function getTitle()
     {
         return Configuration::get('title');
@@ -126,6 +140,15 @@ class Setting extends PaymentModule
     public function isModuleEnabled()
     {
         if (Configuration::get('module_status')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isSandboxEnabled()
+    {
+        if (Configuration::get('sandbox_status')) {
             return true;
         }
 
@@ -150,10 +173,5 @@ class Setting extends PaymentModule
         Configuration::updateValue('live_public_key', strval(Tools::getValue('live_public_key')));
         Configuration::updateValue('live_secret_key', strval(Tools::getValue('live_secret_key')));
         Configuration::updateValue('title', strval(Tools::getValue('title')));
-    }
-
-    public function getSubmitAction()
-    {
-        return $this->submit_action;
     }
 }

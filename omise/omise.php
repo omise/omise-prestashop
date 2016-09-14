@@ -68,6 +68,7 @@ class Omise extends PaymentModule
             return;
         }
 
+        $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
         $this->smarty->assign('omise_title', $this->setting->getTitle());
 
         return $this->display(__FILE__, 'payment.tpl');
