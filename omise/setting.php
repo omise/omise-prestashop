@@ -125,7 +125,11 @@ class Setting extends PaymentModule
 
     public function isModuleEnabled()
     {
-        return Configuration::get('module_status');
+        if (Configuration::get('module_status')) {
+            return true;
+        }
+
+        return false;
     }
 
     public function isSubmit()
