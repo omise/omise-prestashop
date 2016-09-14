@@ -118,6 +118,11 @@ class Setting extends PaymentModule
         return $fields;
     }
 
+    public function getTitle()
+    {
+        return Configuration::get('title');
+    }
+
     public function isModuleEnabled()
     {
         return Configuration::get('module_status');

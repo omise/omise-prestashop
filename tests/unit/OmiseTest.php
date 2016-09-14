@@ -7,6 +7,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
 {
     private $omise;
     private $setting;
+    private $smarty;
 
     public function setup()
     {
@@ -26,6 +27,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->setMethods(
                 array(
                     'generateForm',
+                    'getTitle',
                     'isModuleEnabled',
                     'isSubmit',
                     'save'
@@ -33,8 +35,14 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             )
             ->getMock();
 
+        $this->smarty = $this->getMockBuilder(stdClass::class)
+            ->setMockClassName('Smarty')
+            ->setMethods(array('assign'))
+            ->getMock();
+
         $this->omise = new Omise();
         $this->omise->setSetting($this->setting);
+        $this->omise->setSmarty($this->smarty);
     }
 
     public function testName_omise()
@@ -91,6 +99,19 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->omise->method('display')->willReturn('payment_form');
 
         $this->assertEquals('payment_form', $this->omise->hookPayment(''));
+    }
+
+    public function testHookPayment_moduleIsActivatedAndEnabled_displayTitle()
+    {
+        $this->omise->active = true;
+        $this->setting->method('isModuleEnabled')->willReturn(true);
+        $this->setting->method('getTitle')->willReturn('title_at_header_of_checkout_form');
+
+        $this->smarty->expects($this->once())
+            ->method('assign')
+            ->with('omise_title', 'title_at_header_of_checkout_form');
+
+        $this->omise->hookPayment('');
     }
 
     public function testHookPayment_moduleIsActivatedButModuleIsDisabled_paymentFormMustNotBeDisplayed()
