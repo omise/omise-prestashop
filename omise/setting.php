@@ -132,9 +132,9 @@ class Setting extends PaymentModule
     {
         if (Tools::isSubmit($this->getSubmitAction())) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public function save()
