@@ -54,6 +54,11 @@
 
 <script>
   const omiseCheckout = function omiseCheckout() {
+    if (typeof Omise === 'undefined') {
+      alert('{l s='Unable to process the payment, loading the external card processing library is failed. Please contact the merchant.' mod='omise'}');
+      return false;
+    }
+
     omiseLockCheckoutForm();
 
     const card = {
