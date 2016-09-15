@@ -65,10 +65,10 @@ const omiseCheckout = function omiseCheckout() {
   };
 
   Omise.setPublicKey('{$omise_public_key}');
-  Omise.createToken('card', card, omiseCreateTokenCallBack);
+  Omise.createToken('card', card, omiseCreateTokenCallback);
 }
 
-const omiseCreateTokenCallBack = function omiseCreateTokenCallBack(statusCode, response) {
+const omiseCreateTokenCallback = function omiseCreateTokenCallback(statusCode, response) {
   if (statusCode === 200) {
     document.getElementById('omise_card_token').value = response.id;
   } else {
