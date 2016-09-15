@@ -4,7 +4,6 @@ if (! defined('_PS_VERSION_'))
 
 class Omise extends PaymentModule
 {
-
     /**
      * The name that will be display to the user at the back-end.
      *
