@@ -53,27 +53,27 @@
 <script src="https://cdn.omise.co/omise.js.gz"></script>
 
 <script>
-const omiseCheckout = function omiseCheckout() {
-  document.getElementById('omise_checkout').disabled = true;
+  const omiseCheckout = function omiseCheckout() {
+    document.getElementById('omise_checkout').disabled = true;
 
-  const card = {
-    name: document.getElementById('omise_card_holder_name').value,
-    number: document.getElementById('omise_card_number').value,
-    expiration_month: document.getElementById('omise_card_expiration_month').value,
-    expiration_year: document.getElementById('omise_card_expiration_year').value,
-    security_code: document.getElementById('omise_card_security_code').value,
-  };
+    const card = {
+      name: document.getElementById('omise_card_holder_name').value,
+      number: document.getElementById('omise_card_number').value,
+      expiration_month: document.getElementById('omise_card_expiration_month').value,
+      expiration_year: document.getElementById('omise_card_expiration_year').value,
+      security_code: document.getElementById('omise_card_security_code').value,
+    };
 
-  Omise.setPublicKey('{$omise_public_key}');
-  Omise.createToken('card', card, omiseCreateTokenCallback);
-}
-
-const omiseCreateTokenCallback = function omiseCreateTokenCallback(statusCode, response) {
-  if (statusCode === 200) {
-    document.getElementById('omise_card_token').value = response.id;
-  } else {
-    alert(response.message);
-    document.getElementById('omise_checkout').disabled = false;
+    Omise.setPublicKey('{$omise_public_key}');
+    Omise.createToken('card', card, omiseCreateTokenCallback);
   }
-};
+
+  const omiseCreateTokenCallback = function omiseCreateTokenCallback(statusCode, response) {
+    if (statusCode === 200) {
+      document.getElementById('omise_card_token').value = response.id;
+    } else {
+      alert(response.message);
+      document.getElementById('omise_checkout').disabled = false;
+    }
+  };
 </script>
