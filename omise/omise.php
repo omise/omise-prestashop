@@ -1,6 +1,9 @@
 <?php
-if (! defined('_PS_VERSION_'))
+if (! defined('_PS_VERSION_')) {
     exit();
+}
+
+require_once 'setting.php';
 
 class Omise extends PaymentModule
 {
@@ -25,6 +28,8 @@ class Omise extends PaymentModule
      */
     const MODULE_VERSION = '1.6.0.0';
 
+    protected $setting;
+
     public function __construct()
     {
         $this->name                   = self::MODULE_NAME;
@@ -39,5 +44,48 @@ class Omise extends PaymentModule
 
         $this->displayName            = self::MODULE_DISPLAY_NAME;
         $this->confirmUninstall       = $this->l('Are you sure you want to uninstall ' . self::MODULE_DISPLAY_NAME . ' module?');
+
+        $this->setSetting(new Setting());
+    }
+
+    public function getContent()
+    {
+        $content = '';
+
+        if ($this->setting->isSubmit()) {
+            $this->setting->save();
+            $content .= $this->displayConfirmation($this->l('Settings updated'));
+        }
+
+        $content .= $this->setting->generateForm();
+
+        return $content;
+    }
+
+    public function hookPayment($params)
+    {
+        if ($this->active == false || $this->setting->isModuleEnabled() == false) {
+            return;
+        }
+
+        $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
+        $this->smarty->assign('omise_title', $this->setting->getTitle());
+
+        return $this->display(__FILE__, 'payment.tpl');
+    }
+
+    public function getSetting()
+    {
+        return $this->setting;
+    }
+
+    public function setSetting($setting)
+    {
+        $this->setting = $setting;
+    }
+
+    public function setSmarty($smarty)
+    {
+        $this->smarty = $smarty;
     }
 }
