@@ -54,7 +54,7 @@
 
 <script>
   const omiseCheckout = function omiseCheckout() {
-    document.getElementById('omise_checkout').disabled = true;
+    omiseLockCheckoutForm();
 
     const card = {
       name: document.getElementById('omise_card_holder_name').value,
@@ -73,7 +73,27 @@
       document.getElementById('omise_card_token').value = response.id;
     } else {
       alert(response.message);
-      document.getElementById('omise_checkout').disabled = false;
+      omiseUnlockCheckoutForm();
     }
+  };
+
+  const omiseLockCheckoutForm = function omiseLockCheckoutForm() {
+    document.getElementById('omise_card_holder_name').disabled = true;
+    document.getElementById('omise_card_number').disabled = true;
+    document.getElementById('omise_card_expiration_month').disabled = true;
+    document.getElementById('omise_card_expiration_year').disabled = true;
+    document.getElementById('omise_card_security_code').disabled = true;
+    document.getElementById('omise_checkout').disabled = true;
+    document.getElementById("omise_checkout").innerHTML = '{l s='Processing' mod='omise'}';
+  };
+
+  const omiseUnlockCheckoutForm = function omiseUnlockCheckoutForm() {
+    document.getElementById('omise_card_holder_name').disabled = false;
+    document.getElementById('omise_card_number').disabled = false;
+    document.getElementById('omise_card_expiration_month').disabled = false;
+    document.getElementById('omise_card_expiration_year').disabled = false;
+    document.getElementById('omise_card_security_code').disabled = false;
+    document.getElementById('omise_checkout').disabled = false;
+    document.getElementById("omise_checkout").innerHTML = '{l s='Checkout' mod='omise'}';
   };
 </script>
