@@ -75,5 +75,5 @@ const omiseCreateTokenCallBack = function omiseCreateTokenCallBack(statusCode, r
     alert(response.message);
     document.getElementById("omise_checkout").disabled = false;
   }
-}
+};
 </script>
