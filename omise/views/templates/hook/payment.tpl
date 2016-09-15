@@ -73,7 +73,7 @@ const omiseCreateTokenCallback = function omiseCreateTokenCallback(statusCode, r
     document.getElementById('omise_card_token').value = response.id;
   } else {
     alert(response.message);
-    document.getElementById("omise_checkout").disabled = false;
+    document.getElementById('omise_checkout').disabled = false;
   }
 };
 </script>
