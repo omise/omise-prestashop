@@ -1,9 +1,13 @@
 <?php
-function autoload($class) {
+function autoload($class)
+{
     static $classes = null;
 
     if ($classes === null) {
-        $classes = array('Omise' => 'omise.php');
+        $classes = array(
+            'Omise' => 'omise.php',
+            'Setting' => 'setting.php',
+        );
     }
 
     if (isset($classes[$class])) {
