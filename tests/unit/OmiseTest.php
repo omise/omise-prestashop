@@ -147,7 +147,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->method('assign')
             ->withConsecutive(
                 array('list_of_expiration_year', 'list_of_expiration_year'),
-                 array('omise_public_key', 'omise_public_key'),
+                array('omise_public_key', 'omise_public_key'),
                 array('omise_title', 'title_at_header_of_checkout_form')
             );
 
