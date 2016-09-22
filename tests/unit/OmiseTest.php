@@ -5,6 +5,7 @@ if (! defined('_PS_VERSION_')) {
 
 class OmiseTest extends PHPUnit_Framework_TestCase
 {
+    private $checkout_form;
     private $omise;
     private $setting;
     private $smarty;
@@ -19,6 +20,14 @@ class OmiseTest extends PHPUnit_Framework_TestCase
                     'display',
                     'displayConfirmation',
                     'l',
+                )
+            )
+            ->getMock();
+
+        $this->checkout_form = $this->getMockBuilder(CheckoutForm::class)
+            ->setMethods(
+                array(
+                    'getListOfExpirationYear',
                 )
             )
             ->getMock();
@@ -50,6 +59,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->omise = new Omise();
+        $this->omise->setCheckoutForm($this->checkout_form);
         $this->omise->setSetting($this->setting);
         $this->omise->setSmarty($this->smarty);
     }
@@ -117,5 +127,55 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->setting->expects($this->once())->method('save');
 
         $this->omise->getContent();
+    }
+
+    public function testHookPayment_moduleIsActivatedAndTheSettingOfModuleStatusIsEnabled_displayThePaymentTemplateFile()
+    {
+        $this->omise->active = true;
+        $this->setting->method('isModuleEnabled')->willReturn(true);
+        $this->omise->method('display')->willReturn('payment_template_file');
+
+        $this->assertEquals('payment_template_file', $this->omise->hookPayment(''));
+    }
+
+    public function testHookPayment_moduleIsActivatedAndTheSettingOfModuleStatusIsEnabled_displayCheckoutForm()
+    {
+        $this->omise->active = true;
+        $this->setting->method('isModuleEnabled')->willReturn(true);
+        $this->setting->method('getTitle')->willReturn('title_at_header_of_checkout_form');
+        $this->checkout_form->method('getListOfExpirationYear')->willReturn('list_of_expiration_year');
+
+        $this->smarty->expects($this->exactly(2))
+            ->method('assign')
+            ->withConsecutive(
+                 array('list_of_expiration_year', 'list_of_expiration_year'),
+                 array('omise_title', 'title_at_header_of_checkout_form')
+             );
+
+        $this->omise->hookPayment();
+    }
+
+    public function testHookPayment_moduleIsActivatedButTheSettingOfModuleStatusIsDisabled_paymentFormMustNotBeDisplayed()
+    {
+        $this->omise->active = true;
+        $this->setting->method('isModuleEnabled')->willReturn(false);
+
+        $this->assertNull($this->omise->hookPayment());
+    }
+
+    public function testHookPayment_moduleIsInactivatedButTheSettingOfModuleStatusIsEnabled_paymentFormMustNotBeDisplayed()
+    {
+        $this->omise->active = false;
+        $this->setting->method('isModuleEnabled')->willReturn(true);
+
+        $this->assertNull($this->omise->hookPayment());
+    }
+
+    public function testHookPayment_moduleIsInactivatedAndTheSettingOfModuleStatusIsDisabled_paymentFormMustNotBeDisplayed()
+    {
+        $this->omise->active = false;
+        $this->setting->method('isModuleEnabled')->willReturn(false);
+
+        $this->assertNull($this->omise->hookPayment());
     }
 }
