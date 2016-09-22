@@ -37,6 +37,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
                 array(
                     'getLivePublicKey',
                     'getLiveSecretKey',
+                    'getPublicKey',
                     'getSubmitAction',
                     'getTestPublicKey',
                     'getTestSecretKey',
@@ -142,13 +143,15 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     {
         $this->omise->active = true;
         $this->setting->method('isModuleEnabled')->willReturn(true);
+        $this->setting->method('getPublicKey')->willReturn('omise_public_key');
         $this->setting->method('getTitle')->willReturn('title_at_header_of_checkout_form');
         $this->checkout_form->method('getListOfExpirationYear')->willReturn('list_of_expiration_year');
 
-        $this->smarty->expects($this->exactly(2))
+        $this->smarty->expects($this->exactly(3))
             ->method('assign')
             ->withConsecutive(
                 array('list_of_expiration_year', 'list_of_expiration_year'),
+                 array('omise_public_key', 'omise_public_key'),
                 array('omise_title', 'title_at_header_of_checkout_form')
             );
 
