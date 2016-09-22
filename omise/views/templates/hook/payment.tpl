@@ -59,7 +59,7 @@
                   </div>
                 </div>
             </form>
-            <button class="button btn btn-default standard-checkout button-medium" id="omise_checkout_button">
+            <button class="button btn btn-default standard-checkout button-medium" id="omise_checkout_button" onclick="omiseCheckout();">
               <span id="omise_checkout_text">{l s='Submit Payment' mod='omise'}</span>
             </button>
           </div>
@@ -68,3 +68,56 @@
     </p>
   </div>
 </div>
+
+<script src="https://cdn.omise.co/omise.js.gz"></script>
+
+<script>
+  const omiseCheckout = function omiseCheckout() {
+    if (typeof Omise === 'undefined') {
+      alert('{l s='Unable to process the payment, loading the external card processing library is failed. Please contact the merchant.' mod='omise'}');
+      return false;
+    }
+
+    omiseLockCheckoutForm();
+
+    const card = {
+      name: document.getElementById('omise_card_holder_name').value,
+      number: document.getElementById('omise_card_number').value,
+      expiration_month: document.getElementById('omise_card_expiration_month').value,
+      expiration_year: document.getElementById('omise_card_expiration_year').value,
+      security_code: document.getElementById('omise_card_security_code').value,
+    };
+
+    Omise.setPublicKey('{$omise_public_key}');
+    Omise.createToken('card', card, omiseCreateTokenCallback);
+  }
+
+  const omiseCreateTokenCallback = function omiseCreateTokenCallback(statusCode, response) {
+    if (statusCode === 200) {
+      document.getElementById('omise_card_token').value = response.id;
+    } else {
+      alert(response.message);
+      omiseUnlockCheckoutForm();
+    }
+  };
+
+  const omiseLockCheckoutForm = function omiseLockCheckoutForm() {
+    document.getElementById('omise_card_holder_name').disabled = true;
+    document.getElementById('omise_card_number').disabled = true;
+    document.getElementById('omise_card_expiration_month').disabled = true;
+    document.getElementById('omise_card_expiration_year').disabled = true;
+    document.getElementById('omise_card_security_code').disabled = true;
+    document.getElementById('omise_checkout_button').disabled = true;
+    document.getElementById("omise_checkout_text").innerHTML = '{l s='Processing' mod='omise'}';
+  };
+
+  const omiseUnlockCheckoutForm = function omiseUnlockCheckoutForm() {
+    document.getElementById('omise_card_holder_name').disabled = false;
+    document.getElementById('omise_card_number').disabled = false;
+    document.getElementById('omise_card_expiration_month').disabled = false;
+    document.getElementById('omise_card_expiration_year').disabled = false;
+    document.getElementById('omise_card_security_code').disabled = false;
+    document.getElementById('omise_checkout_button').disabled = false;
+    document.getElementById("omise_checkout_text").innerHTML = '{l s='Submit Payment' mod='omise'}';
+  };
+</script>
