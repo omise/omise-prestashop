@@ -5,6 +5,7 @@ function autoload($class)
 
     if ($classes === null) {
         $classes = array(
+            'CheckoutForm' => 'checkout_form.php',
             'Omise' => 'omise.php',
             'Setting' => 'setting.php',
         );

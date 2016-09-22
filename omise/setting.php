@@ -17,13 +17,22 @@ class Setting extends PaymentModule
         return Configuration::get('live_secret_key');
     }
 
+    /**
+     * Return the public key by checking whether
+     * the current setting for sandbox status is enabled or disabled.
+     *
+     * Return the TEST public key, if the sandbox status is enabled (testing mode).
+     * Return the LIVE public key, if the sandbox status is disabled (live mode).
+     *
+     * @return string
+     */
     public function getPublicKey()
     {
         if ($this->isSandboxEnabled()) {
-            return Configuration::get('test_public_key');
+            return $this->getTestPublicKey();
         }
 
-        return Configuration::get('live_public_key');
+        return $this->getLivePublicKey();
     }
 
     public function getSubmitAction()

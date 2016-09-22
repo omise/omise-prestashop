@@ -3,6 +3,7 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
+require_once 'checkout_form.php';
 require_once 'setting.php';
 
 class Omise extends PaymentModule
@@ -28,6 +29,7 @@ class Omise extends PaymentModule
      */
     const MODULE_VERSION = '1.6.0.0';
 
+    protected $checkout_form;
     protected $setting;
 
     public function __construct()
@@ -45,6 +47,7 @@ class Omise extends PaymentModule
         $this->displayName            = self::MODULE_DISPLAY_NAME;
         $this->confirmUninstall       = $this->l('Are you sure you want to uninstall ' . self::MODULE_DISPLAY_NAME . ' module?');
 
+        $this->setCheckoutForm(new CheckoutForm());
         $this->setSetting(new Setting());
     }
 
@@ -67,9 +70,26 @@ class Omise extends PaymentModule
         return $this->display(__FILE__, 'views/templates/admin/setting.tpl');
     }
 
+    public function hookPayment()
+    {
+        if ($this->active == false || $this->setting->isModuleEnabled() == false) {
+            return;
+        }
+
+        $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
+        $this->smarty->assign('omise_title', $this->setting->getTitle());
+
+        return $this->display(__FILE__, 'payment.tpl');
+    }
+
     public function getSetting()
     {
         return $this->setting;
+    }
+
+    public function setCheckoutForm($checkout_form)
+    {
+        $this->checkout_form = $checkout_form;
     }
 
     public function setSetting($setting)
