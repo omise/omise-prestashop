@@ -1,4 +1,8 @@
 <?php
+if (! defined('_PS_VERSION_')) {
+    define('_PS_VERSION_', 'TEST_VERSION');
+}
+
 class CheckoutFormTest extends PHPUnit_Framework_TestCase
 {
     private $list_of_expiration_year;
