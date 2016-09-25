@@ -4,6 +4,7 @@ if (! defined('_PS_VERSION_')) {
 }
 
 require_once _PS_MODULE_DIR_ . '/omise/libraries/omise-php/lib/Omise.php';
+require_once _PS_MODULE_DIR_ . '/omise/libraries/omise-plugin/Omise.php';
 require_once _PS_MODULE_DIR_ . '/omise/setting.php';
 
 class OmisePaymentModuleFrontController extends ModuleFrontController
@@ -15,42 +16,31 @@ class OmisePaymentModuleFrontController extends ModuleFrontController
     {
         parent::initContent();
 
-        $data = array(
+        $charge_request = array(
             'amount' => $this->getAmount(),
             'card' => $this->getCardToken(),
             'capture' => $this->getCapture(),
-            'currency' => $this->getCurrency(),
-            'description' => $this->getDescription(),
+            'currency' => $this->getCurrencyCode(),
+            'description' => $this->getChargeDescription(),
         );
 
         $secret_key = $this->getSecretKey();
 
         try {
-            $charge = OmiseCharge::create($data, '', $secret_key);
-            $payment_success = true;
+            $charge = OmiseCharge::create($charge_request, '', $secret_key);
         } catch (Exception $e) {
-            $payment_success = false;
-            $this->context->smarty->assign(
-                array(
-                    'error_message' => $e->getMessage(),
-                )
-            );
+            $this->context->smarty->assign('error_message', $e->getMessage());
         }
-
-        $this->context->smarty->assign(
-            array(
-                'payment_success' => $payment_success,
-            )
-        );
 
         $this->setTemplate('payment_result.tpl');
     }
 
     public function getAmount()
     {
-        $total = (float) $this->context->cart->getOrderTotal(true, Cart::BOTH);
+        $currency_code = $this->getCurrencyCode();
+        $order_total = (float) $this->context->cart->getOrderTotal(true, Cart::BOTH);
 
-        return 100 * $total;
+        return OmisePluginHelperCharge::amount($currency_code, $order_total);
     }
 
     public function getCardToken()
@@ -63,17 +53,17 @@ class OmisePaymentModuleFrontController extends ModuleFrontController
         return 'true';
     }
 
-    public function getCurrency()
+    public function getChargeDescription()
+    {
+        return 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')';
+    }
+
+    public function getCurrencyCode()
     {
         $currency_id = (int) $this->context->cart->id_currency;
         $currency_instance = Currency::getCurrencyInstance($currency_id);
 
         return $currency_instance->iso_code;
-    }
-
-    public function getDescription()
-    {
-        return 'PrestaShop';
     }
 
     public function getSecretKey()
