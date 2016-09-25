@@ -4,12 +4,12 @@
 
 <h2>{l s='Order result' mod='omise'}</h2>
 
-{if $payment_success == 'true'}
+{if $error_message}
   <p>
-    Payment Success
+    Payment Failed, {$error_message}
   </p>
 {else}
   <p>
-    Payment Failed, {$error_message}
+    Payment Success
   </p>
 {/if}
