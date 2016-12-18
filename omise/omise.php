@@ -92,6 +92,15 @@ class Omise extends PaymentModule
         return $this->display(__FILE__, 'payment.tpl');
     }
 
+    public function install()
+    {
+        if (parent::install() == false || $this->registerHook('payment') == false) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * @return \Setting
      */
