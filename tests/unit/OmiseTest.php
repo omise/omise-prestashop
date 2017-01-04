@@ -11,7 +11,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->getMockBuilder(stdClass::class)
+        $this->getMockBuilder(get_class(new stdClass()))
             ->setMockClassName('PaymentModule')
             ->setMethods(
                 array(
@@ -23,7 +23,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             )
             ->getMock();
 
-        $this->checkout_form = $this->getMockBuilder(CheckoutForm::class)
+        $this->checkout_form = $this->getMockBuilder(get_class(new CheckoutForm()))
             ->setMethods(
                 array(
                     'getListOfExpirationYear',
@@ -40,7 +40,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('isCurrentCurrencyApplicable')
             ->andReturn(true);
 
-        $this->setting = $this->getMockBuilder(Setting::class)
+        $this->setting = $this->getMockBuilder(get_class(new Setting()))
             ->setMethods(
                 array(
                     'getLivePublicKey',
@@ -59,7 +59,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             )
             ->getMock();
 
-        $this->smarty = $this->getMockBuilder(stdClass::class)
+        $this->smarty = $this->getMockBuilder(get_class(new stdClass()))
             ->setMockClassName('Smarty')
             ->setMethods(
                 array(
