@@ -7,6 +7,7 @@ function autoload($class)
         $classes = array(
             'CheckoutForm' => 'checkout_form.php',
             'Omise' => 'omise.php',
+            'OmisePaymentModuleFrontController' => 'controllers/front/payment.php',
             'Setting' => 'setting.php',
         );
     }
