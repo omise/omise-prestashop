@@ -1,8 +1,4 @@
 <?php
-if (! defined('_PS_VERSION_')) {
-    define('_PS_VERSION_', 'TEST_VERSION');
-}
-
 if (! defined('_PS_MODULE_DIR_')) {
     define('_PS_MODULE_DIR_', __DIR__ . '/../../..');
 }

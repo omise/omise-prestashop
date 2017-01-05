@@ -1,8 +1,4 @@
 <?php
-if (! defined('_PS_VERSION_')) {
-    define('_PS_VERSION_', 'TEST_VERSION');
-}
-
 class OmiseTest extends PHPUnit_Framework_TestCase
 {
     private $checkout_form;
