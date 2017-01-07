@@ -1,23 +1,40 @@
 <?php
-if (! defined('_PS_MODULE_DIR_')) {
-    define('_PS_MODULE_DIR_', __DIR__ . '/../../..');
-}
+use \Mockery as m;
 
 class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
 {
+    private $omiseCharge;
     private $omisePaymentModuleFrontController;
+    private $smarty;
 
     public function setup()
     {
         $this->getMockBuilder(get_class(new stdClass()))
             ->setMockClassName('ModuleFrontController')
+            ->setMethods(
+                array(
+                    'initContent',
+                    'setTemplate',
+                )
+            )
             ->getMock();
 
-        $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('PaymentModule')
+        $this->smarty = $this->getMockBuilder(get_class(new stdClass()))
+            ->setMockClassName('Smarty')
+            ->setMethods(
+                array(
+                    'assign',
+                )
+            )
             ->getMock();
+
+        $context = $this->createMock(get_class(new stdClass()));
+        $context->smarty = $this->smarty;
+
+        $this->omiseCharge = m::mock('overload:\Charge');
 
         $this->omisePaymentModuleFrontController = new OmisePaymentModuleFrontController();
+        $this->omisePaymentModuleFrontController->context = $context;
     }
 
     public function testDisplayColumnLeft_displayTheResultPage_theLeftColumnWillNotAppear()
@@ -25,79 +42,37 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->omisePaymentModuleFrontController->display_column_left);
     }
 
-    public function testGetCardToken_createOmiseCharge_getOmiseCardTokenFromClientSide()
+    public function testInitContent_createOmiseCharge_createOnlyOneOmiseCharge()
     {
-        \Mockery::mock('alias:\Tools')
-            ->shouldReceive('getValue')
-            ->with('omise_card_token')
-            ->andReturn('cardToken');
+        $this->omiseCharge->shouldReceive('create')
+            ->once()
+            ->andReturn($this->createSuccessOmiseChargeResult());
 
-        $card_token = $this->omisePaymentModuleFrontController->getCardToken();
-
-        $this->assertEquals('cardToken', $card_token);
+        $this->omisePaymentModuleFrontController->initContent();
     }
 
-    public function testGetCapture_createOmiseCharge_captureIsTrue()
+    public function testInitContent_exceptionOccurWhenCreateOmiseCharge_displayExceptionMessage()
     {
-        $this->assertEquals('true', $this->omisePaymentModuleFrontController->getCapture());
+        $this->omiseCharge->shouldReceive('create')
+            ->andThrow(new Exception("exceptionMessage"));
+
+        $this->smarty->expects($this->once())
+            ->method('assign')
+            ->with('error_message', 'exceptionMessage');
+
+        $this->omisePaymentModuleFrontController->initContent();
     }
 
-    public function testGetChargeDescription_createOmiseCharge_validChargeDescription()
+    private function createSuccessOmiseChargeResult()
     {
-        $validChargeDescription = 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')';
+        $result = $this->createMock(get_class(new stdClass()));
+        $result->object = 'charge';
 
-        $chargeDescription = $this->omisePaymentModuleFrontController->getChargeDescription();
-
-        $this->assertEquals($validChargeDescription, $chargeDescription);
+        return $result;
     }
 
-    public function testGetCurrencyCode_createOmiseCharge_getCurrencyCodeFromCart()
+    public function tearDown()
     {
-        $cart = $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('Cart')
-            ->setMethods(
-                array(
-                    'getOrderTotal',
-                )
-            )
-            ->getMock();
-        $cart->id_currency = 1234;
-        $cart->method('getOrderTotal')->willReturn('123.45');
-
-        $context = $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('Context')
-            ->getMock();
-        $context->cart = $cart;
-
-        $currency_instance = $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('CurrencyInstance')
-            ->getMock();
-        $currency_instance->iso_code = 'THB';
-
-        \Mockery::mock('alias:\Currency')
-            ->shouldReceive('getCurrencyInstance')
-            ->with(1234)
-            ->andReturn($currency_instance);
-
-        $this->omisePaymentModuleFrontController->context = $context;
-
-        $currency_code = $this->omisePaymentModuleFrontController->getCurrencyCode();
-
-        $this->assertEquals('THB', $currency_code);
-    }
-
-    public function testGetSecretKey_createOmiseCharge_getSecretKeyFromSetting()
-    {
-        \Mockery::mock('alias:\Configuration')
-            ->shouldReceive('get')
-            ->with('sandbox_status')
-            ->andReturn(true)
-            ->shouldReceive('get')
-            ->with('test_secret_key')
-            ->andReturn('secretKey');
-
-        $secretKey = $this->omisePaymentModuleFrontController->getSecretKey();
-
-        $this->assertEquals('secretKey', $secretKey);
+        m::close();
     }
 }
