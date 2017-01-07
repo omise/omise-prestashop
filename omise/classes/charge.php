@@ -9,7 +9,7 @@ require_once _PS_MODULE_DIR_ . '/omise/setting.php';
 
 class Charge extends ModuleFrontController
 {
-    public function getAmount()
+    protected function getAmount()
     {
         $currency_code = $this->getCurrencyCode();
         $order_total = (float) $this->context->cart->getOrderTotal(true, Cart::BOTH);
@@ -17,22 +17,22 @@ class Charge extends ModuleFrontController
         return OmisePluginHelperCharge::amount($currency_code, $order_total);
     }
 
-    public function getCardToken()
+    protected function getCardToken()
     {
         return Tools::getValue('omise_card_token');
     }
 
-    public function getCapture()
+    protected function getCapture()
     {
         return 'true';
     }
 
-    public function getChargeDescription()
+    protected function getChargeDescription()
     {
         return 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')';
     }
 
-    public function getCurrencyCode()
+    protected function getCurrencyCode()
     {
         $currency_id = (int) $this->context->cart->id_currency;
         $currency_instance = Currency::getCurrencyInstance($currency_id);
@@ -40,7 +40,7 @@ class Charge extends ModuleFrontController
         return $currency_instance->iso_code;
     }
 
-    public function getSecretKey()
+    protected function getSecretKey()
     {
         $setting = new Setting();
 
