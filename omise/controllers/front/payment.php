@@ -14,18 +14,10 @@ class OmisePaymentModuleFrontController extends ModuleFrontController
     {
         parent::initContent();
 
-        $charge_request = array(
-            'amount' => $this->getAmount(),
-            'card' => $this->getCardToken(),
-            'capture' => $this->getCapture(),
-            'currency' => $this->getCurrencyCode(),
-            'description' => $this->getChargeDescription(),
-        );
-
-        $secret_key = $this->getSecretKey();
+        $omiseCharge = new Charge();
 
         try {
-            $charge = OmiseCharge::create($charge_request, '', $secret_key);
+            $omiseCharge->create();
         } catch (Exception $e) {
             $this->context->smarty->assign('error_message', $e->getMessage());
         }
