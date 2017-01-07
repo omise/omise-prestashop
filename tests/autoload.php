@@ -1,9 +1,22 @@
 <?php
-function autoload($class) {
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if (! defined('_PS_VERSION_')) {
+    define('_PS_VERSION_', 'TEST_VERSION');
+}
+
+function autoload($class)
+{
     static $classes = null;
 
     if ($classes === null) {
-        $classes = array('Omise' => 'omise.php');
+        $classes = array(
+            'Charge' => 'classes/charge.php',
+            'CheckoutForm' => 'checkout_form.php',
+            'Omise' => 'omise.php',
+            'OmisePaymentModuleFrontController' => 'controllers/front/payment.php',
+            'Setting' => 'setting.php',
+        );
     }
 
     if (isset($classes[$class])) {
