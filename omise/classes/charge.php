@@ -3,9 +3,11 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
-require_once _PS_MODULE_DIR_ . '/omise/libraries/omise-php/lib/Omise.php';
-require_once _PS_MODULE_DIR_ . '/omise/libraries/omise-plugin/Omise.php';
-require_once _PS_MODULE_DIR_ . '/omise/setting.php';
+if (defined('_PS_MODULE_DIR_')) {
+    require_once _PS_MODULE_DIR_ . '/omise/libraries/omise-php/lib/Omise.php';
+    require_once _PS_MODULE_DIR_ . '/omise/libraries/omise-plugin/Omise.php';
+    require_once _PS_MODULE_DIR_ . '/omise/setting.php';
+}
 
 class Charge extends ModuleFrontController
 {
