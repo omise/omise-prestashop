@@ -3,7 +3,7 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
-class Charge
+class Charge extends ModuleFrontController
 {
 
 }
