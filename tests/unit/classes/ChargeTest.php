@@ -45,6 +45,10 @@ class ChargeTest extends PHPUnit_Framework_TestCase
         $this->charge->context = $context;
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testCreate_createOmiseCharge_createOnlyOneOmiseChargeWithCompleteRequestParameters()
     {
         m::mock('alias:\OmiseCharge')
