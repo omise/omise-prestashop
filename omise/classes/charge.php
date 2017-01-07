@@ -9,6 +9,19 @@ require_once _PS_MODULE_DIR_ . '/omise/setting.php';
 
 class Charge extends ModuleFrontController
 {
+    public function create()
+    {
+        $charge_request = array(
+            'amount' => $this->getAmount(),
+            'card' => $this->getCardToken(),
+            'capture' => $this->getCapture(),
+            'currency' => $this->getCurrencyCode(),
+            'description' => $this->getChargeDescription(),
+        );
+
+        return OmiseCharge::create($charge_request, '', $this->getSecretKey());
+    }
+
     protected function getAmount()
     {
         $currency_code = $this->getCurrencyCode();
