@@ -11,6 +11,7 @@ function autoload($class)
 
     if ($classes === null) {
         $classes = array(
+            'Charge' => 'classes/charge.php',
             'CheckoutForm' => 'checkout_form.php',
             'Omise' => 'omise.php',
             'OmisePaymentModuleFrontController' => 'controllers/front/payment.php',
