@@ -1,9 +1,17 @@
 <?php
-function autoload($class) {
+require_once __DIR__ . '/../vendor/autoload.php';
+
+function autoload($class)
+{
     static $classes = null;
 
     if ($classes === null) {
-        $classes = array('Omise' => 'omise.php');
+        $classes = array(
+            'CheckoutForm' => 'checkout_form.php',
+            'Omise' => 'omise.php',
+            'OmisePaymentModuleFrontController' => 'controllers/front/payment.php',
+            'Setting' => 'setting.php',
+        );
     }
 
     if (isset($classes[$class])) {
