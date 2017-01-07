@@ -9,7 +9,6 @@ if (defined('_PS_MODULE_DIR_')) {
 
 class OmisePaymentModuleFrontController extends ModuleFrontController
 {
-    public $context;
     public $display_column_left = false;
 
     public function initContent()
