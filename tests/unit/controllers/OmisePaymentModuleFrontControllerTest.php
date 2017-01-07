@@ -28,7 +28,7 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
             )
             ->getMock();
 
-        $context = $this->createMock(get_class(new stdClass()));
+        $context = $this->getMockBuilder(get_class(new stdClass()));
         $context->smarty = $this->smarty;
 
         $this->omiseCharge = m::mock('overload:\Charge');
@@ -65,7 +65,7 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
 
     private function createSuccessOmiseChargeResult()
     {
-        $result = $this->createMock(get_class(new stdClass()));
+        $result = $this->getMockBuilder(get_class(new stdClass()));
         $result->object = 'charge';
 
         return $result;

@@ -17,10 +17,10 @@ class ChargeTest extends PHPUnit_Framework_TestCase
             )
             ->getMock();
 
-        $context = $this->createMock(get_class(new stdClass()));
+        $context = $this->getMockBuilder(get_class(new stdClass()));
         $context->cart = new Cart();
 
-        $currency_instance = $this->createMock(get_class(new stdClass()));
+        $currency_instance = $this->getMockBuilder(get_class(new stdClass()));
         $currency_instance->iso_code = 'THB';
 
         m::mock('alias:\Currency')
