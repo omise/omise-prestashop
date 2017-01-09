@@ -11,6 +11,8 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
     private $extra_variables = array();
     private $is_not_needed_rounding_card_order_total = false;
     private $module_display_name = 'Omise';
+    private $module_id = '2';
+    private $module_current_order = '3';
     private $optional_message = null;
     private $order_state_accepted_payment = 'orderStatusPayment';
     private $payment_order;
@@ -59,11 +61,27 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
                 )
             )
             ->getMock();
+        $module->currentOrder = $this->module_current_order;
         $module->displayName = $this->module_display_name;
+        $module->id = $this->module_id;
 
         $this->payment_order = new PaymentOrder();
         $this->payment_order->context = $context;
         $this->payment_order->module = $module;
+    }
+
+    public function testRedirectToResultPage_redirectThePage_redirectTheSystemToTheOrderConfirmationPage()
+    {
+        m::mock('alias:Tools')
+            ->shouldReceive('redirect')
+            ->once()
+            ->with('index.php?controller=order-confirmation' .
+                '&id_cart=' . $this->cart_id .
+                '&id_module=' . $this->module_id .
+                '&id_order=' . $this->module_current_order .
+                '&key=' . $this->customer_secure_key);
+
+        $this->payment_order->redirectToResultPage();
     }
 
     public function testSave_saveTheOrder_onlyOneOrderHasBeenSaved()
