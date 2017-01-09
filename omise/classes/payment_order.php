@@ -46,6 +46,16 @@ class PaymentOrder extends ModuleFrontController
         return $this->module->displayName;
     }
 
+    protected function getModuleId()
+    {
+        return (int) $this->module->id;
+    }
+
+    protected function getModuleCurrentOrder()
+    {
+        return $this->module->currentOrder;
+    }
+
     /**
      * The optional message that will be used to attach to the order.
      *
@@ -78,6 +88,16 @@ class PaymentOrder extends ModuleFrontController
     protected function isNotNeededRoundingCardOrderTotal()
     {
         return false;
+    }
+
+    public function redirectToResultPage()
+    {
+        Tools::redirect('index.php?controller=order-confirmation' .
+            '&id_cart=' . $this->getCartId() .
+            '&id_module=' . $this->getModuleId() .
+            '&id_order=' . $this->getModuleCurrentOrder() .
+            '&key=' . $this->getCustomerSecureKey()
+        );
     }
 
     public function save()
