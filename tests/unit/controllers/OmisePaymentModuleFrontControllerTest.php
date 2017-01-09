@@ -5,6 +5,7 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
 {
     private $omiseCharge;
     private $omisePaymentModuleFrontController;
+    private $payment_order;
     private $smarty;
 
     public function setup()
@@ -13,8 +14,8 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
             ->setMockClassName('ModuleFrontController')
             ->setMethods(
                 array(
+                    '__construct',
                     'initContent',
-                    'setTemplate',
                 )
             )
             ->getMock();
@@ -33,8 +34,18 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
 
         $this->omiseCharge = m::mock('overload:\Charge');
 
+        $this->payment_order = $this->getMockBuilder(get_class(new stdClass()))
+            ->setMethods(
+                array(
+                    'redirectToResultPage',
+                    'save',
+                )
+            )
+            ->getMock();
+
         $this->omisePaymentModuleFrontController = new OmisePaymentModuleFrontController();
         $this->omisePaymentModuleFrontController->context = $context;
+        $this->omisePaymentModuleFrontController->setPaymentOrder($this->payment_order);
     }
 
     public function testDisplayColumnLeft_displayTheResultPage_theLeftColumnWillNotAppear()
@@ -47,6 +58,26 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
         $this->omiseCharge->shouldReceive('create')
             ->once()
             ->andReturn($this->createSuccessOmiseChargeResult());
+
+        $this->omisePaymentModuleFrontController->initContent();
+    }
+
+    public function testInitContent_createOmiseCharge_redirectTheSystemToTheResultPage()
+    {
+        $this->payment_order->expects($this->once())
+            ->method('redirectToResultPage');
+
+        $this->omisePaymentModuleFrontController->initContent();
+    }
+
+    public function testInitContent_successfullyCreateOmiseCharge_saveOnlyOneOrder()
+    {
+        $this->omiseCharge->shouldReceive('create')
+            ->once()
+            ->andReturn($this->createSuccessOmiseChargeResult());
+
+        $this->payment_order->expects($this->once())
+            ->method('save');
 
         $this->omisePaymentModuleFrontController->initContent();
     }
