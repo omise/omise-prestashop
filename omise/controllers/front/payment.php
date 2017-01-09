@@ -17,9 +17,11 @@ class OmisePaymentModuleFrontController extends ModuleFrontController
         parent::initContent();
 
         $omiseCharge = new Charge();
+        $payment_order = new PaymentOrder();
 
         try {
             $omiseCharge->create();
+            $payment_order->save();
         } catch (Exception $e) {
             $this->context->smarty->assign('error_message', $e->getMessage());
         }
