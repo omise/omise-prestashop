@@ -5,6 +5,7 @@ if (! defined('_PS_VERSION_')) {
 
 if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . '/omise/classes/charge.php';
+    require_once _PS_MODULE_DIR_ . '/omise/classes/payment_order.php';
 }
 
 class OmisePaymentModuleFrontController extends ModuleFrontController
