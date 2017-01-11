@@ -7,11 +7,17 @@ class Setting
 {
     protected $submit_action = 'omise_save_setting';
 
+    /**
+     * @return string
+     */
     public function getLivePublicKey()
     {
         return Configuration::get('live_public_key');
     }
 
+    /**
+     * @return string
+     */
     public function getLiveSecretKey()
     {
         return Configuration::get('live_secret_key');
@@ -26,26 +32,41 @@ class Setting
         return Configuration::get('live_public_key');
     }
 
+    /**
+     * @return string
+     */
     public function getSubmitAction()
     {
         return $this->submit_action;
     }
 
+    /**
+     * @return string
+     */
     public function getTestPublicKey()
     {
         return Configuration::get('test_public_key');
     }
 
+    /**
+     * @return string
+     */
     public function getTestSecretKey()
     {
         return Configuration::get('test_secret_key');
     }
 
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return Configuration::get('title');
     }
 
+    /**
+     * @return bool
+     */
     public function isModuleEnabled()
     {
         if (Configuration::get('module_status')) {
@@ -55,6 +76,9 @@ class Setting
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function isSandboxEnabled()
     {
         if (Configuration::get('sandbox_status')) {
@@ -64,6 +88,9 @@ class Setting
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function isSubmit()
     {
         if (Tools::isSubmit($this->getSubmitAction())) {
