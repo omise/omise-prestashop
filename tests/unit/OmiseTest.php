@@ -73,7 +73,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Omise', $this->omise->displayName);
     }
 
-    public function testNeedInstance_noNeedToLoadModuleAtTheBackendModulePage()
+    public function testNeedInstance_configureTheModule_noNeedToLoadModuleAtTheBackendModulePage()
     {
         $this->assertEquals(0, $this->omise->need_instance);
     }
