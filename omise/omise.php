@@ -15,7 +15,7 @@ class Omise extends PaymentModule
     const MODULE_DISPLAY_NAME = 'Omise';
 
     /**
-     * The name that used to referece in the program.
+     * The name that used to reference in the program.
      *
      * @var string
      */
