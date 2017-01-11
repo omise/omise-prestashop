@@ -54,7 +54,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->omise->setSmarty($this->smarty);
     }
 
-    public function testConstructor_whenNewTheInstance_theDefaultValueOfTheAttributeSettingMustBeAvailable()
+    public function testConstructor_whenInitiateTheNewInstance_theDefaultValueOfTheAttributeSettingMustBeAvailable()
     {
         $omise = new Omise();
 
