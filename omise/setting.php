@@ -3,7 +3,7 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
-class Setting extends PaymentModule
+class Setting
 {
     protected $submit_action = 'omise_save_setting';
 
