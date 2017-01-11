@@ -78,7 +78,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $this->omise->need_instance);
     }
 
-    public function testBootstrap_bootstrapTemplateIsRequired()
+    public function testBootstrap_configureTheModule_bootstrapTemplateIsRequired()
     {
         $this->assertEquals(true, $this->omise->bootstrap);
     }
