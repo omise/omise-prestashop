@@ -68,7 +68,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('omise', $this->omise->name);
     }
 
-    public function testDisplayName_theNameThatUsedToDisplayeToTheMerchantMustBe_Omise()
+    public function testDisplayName_theNameThatUsedToDisplayToTheMerchantMustBe_Omise()
     {
         $this->assertEquals('Omise', $this->omise->displayName);
     }
