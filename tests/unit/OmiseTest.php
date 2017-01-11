@@ -60,7 +60,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
 
         $setting = $omise->getSetting();
 
-        $this->assertNotEmpty($setting);
+        $this->assertInstanceOf(get_class(new Setting()), $setting);
     }
 
     public function testName_theNameThatUsedToReferenceInTheProgramMustBe_omise()
