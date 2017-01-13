@@ -84,6 +84,9 @@ class Omise extends PaymentModule
         return $this->setting;
     }
 
+    /**
+     * @param \Setting $setting The instance of class, Setting.
+     */
     public function setSetting($setting)
     {
         $this->setting = $setting;
