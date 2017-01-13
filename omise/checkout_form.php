@@ -11,18 +11,10 @@ class CheckoutForm
      * The first year in the list is current year.
      * The last year in the list is next 10 years.
      *
-     * @return string[]
+     * @return int[]
      */
     public function getListOfExpirationYear()
     {
-        $current_year = date('Y');
-        $list_of_expiration_year = array();
-        $maximum_expiration_year = date('Y') + 10;
-
-        do {
-            $list_of_expiration_year[] = $current_year++;
-        } while ($current_year <= $maximum_expiration_year);
-
-        return $list_of_expiration_year;
+        return range(date('Y'), date('Y') + 10);
     }
 }
