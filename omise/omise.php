@@ -76,6 +76,9 @@ class Omise extends PaymentModule
         return $this->display(__FILE__, 'views/templates/admin/setting.tpl');
     }
 
+    /**
+     * @return \Setting
+     */
     public function getSetting()
     {
         return $this->setting;
