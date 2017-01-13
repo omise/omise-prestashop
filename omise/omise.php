@@ -62,14 +62,16 @@ class Omise extends PaymentModule
             $this->smarty->assign('confirmation', $this->displayConfirmation($this->l('Settings updated')));
         }
 
-        $this->smarty->assign('live_public_key', $this->setting->getLivePublicKey());
-        $this->smarty->assign('live_secret_key', $this->setting->getLiveSecretKey());
-        $this->smarty->assign('module_status', $this->setting->isModuleEnabled());
-        $this->smarty->assign('sandbox_status', $this->setting->isSandboxEnabled());
-        $this->smarty->assign('submit_action', $this->setting->getSubmitAction());
-        $this->smarty->assign('test_public_key', $this->setting->getTestPublicKey());
-        $this->smarty->assign('test_secret_key', $this->setting->getTestSecretKey());
-        $this->smarty->assign('title', $this->setting->getTitle());
+        $this->smarty->assign(array(
+            'live_public_key' => $this->setting->getLivePublicKey(),
+            'live_secret_key' => $this->setting->getLiveSecretKey(),
+            'module_status' => $this->setting->isModuleEnabled(),
+            'sandbox_status' => $this->setting->isSandboxEnabled(),
+            'submit_action' => $this->setting->getSubmitAction(),
+            'test_public_key' => $this->setting->getTestPublicKey(),
+            'test_secret_key' => $this->setting->getTestSecretKey(),
+            'title' => $this->setting->getTitle(),
+        ));
 
         return $this->display(__FILE__, 'views/templates/admin/setting.tpl');
     }

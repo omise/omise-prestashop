@@ -94,18 +94,18 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->setting->method('getTestSecretKey')->willReturn('test_secret_key');
         $this->setting->method('getTitle')->willReturn('title');
 
-        $this->smarty->expects($this->exactly(8))
+        $this->smarty->expects($this->once())
             ->method('assign')
-            ->withConsecutive(
-                array('live_public_key', 'live_public_key'),
-                array('live_secret_key', 'live_secret_key'),
-                array('module_status', 'module_status'),
-                array('sandbox_status', 'sandbox_status'),
-                array('submit_action', 'submit_action'),
-                array('test_public_key', 'test_public_key'),
-                array('test_secret_key', 'test_secret_key'),
-                array('title', 'title')
-            );
+            ->with(array(
+                'live_public_key' => 'live_public_key',
+                'live_secret_key' => 'live_secret_key',
+                'module_status' => 'module_status',
+                'sandbox_status' => 'sandbox_status',
+                'submit_action' => 'submit_action',
+                'test_public_key' => 'test_public_key',
+                'test_secret_key' => 'test_secret_key',
+                'title' => 'title',
+            ));
 
         $this->omise->getContent();
     }
