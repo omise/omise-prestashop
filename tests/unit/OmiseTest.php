@@ -135,7 +135,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->setting->method('isModuleEnabled')->willReturn(true);
         $this->omise->method('display')->willReturn('payment_template_file');
 
-        $this->assertEquals('payment_template_file', $this->omise->hookPayment(''));
+        $this->assertEquals('payment_template_file', $this->omise->hookPayment());
     }
 
     public function testHookPayment_moduleIsActivatedAndTheSettingOfModuleStatusIsEnabled_displayCheckoutForm()
