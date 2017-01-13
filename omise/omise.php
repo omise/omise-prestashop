@@ -1,6 +1,9 @@
 <?php
-if (! defined('_PS_VERSION_'))
+if (! defined('_PS_VERSION_')) {
     exit();
+}
+
+require_once 'setting.php';
 
 class Omise extends PaymentModule
 {
@@ -12,7 +15,7 @@ class Omise extends PaymentModule
     const MODULE_DISPLAY_NAME = 'Omise';
 
     /**
-     * The name that used to referece in the program.
+     * The name that used to reference in the program.
      *
      * @var string
      */
@@ -24,6 +27,15 @@ class Omise extends PaymentModule
      * @var string
      */
     const MODULE_VERSION = '1.6.0.0';
+
+    /**
+     * The instance of class, Setting.
+     *
+     * The Setting class is used to manipulate the configuration of module.
+     *
+     * @var \Setting
+     */
+    protected $setting;
 
     public function __construct()
     {
@@ -39,101 +51,52 @@ class Omise extends PaymentModule
 
         $this->displayName            = self::MODULE_DISPLAY_NAME;
         $this->confirmUninstall       = $this->l('Are you sure you want to uninstall ' . self::MODULE_DISPLAY_NAME . ' module?');
+
+        $this->setSetting(new Setting());
     }
 
     public function getContent()
     {
-        $fields_form[0]['form'] = array(
-            'legend' => array(
-                'title' => $this->l('Settings')
-            ),
-            'input'  => array(
-                array(
-                    'type'     => 'switch',
-                    'label'    => $this->l('Enable/Disable'),
-                    'name'     => 'module',
-                    'is_bool'  => true,
-                    'desc'     => $this->l('Enable Omise Payment Module.'),
-                    'values'   => array(
-                        array(
-                            'id'    => 'module_enabled',
-                            'value' => 1,
-                            'label' => 'Enabled'
-                        ),
-                        array(
-                            'id'    => 'module_disabled',
-                            'value' => 0,
-                            'label' => 'Disabled'
-                        )
-                    )
-                ),
-                array(
-                    'type'     => 'switch',
-                    'label'    => $this->l('Sandbox'),
-                    'name'     => 'sandbox',
-                    'is_bool'  => true,
-                    'desc'     => $this->l('Enabling sandbox means that all your transactions will be in TEST mode.'),
-                    'values'   => array(
-                        array(
-                            'id'    => 'sandbox_on',
-                            'value' => 1,
-                            'label' => 'Enabled'
-                        ),
-                        array(
-                            'id'    => 'sandbox_off',
-                            'value' => 0,
-                            'label' => 'Disabled'
-                        )
-                    )
-                ),
-                array(
-                    'type'     => 'text',
-                    'label'    => $this->l('Public key for test'),
-                    'name'     => 'publicKeyForTest',
-                    'required' => false,
-                    'desc'     => 'The "Test" mode public key can be found in Omise Dashboard.'
-                ),
-                array(
-                    'type'     => 'text',
-                    'label'    => $this->l('Secret key for test'),
-                    'name'     => 'secretKeyForTest',
-                    'required' => false,
-                    'desc'     => 'The "Test" mode secret key can be found in Omise Dashboard.'
-                ),
-                array(
-                    'type'     => 'text',
-                    'label'    => $this->l('Public key for live'),
-                    'name'     => 'publicKeyForLive',
-                    'required' => false,
-                    'desc'     => 'The "Live" mode public key can be found in Omise Dashboard.'
-                ),
-                array(
-                    'type'     => 'text',
-                    'label'    => $this->l('Secret key for live'),
-                    'name'     => 'secretKeyForLive',
-                    'required' => false,
-                    'desc'     => 'The "Live" mode secret key can be found in Omise Dashboard.'
-                ),
-                array(
-                    'label'    => '<b>Advance Settings</b>'
-                ),
-                array(
-                    'type'     => 'text',
-                    'label'    => $this->l('Title'),
-                    'name'     => 'title',
-                    'required' => false,
-                    'desc'     => 'This controls the title which the user sees during checkout.'
-                )
-            ),
-            'submit' => array(
-                'title' => $this->l('Save'),
-                'class' => 'btn btn-default pull-right'
-            )
-        );
+        if ($this->setting->isSubmit()) {
+            $this->setting->save();
+            $this->smarty->assign('confirmation', $this->displayConfirmation($this->l('Settings updated')));
+        }
 
-        $helper = new HelperForm();
-        $helper->submit_action = 'submit' . $this->name;
+        $this->smarty->assign(array(
+            'live_public_key' => $this->setting->getLivePublicKey(),
+            'live_secret_key' => $this->setting->getLiveSecretKey(),
+            'module_status' => $this->setting->isModuleEnabled(),
+            'sandbox_status' => $this->setting->isSandboxEnabled(),
+            'submit_action' => $this->setting->getSubmitAction(),
+            'test_public_key' => $this->setting->getTestPublicKey(),
+            'test_secret_key' => $this->setting->getTestSecretKey(),
+            'title' => $this->setting->getTitle(),
+        ));
 
-        return $helper->generateForm($fields_form);
+        return $this->display(__FILE__, 'views/templates/admin/setting.tpl');
+    }
+
+    /**
+     * @return \Setting
+     */
+    public function getSetting()
+    {
+        return $this->setting;
+    }
+
+    /**
+     * @param \Setting $setting The instance of class, Setting.
+     */
+    public function setSetting($setting)
+    {
+        $this->setting = $setting;
+    }
+
+    /**
+     * @param \Smarty_Data $smarty The instance of class, Smarty_Data.
+     */
+    public function setSmarty($smarty)
+    {
+        $this->smarty = $smarty;
     }
 }
