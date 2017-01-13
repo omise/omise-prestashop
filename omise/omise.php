@@ -92,6 +92,9 @@ class Omise extends PaymentModule
         $this->setting = $setting;
     }
 
+    /**
+     * @param \Smarty_Data $smarty The instance of class, Smarty_Data.
+     */
     public function setSmarty($smarty)
     {
         $this->smarty = $smarty;
