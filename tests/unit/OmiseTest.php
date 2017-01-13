@@ -148,9 +148,9 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->smarty->expects($this->exactly(2))
             ->method('assign')
             ->withConsecutive(
-                 array('list_of_expiration_year', 'list_of_expiration_year'),
-                 array('omise_title', 'title_at_header_of_checkout_form')
-             );
+                array('list_of_expiration_year', 'list_of_expiration_year'),
+                array('omise_title', 'title_at_header_of_checkout_form')
+            );
 
         $this->omise->hookPayment();
     }
