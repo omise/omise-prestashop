@@ -110,7 +110,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->omise->getContent();
     }
 
-    public function testGetContent_merchantSaveSetting_theSettingDataMustBeSaved()
+    public function testGetContent_merchantSaveSetting_saveTheSettingData()
     {
         $this->setting->method('isSubmit')->willReturn(true);
 
