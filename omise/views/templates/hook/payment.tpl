@@ -81,11 +81,11 @@
     omiseLockCheckoutForm(omiseCheckoutForm);
 
     const card = {
-      name: document.getElementById('omise_card_holder_name').value,
-      number: document.getElementById('omise_card_number').value,
-      expiration_month: document.getElementById('omise_card_expiration_month').value,
-      expiration_year: document.getElementById('omise_card_expiration_year').value,
-      security_code: document.getElementById('omise_card_security_code').value,
+      name: omiseCheckoutForm.name.value,
+      number: omiseCheckoutForm.number.value,
+      expiration_month: omiseCheckoutForm.expiration_month.value,
+      expiration_year: omiseCheckoutForm.expiration_year.value,
+      security_code: omiseCheckoutForm.security_code.value,
     };
 
     Omise.setPublicKey('{$omise_public_key}');
