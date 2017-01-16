@@ -101,6 +101,16 @@
     }
   };
 
+  const omiseCheckoutForm = {
+    name: document.getElementById('omise_card_holder_name'),
+    number: document.getElementById('omise_card_number'),
+    expiration_month: document.getElementById('omise_card_expiration_month'),
+    expiration_year: document.getElementById('omise_card_expiration_year'),
+    security_code: document.getElementById('omise_card_security_code'),
+    checkout_button: document.getElementById('omise_checkout_button'),
+    checkout_text: document.getElementById('omise_checkout_text'),
+  };
+
   const omiseLockCheckoutForm = function omiseLockCheckoutForm() {
     document.getElementById('omise_card_holder_name').disabled = true;
     document.getElementById('omise_card_number').disabled = true;
