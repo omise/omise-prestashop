@@ -97,7 +97,7 @@
       document.getElementById('omise_card_token').value = response.id;
     } else {
       alert(response.message);
-      omiseUnlockCheckoutForm();
+      omiseUnlockCheckoutForm(omiseCheckoutForm);
     }
   };
 
@@ -121,13 +121,13 @@
     form.checkout_text.innerHTML = '{l s='Processing' mod='omise'}';
   };
 
-  const omiseUnlockCheckoutForm = function omiseUnlockCheckoutForm() {
-    document.getElementById('omise_card_holder_name').disabled = false;
-    document.getElementById('omise_card_number').disabled = false;
-    document.getElementById('omise_card_expiration_month').disabled = false;
-    document.getElementById('omise_card_expiration_year').disabled = false;
-    document.getElementById('omise_card_security_code').disabled = false;
-    document.getElementById('omise_checkout_button').disabled = false;
-    document.getElementById("omise_checkout_text").innerHTML = '{l s='Submit Payment' mod='omise'}';
+  const omiseUnlockCheckoutForm = function omiseUnlockCheckoutForm(form) {
+    form.name.disabled = false;
+    form.number.disabled = false;
+    form.expiration_month.disabled = false;
+    form.expiration_year.disabled = false;
+    form.security_code.disabled = false;
+    form.checkout_button.disabled = false;
+    form.checkout_text.innerHTML = '{l s='Submit Payment' mod='omise'}';
   };
 </script>
