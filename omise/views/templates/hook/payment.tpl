@@ -78,7 +78,7 @@
       return false;
     }
 
-    omiseLockCheckoutForm();
+    omiseLockCheckoutForm(omiseCheckoutForm);
 
     const card = {
       name: document.getElementById('omise_card_holder_name').value,
@@ -111,14 +111,14 @@
     checkout_text: document.getElementById('omise_checkout_text'),
   };
 
-  const omiseLockCheckoutForm = function omiseLockCheckoutForm() {
-    document.getElementById('omise_card_holder_name').disabled = true;
-    document.getElementById('omise_card_number').disabled = true;
-    document.getElementById('omise_card_expiration_month').disabled = true;
-    document.getElementById('omise_card_expiration_year').disabled = true;
-    document.getElementById('omise_card_security_code').disabled = true;
-    document.getElementById('omise_checkout_button').disabled = true;
-    document.getElementById("omise_checkout_text").innerHTML = '{l s='Processing' mod='omise'}';
+  const omiseLockCheckoutForm = function omiseLockCheckoutForm(form) {
+    form.name.disabled = true;
+    form.number.disabled = true;
+    form.expiration_month.disabled = true;
+    form.expiration_year.disabled = true;
+    form.security_code.disabled = true;
+    form.checkout_button.disabled = true;
+    form.checkout_text.innerHTML = '{l s='Processing' mod='omise'}';
   };
 
   const omiseUnlockCheckoutForm = function omiseUnlockCheckoutForm() {
