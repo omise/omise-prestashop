@@ -17,11 +17,9 @@ class OmisePaymentModuleFrontController extends ModuleFrontController
         parent::initContent();
 
         $omiseCharge = new Charge();
-        $payment_order = new PaymentOrder();
 
         try {
             $charge = $omiseCharge->create();
-            $payment_order->save();
         } catch (Exception $e) {
             $this->context->smarty->assign('error_message', $e->getMessage());
             $this->setTemplate('payment-error.tpl');
@@ -34,6 +32,8 @@ class OmisePaymentModuleFrontController extends ModuleFrontController
             return;
         }
 
-        $this->payment_order->redirectToResultPage();
+        $payment_order = new PaymentOrder();
+        $payment_order->save();
+        $payment_order->redirectToResultPage();
     }
 }
