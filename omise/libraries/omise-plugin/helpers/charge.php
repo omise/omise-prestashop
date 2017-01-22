@@ -22,6 +22,20 @@ if (! class_exists('OmisePluginHelperCharge')) {
         /**
          *
          * @param \omise-php\OmiseCharge $charge
+         * @return string
+         */
+        public static function getErrorMessage($charge)
+        {
+            if ($charge['failure_code'] !== '') {
+                return '(' . $charge['failure_code'] . ') ' . $charge['failure_message'];
+            }
+
+            return '';
+        }
+
+        /**
+         *
+         * @param \omise-php\OmiseCharge $charge
          * @return boolean
          */
         public static function isChargeObject($charge)
@@ -44,8 +58,8 @@ if (! class_exists('OmisePluginHelperCharge')) {
                 return true;
             }
 
-            if ((! is_null($charge['failure_code']) && $charge['failure_code'] !== '')
-                || (! is_null($charge['failure_message']) && $charge['failure_message'] !== '')) {
+            if ((! is_null($charge['failure_code']) && $charge['failure_code'] !== "")
+                || (! is_null($charge['failure_message']) && $charge['failure_message'] !== "")) {
                 return true;
             }
 
