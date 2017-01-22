@@ -110,7 +110,9 @@ class Omise extends PaymentModule
 
     public function install()
     {
-        return parent::install() && $this->registerHook('payment');
+        return parent::install()
+            && $this->registerHook('payment')
+            && $this->registerHook('displayOrderConfirmation');
     }
 
     /**
