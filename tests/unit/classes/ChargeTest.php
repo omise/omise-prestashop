@@ -77,9 +77,9 @@ class ChargeTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('isFailed')
             ->andReturn(true);
 
-        $isChargeFailed = $this->charge->isFailed();
+        $is_charge_failed = $this->charge->isFailed();
 
-        $this->assertTrue($isChargeFailed);
+        $this->assertTrue($is_charge_failed);
     }
 
     private function createChargeRequest()
