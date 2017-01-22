@@ -54,6 +54,11 @@ class Charge extends ModuleFrontController
         return $currency_instance->iso_code;
     }
 
+    public function getErrorMessage()
+    {
+        return OmisePluginHelperCharge::getErrorMessage($this->charge_response);
+    }
+
     protected function getSecretKey()
     {
         $setting = new Setting();
