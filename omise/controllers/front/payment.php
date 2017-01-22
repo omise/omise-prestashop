@@ -24,6 +24,8 @@ class OmisePaymentModuleFrontController extends ModuleFrontController
             $payment_order->save();
         } catch (Exception $e) {
             $this->context->smarty->assign('error_message', $e->getMessage());
+            $this->setTemplate('payment-error.tpl');
+            return;
         }
 
         $this->payment_order->redirectToResultPage();
