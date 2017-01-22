@@ -4,6 +4,7 @@ use \Mockery as m;
 class ChargeTest extends PHPUnit_Framework_TestCase
 {
     private $charge;
+    private $omisePluginHelperCharge;
     private $secret_key = 'secretKey';
 
     public function setup()
@@ -28,7 +29,7 @@ class ChargeTest extends PHPUnit_Framework_TestCase
             ->with(1234)
             ->andReturn($currency_instance);
 
-        m::mock('alias:\OmisePluginHelperCharge')
+        $this->omisePluginHelperCharge = m::mock('alias:\OmisePluginHelperCharge')
             ->shouldReceive('amount')
             ->andReturn(10025);
 
@@ -59,6 +60,28 @@ class ChargeTest extends PHPUnit_Framework_TestCase
         $this->charge->create();
     }
 
+    public function testGetErrorMessage_createOmiseChargeIsFail_failureCodeAndMessage()
+    {
+        $this->omisePluginHelperCharge
+            ->shouldReceive('getErrorMessage')
+            ->andReturn($this->createChargeErrorMessage());
+
+        $error_message = $this->charge->getErrorMessage();
+
+        $this->assertEquals('(failureCode) failureMessage', $error_message);
+    }
+
+    public function testIsFailed_createOmiseChargeIsFail_true()
+    {
+        $this->omisePluginHelperCharge
+            ->shouldReceive('isFailed')
+            ->andReturn(true);
+
+        $isChargeFailed = $this->charge->isFailed();
+
+        $this->assertTrue($isChargeFailed);
+    }
+
     private function createChargeRequest()
     {
         $charge_request = array(
@@ -70,6 +93,11 @@ class ChargeTest extends PHPUnit_Framework_TestCase
         );
 
         return $charge_request;
+    }
+
+    private function createChargeErrorMessage()
+    {
+        return '(failureCode) failureMessage';
     }
 
     public function tearDown() {
