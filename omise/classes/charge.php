@@ -11,6 +11,8 @@ if (defined('_PS_MODULE_DIR_')) {
 
 class Charge extends ModuleFrontController
 {
+    protected $charge_response;
+
     public function create()
     {
         $charge_request = array(
@@ -21,7 +23,9 @@ class Charge extends ModuleFrontController
             'description' => $this->getChargeDescription(),
         );
 
-        return OmiseCharge::create($charge_request, '', $this->getSecretKey());
+        $this->charge_response = OmiseCharge::create($charge_request, '', $this->getSecretKey());
+
+        return $this;
     }
 
     protected function getAmount()
