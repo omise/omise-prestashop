@@ -80,6 +80,21 @@ class Omise extends PaymentModule
         return $this->display(__FILE__, 'views/templates/admin/setting.tpl');
     }
 
+    public function hookDisplayOrderConfirmation($params)
+    {
+        if ($this->active == false) {
+            return;
+        }
+
+        if ($params['objOrder']->module != $this->name) {
+            return;
+        }
+
+        $this->smarty->assign('order_reference', $params['objOrder']->reference);
+
+        return $this->display(__FILE__, 'confirmation.tpl');
+    }
+
     public function hookPayment()
     {
         if ($this->active == false || $this->setting->isModuleEnabled() == false) {
