@@ -3,8 +3,8 @@ use \Mockery as m;
 
 class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
 {
-    private $omiseCharge;
-    private $omisePaymentModuleFrontController;
+    private $omise_charge;
+    private $omise_payment_module_front_controller;
     private $payment_order;
     private $smarty;
 
@@ -16,6 +16,7 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
                 array(
                     '__construct',
                     'initContent',
+                    'setTemplate',
                 )
             )
             ->getMock();
@@ -32,72 +33,113 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
         $context = $this->getMockBuilder(get_class(new stdClass()));
         $context->smarty = $this->smarty;
 
-        $this->omiseCharge = m::mock('overload:\Charge');
+        $this->omise_charge = m::mock('overload:\Charge');
+        $this->payment_order = m::mock('overload:\PaymentOrder');
 
-        $this->payment_order = $this->getMockBuilder(get_class(new stdClass()))
-            ->setMethods(
-                array(
-                    'redirectToResultPage',
-                    'save',
-                )
-            )
-            ->getMock();
-
-        $this->omisePaymentModuleFrontController = new OmisePaymentModuleFrontController();
-        $this->omisePaymentModuleFrontController->context = $context;
-        $this->omisePaymentModuleFrontController->setPaymentOrder($this->payment_order);
+        $this->omise_payment_module_front_controller = new OmisePaymentModuleFrontController();
+        $this->omise_payment_module_front_controller->context = $context;
     }
 
     public function testDisplayColumnLeft_displayTheResultPage_theLeftColumnWillNotAppear()
     {
-        $this->assertFalse($this->omisePaymentModuleFrontController->display_column_left);
+        $this->assertFalse($this->omise_payment_module_front_controller->display_column_left);
     }
 
     public function testInitContent_createOmiseCharge_createOnlyOneOmiseCharge()
     {
-        $this->omiseCharge->shouldReceive('create')
+        $this->payment_order
+            ->shouldReceive('redirectToResultPage')
+            ->shouldReceive('save');
+
+        $this->omise_charge->shouldReceive('create')
             ->once()
             ->andReturn($this->createSuccessOmiseChargeResult());
 
-        $this->omisePaymentModuleFrontController->initContent();
+        $this->omise_payment_module_front_controller->initContent();
     }
 
-    public function testInitContent_createOmiseCharge_redirectTheSystemToTheResultPage()
+    public function testInitContent_successfullyCreateOmiseCharge_redirectTheSystemToTheResultPage()
     {
-        $this->payment_order->expects($this->once())
-            ->method('redirectToResultPage');
+        $this->omise_charge
+            ->shouldReceive('create')
+            ->andReturn($this->createSuccessOmiseChargeResult());
 
-        $this->omisePaymentModuleFrontController->initContent();
+        $this->payment_order
+            ->shouldReceive('redirectToResultPage')
+            ->once()
+            ->shouldReceive('save');
+
+        $this->omise_payment_module_front_controller->initContent();
     }
 
     public function testInitContent_successfullyCreateOmiseCharge_saveOnlyOneOrder()
     {
-        $this->omiseCharge->shouldReceive('create')
-            ->once()
+        $this->omise_charge
+            ->shouldReceive('create')
             ->andReturn($this->createSuccessOmiseChargeResult());
 
-        $this->payment_order->expects($this->once())
-            ->method('save');
+        $this->payment_order
+            ->shouldReceive('redirectToResultPage')
+            ->shouldReceive('save')
+            ->once();
 
-        $this->omisePaymentModuleFrontController->initContent();
+        $this->omise_payment_module_front_controller->initContent();
+    }
+
+    public function testInitContent_createOmiseChargeIsFail_displayErrorMessage()
+    {
+        $this->omise_charge
+            ->shouldReceive('create')
+            ->andReturn($this->createFailOmiseChargeResult());
+
+        $this->smarty->expects($this->once())
+            ->method('assign')
+            ->with('error_message', 'errorMessage');
+
+        $this->omise_payment_module_front_controller->initContent();
     }
 
     public function testInitContent_exceptionOccurWhenCreateOmiseCharge_displayExceptionMessage()
     {
-        $this->omiseCharge->shouldReceive('create')
-            ->andThrow(new Exception("exceptionMessage"));
+        $this->omise_charge
+            ->shouldReceive('create')
+            ->andThrow(new Exception('exceptionMessage'));
 
         $this->smarty->expects($this->once())
             ->method('assign')
             ->with('error_message', 'exceptionMessage');
 
-        $this->omisePaymentModuleFrontController->initContent();
+        $this->omise_payment_module_front_controller->initContent();
+    }
+
+    private function createFailOmiseChargeResult()
+    {
+        $result = $this->getMockBuilder(get_class(new stdClass()))
+            ->setMethods(
+                array(
+                    'getErrorMessage',
+                    'isFailed',
+                )
+            )
+            ->getMock();
+
+        $result->method('getErrorMessage')->willReturn('errorMessage');
+        $result->method('isFailed')->willReturn(true);
+
+        return $result;
     }
 
     private function createSuccessOmiseChargeResult()
     {
-        $result = $this->getMockBuilder(get_class(new stdClass()));
-        $result->object = 'charge';
+        $result = $this->getMockBuilder(get_class(new stdClass()))
+            ->setMethods(
+                array(
+                    'isFailed',
+                )
+            )
+            ->getMock();
+
+        $result->method('isFailed')->willReturn(false);
 
         return $result;
     }
