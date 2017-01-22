@@ -20,10 +20,16 @@ class OmisePaymentModuleFrontController extends ModuleFrontController
         $payment_order = new PaymentOrder();
 
         try {
-            $omiseCharge->create();
+            $charge = $omiseCharge->create();
             $payment_order->save();
         } catch (Exception $e) {
             $this->context->smarty->assign('error_message', $e->getMessage());
+            $this->setTemplate('payment-error.tpl');
+            return;
+        }
+
+        if ($charge->isFailed()) {
+            $this->context->smarty->assign('error_message', $charge->getErrorMessage());
             $this->setTemplate('payment-error.tpl');
             return;
         }
