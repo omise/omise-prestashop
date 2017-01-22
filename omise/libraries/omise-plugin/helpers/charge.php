@@ -18,5 +18,19 @@ if (! class_exists('OmisePluginHelperCharge')) {
 
             return $amount;
         }
+
+        /**
+         *
+         * @param \omise-php\OmiseCharge $charge
+         * @return boolean
+         */
+        public static function isChargeObject($charge)
+        {
+            if (! isset($charge['object']) || $charge['object'] !== 'charge') {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
