@@ -1,6 +1,10 @@
 <?php
 use \Mockery as m;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ */
 class ChargeTest extends PHPUnit_Framework_TestCase
 {
     private $charge;
