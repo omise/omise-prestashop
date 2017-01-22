@@ -100,7 +100,8 @@ class ChargeTest extends PHPUnit_Framework_TestCase
         return '(failureCode) failureMessage';
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         m::close();
     }
 }
