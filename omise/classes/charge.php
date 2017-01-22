@@ -60,4 +60,9 @@ class Charge extends ModuleFrontController
 
         return $setting->getSecretKey();
     }
+
+    public function isFailed()
+    {
+        return OmisePluginHelperCharge::isFailed($this->charge_response);
+    }
 }
