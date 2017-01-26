@@ -3,32 +3,41 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
-class PaymentOrder extends ModuleFrontController
+if (defined('_PS_MODULE_DIR_')) {
+    require_once _PS_MODULE_DIR_ . 'omise/omise.php';
+}
+
+class PaymentOrder
 {
+    protected $context;
+    protected $module;
+
+    public function __construct()
+    {
+        $this->context = Context::getContext();
+        $this->module = Module::getInstanceByName(Omise::MODULE_NAME);
+    }
+
     protected function getCartId()
     {
-        $cart = $this->context->cart;
-        return (int) $cart->id;
+        return (int) $this->context->cart->id;
     }
 
     protected function getCartOrderTotal()
     {
-        $cart = $this->context->cart;
-        return (float) $cart->getOrderTotal();
+        return (float) $this->context->cart->getOrderTotal();
     }
 
     protected function getCustomerSecureKey()
     {
-        $cart = $this->context->cart;
-        $customer = new Customer($cart->id_customer);
+        $customer = new Customer($this->context->cart->id_customer);
 
         return $customer->secure_key;
     }
 
     protected function getCurrencyId()
     {
-        $currency = $this->context->currency;
-        return (int) $currency->id;
+        return (int) $this->context->currency->id;
     }
 
     /**
@@ -43,7 +52,7 @@ class PaymentOrder extends ModuleFrontController
 
     protected function getModuleDisplayName()
     {
-        return $this->module->displayName;
+        return Omise::MODULE_DISPLAY_NAME;
     }
 
     /**
