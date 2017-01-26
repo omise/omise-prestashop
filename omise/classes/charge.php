@@ -48,10 +48,7 @@ class Charge extends ModuleFrontController
 
     protected function getCurrencyCode()
     {
-        $currency_id = (int) $this->context->cart->id_currency;
-        $currency_instance = Currency::getCurrencyInstance($currency_id);
-
-        return $currency_instance->iso_code;
+        return $this->context->currency->iso_code;
     }
 
     public function getErrorMessage()
