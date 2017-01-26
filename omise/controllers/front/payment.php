@@ -10,30 +10,53 @@ if (defined('_PS_MODULE_DIR_')) {
 
 class OmisePaymentModuleFrontController extends ModuleFrontController
 {
+    protected $charge;
     public $display_column_left = false;
+    protected $error_message;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->omise_charge = new Charge();
+        $this->payment_order = new PaymentOrder();
+        $this->setting = new Setting();
+    }
 
     public function initContent()
     {
         parent::initContent();
 
-        $omise_charge = new Charge();
+        $this->context->smarty->assign('error_message', $this->error_message);
+        $this->setTemplate('payment-error.tpl');
+    }
 
+    public function postProcess()
+    {
         try {
-            $charge = $omise_charge->create();
+            $this->charge = $this->omise_charge->create();
         } catch (Exception $e) {
-            $this->context->smarty->assign('error_message', $e->getMessage());
-            $this->setTemplate('payment-error.tpl');
+            $this->error_message = $e->getMessage();
             return;
         }
 
-        if ($charge->isFailed()) {
-            $this->context->smarty->assign('error_message', $charge->getErrorMessage());
-            $this->setTemplate('payment-error.tpl');
+        if ($this->charge->isFailed()) {
+            $this->error_message = $this->charge->getErrorMessage();
             return;
         }
 
-        $payment_order = new PaymentOrder();
-        $payment_order->save();
-        $payment_order->redirectToResultPage();
+        $this->payment_order->save();
+
+        $this->setRedirectAfter('index.php?controller=order-confirmation' .
+            '&id_cart=' . $this->context->cart->id .
+            '&id_module=' . $this->module->id .
+            '&id_order=' . $this->module->currentOrder .
+            '&key=' . $this->context->customer->secure_key
+        );
+    }
+
+    protected function redirect()
+    {
+        Tools::redirect($this->redirect_after);
     }
 }
