@@ -83,6 +83,11 @@ class Setting
         return Configuration::get('test_secret_key');
     }
 
+    public function getThreeDomainSecure()
+    {
+        return Configuration::get('three_domain_secure_status');
+    }
+
     /**
      * @return string
      */
@@ -136,5 +141,6 @@ class Setting
         Configuration::updateValue('live_public_key', strval(Tools::getValue('live_public_key')));
         Configuration::updateValue('live_secret_key', strval(Tools::getValue('live_secret_key')));
         Configuration::updateValue('title', strval(Tools::getValue('title')));
+        Configuration::updateValue('three_domain_secure_status', strval(Tools::getValue('three_domain_secure_status')));
     }
 }
