@@ -9,7 +9,7 @@ if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
 }
 
-class Charge extends ModuleFrontController
+class Charge
 {
     protected $charge_response;
 
@@ -31,7 +31,7 @@ class Charge extends ModuleFrontController
     protected function getAmount()
     {
         $currency_code = $this->getCurrencyCode();
-        $order_total = (float) $this->context->cart->getOrderTotal(true, Cart::BOTH);
+        $order_total = (float) Context::getContext()->cart->getOrderTotal(true, Cart::BOTH);
 
         return OmisePluginHelperCharge::amount($currency_code, $order_total);
     }
@@ -48,7 +48,7 @@ class Charge extends ModuleFrontController
 
     protected function getCurrencyCode()
     {
-        return $this->context->currency->iso_code;
+        return Context::getContext()->currency->iso_code;
     }
 
     public function getErrorMessage()
