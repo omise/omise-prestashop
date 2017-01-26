@@ -16,10 +16,10 @@ class OmisePaymentModuleFrontController extends ModuleFrontController
     {
         parent::initContent();
 
-        $omiseCharge = new Charge();
+        $omise_charge = new Charge();
 
         try {
-            $charge = $omiseCharge->create();
+            $charge = $omise_charge->create();
         } catch (Exception $e) {
             $this->context->smarty->assign('error_message', $e->getMessage());
             $this->setTemplate('payment-error.tpl');
