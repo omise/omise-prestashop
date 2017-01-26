@@ -21,11 +21,11 @@ class Charge
         $this->setSetting(new Setting());
     }
 
-    public function create()
+    public function create($card_token)
     {
         $charge_request = array(
             'amount' => $this->getAmount(),
-            'card' => $this->getCardToken(),
+            'card' => $card_token,
             'capture' => 'true',
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),

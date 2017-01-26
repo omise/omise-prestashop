@@ -38,7 +38,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
     public function postProcess()
     {
         try {
-            $this->charge = $this->omise_charge->create();
+            $this->charge = $this->omise_charge->create(Tools::getValue('omise_card_token'));
         } catch (Exception $e) {
             $this->error_message = $e->getMessage();
             return;

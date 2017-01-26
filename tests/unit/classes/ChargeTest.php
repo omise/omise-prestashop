@@ -82,7 +82,7 @@ class ChargeTest extends PHPUnit_Framework_TestCase
             ->with($this->createChargeRequest(), '', $this->secret_key)
             ->once();
 
-        $this->charge->create();
+        $this->charge->create('cardToken');
     }
 
     public function testCreate_createThreeDomainSecureOmiseCharge_returnUriMustBeAddedToRequest()
@@ -96,7 +96,7 @@ class ChargeTest extends PHPUnit_Framework_TestCase
             ->with($this->createThreeDomainSecureChargeRequest(), '', $this->secret_key)
             ->once();
 
-        $this->charge->create();
+        $this->charge->create('cardToken');
     }
 
     public function testGetAuthorizeUri_afterReceivedThreeDomainSecureResponseFromOmiseApi_authorizeUri()
@@ -105,7 +105,7 @@ class ChargeTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('create')
             ->andReturn($this->createThreeDomainSecureChargeResponse());
 
-        $this->charge->create();
+        $this->charge->create('cardToken');
 
         $authorize_uri = $this->charge->getAuthorizeUri();
 
