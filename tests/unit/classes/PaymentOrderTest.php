@@ -10,24 +10,19 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
     private $customer_secure_key = 'customerSecureKey';
     private $extra_variables = array();
     private $is_not_needed_rounding_card_order_total = false;
+    private $module;
     private $module_display_name = 'Omise';
     private $module_id = '2';
     private $module_current_order = '3';
     private $optional_message = null;
     private $order_state_accepted_payment = 'orderStatusPayment';
+    private $order_state_processing_in_progress = 'orderStatusProcessingInProgress';
     private $payment_order;
 
     public function setup()
     {
         $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('ModuleFrontController')
-            ->setMethods(
-                array(
-                    '__construct',
-                    'initContent',
-                    'setTemplate',
-                )
-            )
+            ->setMockClassName('PaymentModule')
             ->getMock();
 
         $cart = $this->getMockBuilder(get_class(new stdClass()))
@@ -49,44 +44,39 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
         $context->cart = $cart;
         $context->currency = $currency;
 
+        m::mock('alias:\Context')
+            ->shouldReceive('getContext')
+            ->andReturn($context);
+
         m::mock('alias:\Configuration')
             ->shouldReceive('get')
             ->with('PS_OS_PAYMENT')
-            ->andReturn($this->order_state_accepted_payment);
+            ->andReturn($this->order_state_accepted_payment)
+            ->shouldReceive('get')
+            ->with('PS_OS_PREPARATION')
+            ->andReturn($this->order_state_processing_in_progress);
 
-        $module = $this->getMockBuilder(get_class(new stdClass()))
+        $this->module = $this->getMockBuilder(get_class(new stdClass()))
             ->setMethods(
                 array(
                     'validateOrder',
                 )
             )
             ->getMock();
-        $module->currentOrder = $this->module_current_order;
-        $module->displayName = $this->module_display_name;
-        $module->id = $this->module_id;
+        $this->module->currentOrder = $this->module_current_order;
+        $this->module->displayName = $this->module_display_name;
+        $this->module->id = $this->module_id;
+
+        m::mock('alias:\Module')
+            ->shouldReceive('getInstanceByName')
+            ->andReturn($this->module);
 
         $this->payment_order = new PaymentOrder();
-        $this->payment_order->context = $context;
-        $this->payment_order->module = $module;
-    }
-
-    public function testRedirectToResultPage_redirectThePage_redirectTheSystemToTheOrderConfirmationPage()
-    {
-        m::mock('alias:Tools')
-            ->shouldReceive('redirect')
-            ->once()
-            ->with('index.php?controller=order-confirmation' .
-                '&id_cart=' . $this->cart_id .
-                '&id_module=' . $this->module_id .
-                '&id_order=' . $this->module_current_order .
-                '&key=' . $this->customer_secure_key);
-
-        $this->payment_order->redirectToResultPage();
     }
 
     public function testSave_saveTheOrder_onlyOneOrderHasBeenSaved()
     {
-        $this->payment_order->module->expects($this->once())
+        $this->module->expects($this->once())
             ->method('validateOrder')
             ->with($this->cart_id,
                 $this->order_state_accepted_payment,
@@ -100,6 +90,24 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
             );
 
         $this->payment_order->save();
+    }
+
+    public function testSaveAsProcessing_saveTheOrder_saveAnOrderWithProcessingInProgressState()
+    {
+        $this->module->expects($this->once())
+            ->method('validateOrder')
+            ->with($this->cart_id,
+                $this->order_state_processing_in_progress,
+                $this->cart_order_total,
+                $this->module_display_name,
+                $this->optional_message,
+                $this->extra_variables,
+                $this->currency_id,
+                $this->is_not_needed_rounding_card_order_total,
+                $this->customer_secure_key
+            );
+
+        $this->payment_order->saveAsProcessing();
     }
 
     public function tearDown()
