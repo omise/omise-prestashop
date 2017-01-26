@@ -18,7 +18,7 @@ class Charge
     public function __construct()
     {
         $this->context = Context::getContext();
-        $this->setting = new Setting();
+        $this->setSetting(new Setting());
     }
 
     public function create()
@@ -93,5 +93,10 @@ class Charge
     public function isFailed()
     {
         return OmisePluginHelperCharge::isFailed($this->charge_response);
+    }
+
+    public function setSetting($setting)
+    {
+        $this->setting = $setting;
     }
 }
