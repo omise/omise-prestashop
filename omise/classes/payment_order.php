@@ -125,4 +125,11 @@ class PaymentOrder
             $this->getCustomerSecureKey()
         );
     }
+
+    public function updateStateToBeSuccess($id_order)
+    {
+        $order = new Order($id_order);
+
+        $order->setCurrentState($this->getOrderStateAcceptedPayment());
+    }
 }
