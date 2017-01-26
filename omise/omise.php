@@ -117,7 +117,7 @@ class Omise extends PaymentModule
             && $this->registerHook('displayOrderConfirmation');
     }
 
-    public function getAction()
+    protected function getAction()
     {
         $controller = 'payment';
 
