@@ -102,6 +102,7 @@ class Omise extends PaymentModule
             return;
         }
 
+        $this->smarty->assign('action', $this->getAction());
         $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
         $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
         $this->smarty->assign('omise_title', $this->setting->getTitle());
@@ -114,6 +115,17 @@ class Omise extends PaymentModule
         return parent::install()
             && $this->registerHook('payment')
             && $this->registerHook('displayOrderConfirmation');
+    }
+
+    public function getAction()
+    {
+        $controller = 'payment';
+
+        if ($this->setting->isThreeDomainSecureEnabled()) {
+            $controller = 'threedomainsecurepayment';
+        }
+
+        return $this->context->link->getModuleLink(self::MODULE_NAME, $controller, [], true);
     }
 
     /**
