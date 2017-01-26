@@ -19,6 +19,6 @@ class OmiseThreeDomainSecurePaymentModuleFrontController extends OmiseBasePaymen
             return;
         }
 
-        $this->setRedirectAfter($this->charge->getAuthorizeUrl());
+        $this->setRedirectAfter($this->charge->getAuthorizeUri());
     }
 }

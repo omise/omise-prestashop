@@ -48,7 +48,7 @@ class Charge
         return OmisePluginHelperCharge::amount($currency_code, $order_total);
     }
 
-    public function getAuthorizeUrl()
+    public function getAuthorizeUri()
     {
         return $this->charge_response['authorize_uri'];
     }
