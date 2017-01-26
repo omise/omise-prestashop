@@ -11,7 +11,15 @@ if (defined('_PS_MODULE_DIR_')) {
 
 class Charge
 {
+    protected $context;
     protected $charge_response;
+    protected $setting;
+
+    public function __construct()
+    {
+        $this->context = Context::getContext();
+        $this->setting = new Setting();
+    }
 
     public function create()
     {
@@ -23,8 +31,7 @@ class Charge
             'description' => $this->getChargeDescription(),
         );
 
-        $setting = new Setting();
-        if ($setting->isThreeDomainSecureEnabled()) {
+        if ($this->setting->isThreeDomainSecureEnabled()) {
             $charge_request['return_uri'] = $this->getReturnUri();
         }
 
@@ -36,7 +43,7 @@ class Charge
     protected function getAmount()
     {
         $currency_code = $this->getCurrencyCode();
-        $order_total = (float) Context::getContext()->cart->getOrderTotal(true, Cart::BOTH);
+        $order_total = (float) $this->context->cart->getOrderTotal(true, Cart::BOTH);
 
         return OmisePluginHelperCharge::amount($currency_code, $order_total);
     }
@@ -58,7 +65,7 @@ class Charge
 
     protected function getCurrencyCode()
     {
-        return Context::getContext()->currency->iso_code;
+        return $this->context->currency->iso_code;
     }
 
     public function getErrorMessage()
@@ -68,24 +75,19 @@ class Charge
 
     protected function getReturnUri()
     {
-        $cart = Context::getContext()->cart;
-        $customer = new Customer($cart->id_customer);
-        $id_order = Order::getOrderByCartId($cart->id);
-        $link = Context::getContext()->link;
+        $id_order = Order::getOrderByCartId($this->context->cart->id);
         $module = Module::getInstanceByName(Omise::MODULE_NAME);
 
-        return $link->getModuleLink(Omise::MODULE_NAME, 'return', [], true) .
-            '?id_cart=' . $cart->id .
+        return $this->context->link->getModuleLink(Omise::MODULE_NAME, 'return', [], true) .
+            '?id_cart=' . $this->context->cart->id .
             '&id_module=' . $module->id .
             '&id_order=' . $id_order .
-            '&key=' . $customer->secure_key;
+            '&key=' . $this->context->customer->secure_key;
     }
 
     protected function getSecretKey()
     {
-        $setting = new Setting();
-
-        return $setting->getSecretKey();
+        return $this->setting->getSecretKey();
     }
 
     public function isFailed()
