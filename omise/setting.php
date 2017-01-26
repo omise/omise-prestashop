@@ -123,6 +123,18 @@ class Setting
     /**
      * @return bool
      */
+    public function isThreeDomainSecureEnabled()
+    {
+        if (Configuration::get('three_domain_secure_status')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
     public function isSubmit()
     {
         if (Tools::isSubmit($this->getSubmitAction())) {
