@@ -75,6 +75,7 @@ class Omise extends PaymentModule
             'test_public_key' => $this->setting->getTestPublicKey(),
             'test_secret_key' => $this->setting->getTestSecretKey(),
             'title' => $this->setting->getTitle(),
+            'three_domain_secure_status' => $this->setting->getThreeDomainSecure(),
         ));
 
         return $this->display(__FILE__, 'views/templates/admin/setting.tpl');
