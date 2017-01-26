@@ -23,6 +23,11 @@ class Charge
             'description' => $this->getChargeDescription(),
         );
 
+        $setting = new Setting();
+        if ($setting->isThreeDomainSecureEnabled()) {
+            $charge_request['return_uri'] = $this->getReturnUri();
+        }
+
         $this->charge_response = OmiseCharge::create($charge_request, '', $this->getSecretKey());
 
         return $this;
@@ -34,6 +39,11 @@ class Charge
         $order_total = (float) Context::getContext()->cart->getOrderTotal(true, Cart::BOTH);
 
         return OmisePluginHelperCharge::amount($currency_code, $order_total);
+    }
+
+    public function getAuthorizeUrl()
+    {
+        return $this->charge_response['authorize_uri'];
     }
 
     protected function getCardToken()
@@ -54,6 +64,21 @@ class Charge
     public function getErrorMessage()
     {
         return OmisePluginHelperCharge::getErrorMessage($this->charge_response);
+    }
+
+    protected function getReturnUri()
+    {
+        $cart = Context::getContext()->cart;
+        $customer = new Customer($cart->id_customer);
+        $id_order = Order::getOrderByCartId($cart->id);
+        $link = Context::getContext()->link;
+        $module = Module::getInstanceByName(Omise::MODULE_NAME);
+
+        return $link->getModuleLink(Omise::MODULE_NAME, 'return', [], true) .
+            '?id_cart=' . $cart->id .
+            '&id_module=' . $module->id .
+            '&id_order=' . $id_order .
+            '&key=' . $customer->secure_key;
     }
 
     protected function getSecretKey()
