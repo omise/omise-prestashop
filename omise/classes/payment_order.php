@@ -75,6 +75,11 @@ class PaymentOrder
         return Configuration::get('PS_OS_PAYMENT');
     }
 
+    protected function getOrderStateProcessingInProgress()
+    {
+        return Configuration::get('PS_OS_PREPARATION');
+    }
+
     /**
      * The flag that used to indicate that the PrestaShop need to
      * round the card order total amount.
@@ -94,6 +99,23 @@ class PaymentOrder
         $this->module->validateOrder(
             $this->getCartId(),
             $this->getOrderStateAcceptedPayment(),
+            $this->getCartOrderTotal(),
+            $this->getModuleDisplayName(),
+            $this->getOptionalMessage(),
+            $this->getExtraVariables(),
+            $this->getCurrencyId(),
+            $this->isNotNeededRoundingCardOrderTotal(),
+            $this->getCustomerSecureKey()
+        );
+    }
+
+    public function saveAsProcessing()
+    {
+        $order_state = $this->getOrderStateProcessingInProgress();
+
+        $this->module->validateOrder(
+            $this->getCartId(),
+            $order_state,
             $this->getCartOrderTotal(),
             $this->getModuleDisplayName(),
             $this->getOptionalMessage(),
