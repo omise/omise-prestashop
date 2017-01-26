@@ -7,7 +7,7 @@
             <h3>{$omise_title}</h3>
           </div>
           <div class="col-sm-8 col-md-5 col-lg-4">
-              <form id="omise_checkout_form" method="post" action="{$link->getModuleLink('omise', 'payment', [], true)|escape:'html'}">
+              <form id="omise_checkout_form" method="post" action="{$action|escape:'html'}">
                 <input id="omise_card_token" name="omise_card_token" type="hidden">
                 <div class="row">
                   <div class="form-group col-sm-12">
