@@ -60,6 +60,33 @@ class Omise extends PaymentModule
         $this->setSetting(new Setting());
     }
 
+    /**
+     * Display the message about the inapplicable checkout condition.
+     *
+     * @return string rendered template output (@see Smarty_Internal_TemplateBase::display())
+     */
+    protected function displayInapplicablePayment()
+    {
+        $this->smarty->assign('omise_title', $this->setting->getTitle());
+
+        return $this->display(__FILE__, 'inapplicable_payment.tpl');
+    }
+
+    /**
+     * Display the checkout form.
+     *
+     * @return string rendered template output (@see Smarty_Internal_TemplateBase::display())
+     */
+    protected function displayPayment()
+    {
+        $this->smarty->assign('action', $this->getAction());
+        $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
+        $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
+        $this->smarty->assign('omise_title', $this->setting->getTitle());
+
+        return $this->display(__FILE__, 'payment.tpl');
+    }
+
     public function getContent()
     {
         if ($this->setting->isSubmit()) {
@@ -103,12 +130,11 @@ class Omise extends PaymentModule
             return;
         }
 
-        $this->smarty->assign('action', $this->getAction());
-        $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
-        $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
-        $this->smarty->assign('omise_title', $this->setting->getTitle());
+        if ($this->isCurrentCurrencyApplicable()) {
+            return $this->displayPayment();
+        }
 
-        return $this->display(__FILE__, 'payment.tpl');
+        return $this->displayInapplicablePayment();
     }
 
     public function install()
@@ -116,6 +142,16 @@ class Omise extends PaymentModule
         return parent::install()
             && $this->registerHook('payment')
             && $this->registerHook('displayOrderConfirmation');
+    }
+
+    /**
+     * Check whether the current currency is supported by the Omise API.
+     *
+     * @return bool
+     */
+    protected function isCurrentCurrencyApplicable()
+    {
+        return OmisePluginHelperCharge::isCurrentCurrencyApplicable($this->context->currency->iso_code);
     }
 
     protected function getAction()
