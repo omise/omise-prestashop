@@ -5,6 +5,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
 {
     private $checkout_form;
     private $omise;
+    private $omise_plugin_helper_charge;
     private $setting;
     private $smarty;
 
@@ -32,6 +33,12 @@ class OmiseTest extends PHPUnit_Framework_TestCase
 
         m::mock('alias:\Configuration')
             ->shouldReceive('get');
+
+        $this->omise_plugin_helper_charge = m::mock('alias:\OmisePluginHelperCharge')
+            ->shouldReceive('amount')
+            ->andReturn(10025)
+            ->shouldReceive('isCurrentCurrencyApplicable')
+            ->andReturn(true);
 
         $this->setting = $this->getMockBuilder(Setting::class)
             ->setMethods(
@@ -191,6 +198,9 @@ class OmiseTest extends PHPUnit_Framework_TestCase
 
     private function getMockedContext()
     {
+        $currency = $this->getMockBuilder(get_class(new stdClass()));
+        $currency->iso_code = 'THB';
+
         $link = $this->getMockBuilder(get_class(new stdClass()))
             ->setMethods(
                 array(
@@ -200,8 +210,14 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->getMock();
 
         $context = $this->getMockBuilder(get_class(new stdClass()))->getMock();
+        $context->currency = $currency;
         $context->link = $link;
 
         return $context;
+    }
+
+    public function tearDown()
+    {
+        m::close();
     }
 }
