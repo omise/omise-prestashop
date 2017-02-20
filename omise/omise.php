@@ -3,6 +3,7 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
+require_once 'libraries/omise-plugin/Omise.php';
 require_once 'checkout_form.php';
 require_once 'setting.php';
 
