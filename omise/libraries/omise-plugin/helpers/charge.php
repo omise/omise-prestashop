@@ -11,6 +11,8 @@ if (! class_exists('OmisePluginHelperCharge')) {
         public static function amount($currency, $amount)
         {
             switch (strtoupper($currency)) {
+                case 'IDR':
+                case 'SGD':
                 case 'THB':
                     $amount = $amount * 100;
                     break;
