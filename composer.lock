@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "293c33ec85fc878db8556281efb862ec",
+    "hash": "bfd5ea2eba5f8e2ffb71bfa145500cc3",
     "content-hash": "ead74161f1692cddf0294551ac9027fe",
     "packages": [],
     "packages-dev": [
@@ -62,21 +62,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "d4f0db56642357c87e967beba75157fcdb9b0cca"
+                "reference": "e20e6dc435a9ef68fcf566dad8b232f170a1e3c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/d4f0db56642357c87e967beba75157fcdb9b0cca",
-                "reference": "d4f0db56642357c87e967beba75157fcdb9b0cca",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/e20e6dc435a9ef68fcf566dad8b232f170a1e3c1",
+                "reference": "e20e6dc435a9ef68fcf566dad8b232f170a1e3c1",
                 "shasum": ""
             },
             "require": {
                 "hamcrest/hamcrest-php": "~2.0",
                 "lib-pcre": ">=7.0",
-                "php": ">=5.4.0"
+                "php": ">=5.6.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "~5.7"
             },
             "type": "library",
             "extra": {
@@ -119,7 +119,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2017-01-03 20:33:07"
+            "time": "2017-02-16 08:49:25"
         }
     ],
     "aliases": [],
