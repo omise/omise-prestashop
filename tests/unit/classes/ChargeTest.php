@@ -112,33 +112,6 @@ class ChargeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('authorizeUri', $authorize_uri);
     }
 
-    public function testCreate_createThreeDomainSecureOmiseCharge_returnUriMustBeAddedToRequest()
-    {
-        $this->setting
-            ->method('isThreeDomainSecureEnabled')
-            ->willReturn(true);
-
-        m::mock('alias:\OmiseCharge')
-            ->shouldReceive('create')
-            ->with($this->createThreeDomainSecureChargeRequest(), '', $this->secret_key)
-            ->once();
-
-        $this->charge->create();
-    }
-
-    public function testGetAuthorizeUri_afterReceivedThreeDomainSecureResponseFromOmiseApi_authorizeUri()
-    {
-        m::mock('alias:\OmiseCharge')
-            ->shouldReceive('create')
-            ->andReturn($this->createThreeDomainSecureChargeResponse());
-
-        $this->charge->create();
-
-        $authorize_uri = $this->charge->getAuthorizeUri();
-
-        $this->assertEquals('authorizeUri', $authorize_uri);
-    }
-
     public function testGetErrorMessage_createOmiseChargeIsFail_failureCodeAndMessage()
     {
         $this->omise_plugin_helper_charge
