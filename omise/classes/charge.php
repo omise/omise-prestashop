@@ -16,7 +16,7 @@ class Charge extends ModuleFrontController
         $charge_request = array(
             'amount' => $this->getAmount(),
             'card' => $this->getCardToken(),
-            'capture' => $this->getCapture(),
+            'capture' => 'true',
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),
         );
@@ -35,11 +35,6 @@ class Charge extends ModuleFrontController
     protected function getCardToken()
     {
         return Tools::getValue('omise_card_token');
-    }
-
-    protected function getCapture()
-    {
-        return 'true';
     }
 
     protected function getChargeDescription()
