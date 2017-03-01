@@ -11,6 +11,8 @@ if (! class_exists('OmisePluginHelperCharge')) {
         public static function amount($currency, $amount)
         {
             switch (strtoupper($currency)) {
+                case 'IDR':
+                case 'SGD':
                 case 'THB':
                     $amount = $amount * 100;
                     break;
@@ -45,6 +47,28 @@ if (! class_exists('OmisePluginHelperCharge')) {
             }
 
             return true;
+        }
+
+        /**
+         * Check whether the current currency is supported by the Omise API.
+         *
+         * Now, Omise API has no interface to check the supported currencies.
+         * So, the supported currencies have been fixed in this function.
+         *
+         * @param string $currency
+         * @return bool
+         */
+        public static function isCurrentCurrencyApplicable($currency)
+        {
+            switch ($currency) {
+                case 'IDR':
+                case 'JPY':
+                case 'SGD':
+                case 'THB':
+                    return true;
+            }
+
+            return false;
         }
 
         /**

@@ -53,11 +53,6 @@ class Charge
         return $this->charge_response['authorize_uri'];
     }
 
-    protected function getCardToken()
-    {
-        return Tools::getValue('omise_card_token');
-    }
-
     protected function getChargeDescription()
     {
         return 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')';
