@@ -1,19 +1,6 @@
 <?php
-function autoload($class)
-{
-    static $classes = null;
+require_once __DIR__ . '/../vendor/autoload.php';
 
-    if ($classes === null) {
-        $classes = array(
-            'CheckoutForm' => 'checkout_form.php',
-            'Omise' => 'omise.php',
-            'Setting' => 'setting.php',
-        );
-    }
-
-    if (isset($classes[$class])) {
-        require __DIR__ . '/../omise/' . $classes[$class];
-    }
+if (! defined('_PS_VERSION_')) {
+    define('_PS_VERSION_', 'TEST_VERSION');
 }
-
-spl_autoload_register('autoload');

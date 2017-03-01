@@ -75,9 +75,25 @@ class Omise extends PaymentModule
             'test_public_key' => $this->setting->getTestPublicKey(),
             'test_secret_key' => $this->setting->getTestSecretKey(),
             'title' => $this->setting->getTitle(),
+            'three_domain_secure_status' => $this->setting->isThreeDomainSecureEnabled(),
         ));
 
         return $this->display(__FILE__, 'views/templates/admin/setting.tpl');
+    }
+
+    public function hookDisplayOrderConfirmation($params)
+    {
+        if ($this->active == false) {
+            return;
+        }
+
+        if ($params['objOrder']->module != $this->name) {
+            return;
+        }
+
+        $this->smarty->assign('order_reference', $params['objOrder']->reference);
+
+        return $this->display(__FILE__, 'confirmation.tpl');
     }
 
     public function hookPayment()
@@ -86,6 +102,7 @@ class Omise extends PaymentModule
             return;
         }
 
+        $this->smarty->assign('action', $this->getAction());
         $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
         $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
         $this->smarty->assign('omise_title', $this->setting->getTitle());
@@ -95,7 +112,20 @@ class Omise extends PaymentModule
 
     public function install()
     {
-        return parent::install() && $this->registerHook('payment');
+        return parent::install()
+            && $this->registerHook('payment')
+            && $this->registerHook('displayOrderConfirmation');
+    }
+
+    protected function getAction()
+    {
+        $controller = 'payment';
+
+        if ($this->setting->isThreeDomainSecureEnabled()) {
+            $controller = 'threedomainsecurepayment';
+        }
+
+        return $this->context->link->getModuleLink(self::MODULE_NAME, $controller, [], true);
     }
 
     /**

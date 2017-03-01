@@ -42,6 +42,24 @@ class Setting
     }
 
     /**
+     * Return the secret key by checking whether
+     * the current setting for sandbox status is enabled or disabled.
+     *
+     * Return the TEST secret key, if the sandbox status is enabled (testing mode).
+     * Return the LIVE secret key, if the sandbox status is disabled (live mode).
+     *
+     * @return string
+     */
+    public function getSecretKey()
+    {
+        if ($this->isSandboxEnabled()) {
+            return $this->getTestSecretKey();
+        }
+
+        return $this->getLiveSecretKey();
+    }
+
+    /**
      * @return string
      */
     public function getSubmitAction()
@@ -63,6 +81,11 @@ class Setting
     public function getTestSecretKey()
     {
         return Configuration::get('test_secret_key');
+    }
+
+    public function getThreeDomainSecure()
+    {
+        return Configuration::get('three_domain_secure_status');
     }
 
     /**
@@ -100,6 +123,18 @@ class Setting
     /**
      * @return bool
      */
+    public function isThreeDomainSecureEnabled()
+    {
+        if (Configuration::get('three_domain_secure_status')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
     public function isSubmit()
     {
         if (Tools::isSubmit($this->getSubmitAction())) {
@@ -118,5 +153,6 @@ class Setting
         Configuration::updateValue('live_public_key', strval(Tools::getValue('live_public_key')));
         Configuration::updateValue('live_secret_key', strval(Tools::getValue('live_secret_key')));
         Configuration::updateValue('title', strval(Tools::getValue('title')));
+        Configuration::updateValue('three_domain_secure_status', strval(Tools::getValue('three_domain_secure_status')));
     }
 }

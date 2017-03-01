@@ -1,7 +1,5 @@
 <?php
-if (! defined('_PS_VERSION_')) {
-    define('_PS_VERSION_', 'TEST_VERSION');
-}
+use \Mockery as m;
 
 class OmiseTest extends PHPUnit_Framework_TestCase
 {
@@ -32,6 +30,9 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             )
             ->getMock();
 
+        m::mock('alias:\Configuration')
+            ->shouldReceive('get');
+
         $this->setting = $this->getMockBuilder(Setting::class)
             ->setMethods(
                 array(
@@ -45,6 +46,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
                     'isModuleEnabled',
                     'isSandboxEnabled',
                     'isSubmit',
+                    'isThreeDomainSecureEnabled',
                     'save',
                 )
             )
@@ -60,6 +62,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->omise = new Omise();
+        $this->omise->context = $this->getMockedContext();
         $this->omise->setCheckoutForm($this->checkout_form);
         $this->omise->setSetting($this->setting);
         $this->omise->setSmarty($this->smarty);
@@ -104,6 +107,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->setting->method('getTestPublicKey')->willReturn('test_public_key');
         $this->setting->method('getTestSecretKey')->willReturn('test_secret_key');
         $this->setting->method('getTitle')->willReturn('title');
+        $this->setting->method('isThreeDomainSecureEnabled')->willReturn('three_domain_secure_status');
 
         $this->smarty->expects($this->once())
             ->method('assign')
@@ -116,6 +120,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
                 'test_public_key' => 'test_public_key',
                 'test_secret_key' => 'test_secret_key',
                 'title' => 'title',
+                'three_domain_secure_status' => 'three_domain_secure_status',
             ));
 
         $this->omise->getContent();
@@ -146,12 +151,14 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->setting->method('getPublicKey')->willReturn('omise_public_key');
         $this->setting->method('getTitle')->willReturn('title_at_header_of_checkout_form');
         $this->checkout_form->method('getListOfExpirationYear')->willReturn('list_of_expiration_year');
+        $this->omise->context->link->method('getModuleLink')->willReturn('payment');
 
-        $this->smarty->expects($this->exactly(3))
+        $this->smarty->expects($this->exactly(4))
             ->method('assign')
             ->withConsecutive(
+                array('action', 'payment'),
                 array('list_of_expiration_year', 'list_of_expiration_year'),
-                 array('omise_public_key', 'omise_public_key'),
+                array('omise_public_key', 'omise_public_key'),
                 array('omise_title', 'title_at_header_of_checkout_form')
             );
 
@@ -180,5 +187,21 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->setting->method('isModuleEnabled')->willReturn(false);
 
         $this->assertNull($this->omise->hookPayment());
+    }
+
+    private function getMockedContext()
+    {
+        $link = $this->getMockBuilder(get_class(new stdClass()))
+            ->setMethods(
+                array(
+                    'getModuleLink',
+                )
+            )
+            ->getMock();
+
+        $context = $this->getMockBuilder(get_class(new stdClass()))->getMock();
+        $context->link = $link;
+
+        return $context;
     }
 }
