@@ -12,7 +12,7 @@ class Setting
      */
     public function getLivePublicKey()
     {
-        return Configuration::get('live_public_key');
+        return Configuration::get('omise_live_public_key');
     }
 
     /**
@@ -20,7 +20,7 @@ class Setting
      */
     public function getLiveSecretKey()
     {
-        return Configuration::get('live_secret_key');
+        return Configuration::get('omise_live_secret_key');
     }
 
     /**
@@ -72,7 +72,7 @@ class Setting
      */
     public function getTestPublicKey()
     {
-        return Configuration::get('test_public_key');
+        return Configuration::get('omise_test_public_key');
     }
 
     /**
@@ -80,12 +80,12 @@ class Setting
      */
     public function getTestSecretKey()
     {
-        return Configuration::get('test_secret_key');
+        return Configuration::get('omise_test_secret_key');
     }
 
     public function getThreeDomainSecure()
     {
-        return Configuration::get('three_domain_secure_status');
+        return Configuration::get('omise_three_domain_secure_status');
     }
 
     /**
@@ -93,7 +93,7 @@ class Setting
      */
     public function getTitle()
     {
-        return Configuration::get('title');
+        return Configuration::get('omise_title');
     }
 
     /**
@@ -101,7 +101,7 @@ class Setting
      */
     public function isModuleEnabled()
     {
-        if (Configuration::get('module_status')) {
+        if (Configuration::get('omise_module_status')) {
             return true;
         }
 
@@ -113,7 +113,7 @@ class Setting
      */
     public function isSandboxEnabled()
     {
-        if (Configuration::get('sandbox_status')) {
+        if (Configuration::get('omise_sandbox_status')) {
             return true;
         }
 
@@ -125,7 +125,7 @@ class Setting
      */
     public function isThreeDomainSecureEnabled()
     {
-        if (Configuration::get('three_domain_secure_status')) {
+        if (Configuration::get('omise_three_domain_secure_status')) {
             return true;
         }
 
@@ -146,13 +146,13 @@ class Setting
 
     public function save()
     {
-        Configuration::updateValue('module_status', strval(Tools::getValue('module_status')));
-        Configuration::updateValue('sandbox_status', strval(Tools::getValue('sandbox_status')));
-        Configuration::updateValue('test_public_key', strval(Tools::getValue('test_public_key')));
-        Configuration::updateValue('test_secret_key', strval(Tools::getValue('test_secret_key')));
-        Configuration::updateValue('live_public_key', strval(Tools::getValue('live_public_key')));
-        Configuration::updateValue('live_secret_key', strval(Tools::getValue('live_secret_key')));
-        Configuration::updateValue('title', strval(Tools::getValue('title')));
-        Configuration::updateValue('three_domain_secure_status', strval(Tools::getValue('three_domain_secure_status')));
+        Configuration::updateValue('omise_module_status', strval(Tools::getValue('module_status')));
+        Configuration::updateValue('omise_sandbox_status', strval(Tools::getValue('sandbox_status')));
+        Configuration::updateValue('omise_test_public_key', strval(Tools::getValue('test_public_key')));
+        Configuration::updateValue('omise_test_secret_key', strval(Tools::getValue('test_secret_key')));
+        Configuration::updateValue('omise_live_public_key', strval(Tools::getValue('live_public_key')));
+        Configuration::updateValue('omise_live_secret_key', strval(Tools::getValue('live_secret_key')));
+        Configuration::updateValue('omise_title', strval(Tools::getValue('title')));
+        Configuration::updateValue('omise_three_domain_secure_status', strval(Tools::getValue('three_domain_secure_status')));
     }
 }
