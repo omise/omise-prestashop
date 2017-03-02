@@ -131,10 +131,17 @@ class PaymentOrder
         );
     }
 
-    public function updateStateToBeSuccess($id_order)
+    /**
+     * @param \Order $order The instance of class, Order;
+     */
+    public function updateStateToBeSuccess($order)
     {
-        $order = new Order($id_order);
+        $order_state = $this->getOrderStateAcceptedPayment();
 
-        $order->setCurrentState($this->getOrderStateAcceptedPayment());
+        if ($order->current_state == $order_state) {
+            return;
+        }
+
+        $order->setCurrentState($order_state);
     }
 }
