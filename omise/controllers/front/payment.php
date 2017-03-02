@@ -11,6 +11,8 @@ class OmisePaymentModuleFrontController extends OmiseBasePaymentModuleFrontContr
 {
     public function postProcess()
     {
+        $this->validateCart();
+
         parent::postProcess();
 
         if (! empty($this->error_message)) {
