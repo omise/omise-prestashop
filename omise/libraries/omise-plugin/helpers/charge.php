@@ -40,6 +40,24 @@ if (! class_exists('OmisePluginHelperCharge')) {
          * @param \omise-php\OmiseCharge $charge
          * @return boolean
          */
+        public static function isAuthorized($charge)
+        {
+            if (! self::isChargeObject($charge)) {
+                return false;
+            }
+
+            if ($charge['authorized'] === true) {
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
+         *
+         * @param \omise-php\OmiseCharge $charge
+         * @return boolean
+         */
         public static function isChargeObject($charge)
         {
             if (! isset($charge['object']) || $charge['object'] !== 'charge') {
