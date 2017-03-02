@@ -15,6 +15,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
     public $display_column_left = false;
     protected $error_message;
     protected $omise_charge;
+    protected $order_reference;
     protected $payment_order;
     protected $setting;
 
@@ -32,6 +33,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         parent::initContent();
 
         $this->context->smarty->assign('error_message', $this->error_message);
+        $this->context->smarty->assign('order_reference', $this->order_reference);
 
         $this->setTemplate('payment-error.tpl');
     }
