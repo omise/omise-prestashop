@@ -4,6 +4,7 @@ if (! defined('_PS_VERSION_')) {
 }
 
 if (defined('_PS_MODULE_DIR_')) {
+    require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
     require_once _PS_MODULE_DIR_ . 'omise/libraries/omise-plugin/Omise.php';
     require_once _PS_MODULE_DIR_ . 'omise/checkout_form.php';
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
