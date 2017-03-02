@@ -4,7 +4,7 @@ if (! defined('_PS_VERSION_')) {
 }
 
 if (defined('_PS_MODULE_DIR_')) {
-    require_once _PS_MODULE_DIR_ . 'omise/classes/charge.php';
+    require_once _PS_MODULE_DIR_ . 'omise/classes/omise_charge_class.php';
     require_once _PS_MODULE_DIR_ . 'omise/classes/payment_order.php';
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
 }
@@ -22,7 +22,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
     {
         parent::__construct();
 
-        $this->omise_charge = new Charge();
+        $this->omise_charge = new OmiseChargeClass();
         $this->payment_order = new PaymentOrder();
         $this->setting = new Setting();
     }
@@ -32,6 +32,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         parent::initContent();
 
         $this->context->smarty->assign('error_message', $this->error_message);
+
         $this->setTemplate('payment-error.tpl');
     }
 
