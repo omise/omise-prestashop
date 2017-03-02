@@ -33,6 +33,8 @@ class Omise extends PaymentModule
      */
     const MODULE_VERSION = '1.6.0.0';
 
+    protected $checkout_form;
+
     /**
      * The instance of class, OmiseTransactionModel.
      *
@@ -48,8 +50,6 @@ class Omise extends PaymentModule
      * @var \Setting
      */
     protected $setting;
-
-    protected $checkout_form;
 
     public function __construct()
     {
