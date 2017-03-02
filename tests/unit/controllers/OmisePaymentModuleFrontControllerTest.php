@@ -1,7 +1,7 @@
 <?php
 class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
 {
-    private $omisePaymentModuleFrontController;
+    private $omise_payment_module_front_controller;
     private $payment_order;
 
     public function setup()
@@ -10,26 +10,28 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
             ->setMockClassName('OmiseBasePaymentModuleFrontController')
             ->setMethods(
                 array(
+                    '__construct',
                     'postProcess',
                     'setRedirectAfter',
+                    'validateCart',
                 )
             )
             ->getMock();
 
-        $this->omisePaymentModuleFrontController = new OmisePaymentModuleFrontController();
-        $this->omisePaymentModuleFrontController->payment_order = $this->getMockedPaymentOrder();
-        $this->omisePaymentModuleFrontController->context = $this->getMockedContext();
-        $this->omisePaymentModuleFrontController->module = $this->getMockedModule();
+        $this->omise_payment_module_front_controller = new OmisePaymentModuleFrontController();
+        $this->omise_payment_module_front_controller->payment_order = $this->getMockedPaymentOrder();
+        $this->omise_payment_module_front_controller->context = $this->getMockedContext();
+        $this->omise_payment_module_front_controller->module = $this->getMockedModule();
     }
 
     public function testPostProcess_errorOccurred_noAnyOrderHasBeenSaved()
     {
-        $this->omisePaymentModuleFrontController->error_message = 'errorMessage';
+        $this->omise_payment_module_front_controller->error_message = 'errorMessage';
 
         $this->payment_order->expects($this->never())
             ->method('save');
 
-        $this->omisePaymentModuleFrontController->postProcess();
+        $this->omise_payment_module_front_controller->postProcess();
     }
 
     public function testPostProcess_noErrorOccurred_saveTheOrder()
@@ -37,7 +39,7 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
         $this->payment_order->expects($this->once())
             ->method('save');
 
-        $this->omisePaymentModuleFrontController->postProcess();
+        $this->omise_payment_module_front_controller->postProcess();
     }
 
     private function getMockedContext()

@@ -6,6 +6,8 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     private $checkout_form;
     private $omise;
     private $omise_plugin_helper_charge;
+    private $omise_transaction_model;
+    private $payment_module;
     private $setting;
     private $smarty;
 
@@ -18,7 +20,11 @@ class OmiseTest extends PHPUnit_Framework_TestCase
                     '__construct',
                     'display',
                     'displayConfirmation',
+                    'install',
                     'l',
+                    'registerHook',
+                    'uninstall',
+                    'unregisterHook',
                 )
             )
             ->getMock();
@@ -32,7 +38,8 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->getMock();
 
         m::mock('alias:\Configuration')
-            ->shouldReceive('get');
+            ->shouldReceive('get')
+            ->shouldReceive('deleteByName');
 
         $this->omise_plugin_helper_charge = m::mock('alias:\OmisePluginHelperCharge')
             ->shouldReceive('amount')
@@ -40,9 +47,12 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('isCurrentCurrencyApplicable')
             ->andReturn(true);
 
+        $this->omise_transaction_model = $this->getMockedOmiseTransactionModel();
+
         $this->setting = $this->getMockBuilder(get_class(new Setting()))
             ->setMethods(
                 array(
+                    'delete',
                     'getLivePublicKey',
                     'getLiveSecretKey',
                     'getPublicKey',
@@ -73,6 +83,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->omise->setCheckoutForm($this->checkout_form);
         $this->omise->setSetting($this->setting);
         $this->omise->setSmarty($this->smarty);
+        $this->omise->setOmiseTransactionModel($this->omise_transaction_model);
     }
 
     public function testConstructor_whenInitiateTheNewInstance_theDefaultValueOfTheAttributeSettingMustBeAvailable()
@@ -196,6 +207,91 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->assertNull($this->omise->hookPayment());
     }
 
+    public function testInstall_installationIsSuccess_true()
+    {
+        $this->omise->method('install')->willReturn(true);
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true));
+        $this->omise_transaction_model->method('createTable')->willReturn(true);
+
+        $this->assertTrue($this->omise->install());
+    }
+
+    public function testInstall_createTableIsFail_false()
+    {
+        $this->omise->method('install')->willReturn(true);
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true));
+        $this->omise_transaction_model->method('createTable')->willReturn(false);
+
+        $this->assertFalse($this->omise->install());
+    }
+
+    public function testInstall_parentInstallationIsFail_false()
+    {
+        $this->omise->method('install')->willReturn(false);
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true));
+        $this->omise_transaction_model->method('createTable')->willReturn(true);
+
+        $this->assertFalse($this->omise->install());
+    }
+
+    public function testInstall_registerHookForDisplayOrderConfirmationIsFail_false()
+    {
+        $this->omise->method('install')->willReturn(true);
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(false, true));
+        $this->omise_transaction_model->method('createTable')->willReturn(true);
+
+        $this->assertFalse($this->omise->install());
+    }
+
+    public function testInstall_registerHookForPaymentIsFail_false()
+    {
+        $this->omise->method('install')->willReturn(true);
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, false));
+        $this->omise_transaction_model->method('createTable')->willReturn(true);
+
+        $this->assertFalse($this->omise->install());
+    }
+
+    public function testUninstall_uninstallTheModule_theSettingMustBeDeleted()
+    {
+        $this->setting->expects($this->once())
+            ->method('delete');
+
+        $this->omise->uninstall();
+    }
+
+    public function testUninstall_uninstallIsSuccess_true()
+    {
+        $this->omise->method('uninstall')->willReturn(true);
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true));
+
+        $this->assertTrue($this->omise->uninstall());
+    }
+
+    public function testUninstall_parentUninstallIsFail_false()
+    {
+        $this->omise->method('uninstall')->willReturn(false);
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true));
+
+        $this->assertFalse($this->omise->uninstall());
+    }
+
+    public function testUninstall_unregisterHookForDisplayOrderConfirmationIsFail_false()
+    {
+        $this->omise->method('uninstall')->willReturn(true);
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(false, true));
+
+        $this->assertFalse($this->omise->uninstall());
+    }
+
+    public function testUninstall_unregisterHookForPaymentIsFail_false()
+    {
+        $this->omise->method('uninstall')->willReturn(true);
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, false));
+
+        $this->assertFalse($this->omise->uninstall());
+    }
+
     private function getMockedContext()
     {
         $currency = $this->getMockBuilder(get_class(new stdClass()));
@@ -214,6 +310,21 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $context->link = $link;
 
         return $context;
+    }
+
+    private function getMockedOmiseTransactionModel()
+    {
+        $omise_transaction_model = $this->getMockBuilder(get_class(new stdClass()))
+            ->setMockClassName('OmiseTransactionModel')
+            ->setMethods(
+                array(
+                    'add',
+                    'createTable',
+                )
+            )
+            ->getMock();
+
+        return $omise_transaction_model;
     }
 
     public function tearDown()

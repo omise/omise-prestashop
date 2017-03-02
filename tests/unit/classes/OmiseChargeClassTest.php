@@ -1,9 +1,9 @@
 <?php
 use \Mockery as m;
 
-class ChargeTest extends PHPUnit_Framework_TestCase
+class OmiseChargeClassTest extends PHPUnit_Framework_TestCase
 {
-    private $charge;
+    private $omise_charge_class;
     private $omise_plugin_helper_charge;
     private $secret_key = 'secretKey';
     private $setting;
@@ -71,8 +71,8 @@ class ChargeTest extends PHPUnit_Framework_TestCase
             ->with('omise_card_token')
             ->andReturn('cardToken');
 
-        $this->charge = new Charge();
-        $this->charge->setSetting($this->setting);
+        $this->omise_charge_class = new OmiseChargeClass();
+        $this->omise_charge_class->setSetting($this->setting);
     }
 
     public function testCreate_createOmiseCharge_createOnlyOneOmiseChargeWithCompleteRequestParameters()
@@ -82,7 +82,7 @@ class ChargeTest extends PHPUnit_Framework_TestCase
             ->with($this->createChargeRequest(), '', $this->secret_key)
             ->once();
 
-        $this->charge->create('cardToken');
+        $this->omise_charge_class->create('cardToken');
     }
 
     public function testCreate_createThreeDomainSecureOmiseCharge_returnUriMustBeAddedToRequest()
@@ -96,7 +96,7 @@ class ChargeTest extends PHPUnit_Framework_TestCase
             ->with($this->createThreeDomainSecureChargeRequest(), '', $this->secret_key)
             ->once();
 
-        $this->charge->create('cardToken');
+        $this->omise_charge_class->create('cardToken');
     }
 
     public function testGetAuthorizeUri_afterReceivedThreeDomainSecureResponseFromOmiseApi_authorizeUri()
@@ -105,9 +105,9 @@ class ChargeTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('create')
             ->andReturn($this->createThreeDomainSecureChargeResponse());
 
-        $this->charge->create('cardToken');
+        $this->omise_charge_class->create('cardToken');
 
-        $authorize_uri = $this->charge->getAuthorizeUri();
+        $authorize_uri = $this->omise_charge_class->getAuthorizeUri();
 
         $this->assertEquals('authorizeUri', $authorize_uri);
     }
@@ -118,9 +118,23 @@ class ChargeTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('getErrorMessage')
             ->andReturn($this->createChargeErrorMessage());
 
-        $error_message = $this->charge->getErrorMessage();
+        $error_message = $this->omise_charge_class->getErrorMessage();
 
         $this->assertEquals('(failureCode) failureMessage', $error_message);
+    }
+
+    public function testGetId_retrieveCharge_omiseChargeId()
+    {
+        $omise_charge_id = 'omiseChargeId';
+
+        m::mock('alias:\OmiseCharge')
+            ->shouldReceive('retrieve')
+            ->with($omise_charge_id, '', $this->secret_key)
+            ->andReturn($this->createChargeResponse());
+
+        $this->omise_charge_class->retrieve($omise_charge_id);
+
+        $this->assertEquals($omise_charge_id, $this->omise_charge_class->getId());
     }
 
     public function testIsFailed_createOmiseChargeIsFail_true()
@@ -129,9 +143,32 @@ class ChargeTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('isFailed')
             ->andReturn(true);
 
-        $is_charge_failed = $this->charge->isFailed();
+        $is_charge_failed = $this->omise_charge_class->isFailed();
 
         $this->assertTrue($is_charge_failed);
+    }
+
+    public function testRetrieve_retrieveOmiseCharge_retrieveOmiseChargeOneTime()
+    {
+        $omise_charge_id = 'omiseChargeId';
+
+        m::mock('alias:\OmiseCharge')
+            ->shouldReceive('retrieve')
+            ->with($omise_charge_id, '', $this->secret_key)
+            ->once();
+
+        $this->omise_charge_class->retrieve($omise_charge_id);
+    }
+
+    public function testRetrieve_retrieveOmiseCharge_returnTypeIsInstanceOfCharge()
+    {
+        $omise_charge_id = 'omiseChargeId';
+
+        m::mock('alias:\OmiseCharge')
+            ->shouldReceive('retrieve')
+            ->with($omise_charge_id, '', $this->secret_key);
+
+        $this->assertInstanceOf(get_class(new OmiseChargeClass()), $this->omise_charge_class->retrieve($omise_charge_id));
     }
 
     private function createChargeRequest()
@@ -145,6 +182,15 @@ class ChargeTest extends PHPUnit_Framework_TestCase
         );
 
         return $charge_request;
+    }
+
+    private function createChargeResponse()
+    {
+        $response = array(
+            'id' => 'omiseChargeId',
+        );
+
+        return $response;
     }
 
     private function createThreeDomainSecureChargeRequest()
