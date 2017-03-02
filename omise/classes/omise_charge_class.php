@@ -9,7 +9,7 @@ if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
 }
 
-class Charge
+class OmiseChargeClass
 {
     protected $context;
     protected $charge_response;
@@ -21,6 +21,10 @@ class Charge
         $this->setSetting(new Setting());
     }
 
+    /**
+     * @param string $card_token The Omise card token.
+     * @return $this
+     */
     public function create($card_token)
     {
         $charge_request = array(
@@ -48,6 +52,11 @@ class Charge
         return OmisePluginHelperCharge::amount($currency_code, $order_total);
     }
 
+    /**
+     * Return the URL that is used to redirect in the process of create Omise charge with 3-D Secure.
+     *
+     * @return string
+     */
     public function getAuthorizeUri()
     {
         return $this->charge_response['authorize_uri'];
@@ -58,14 +67,32 @@ class Charge
         return 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')';
     }
 
+    /**
+     * @return string
+     */
     protected function getCurrencyCode()
     {
         return $this->context->currency->iso_code;
     }
 
+    /**
+     * Return the formatted error message from Omise API.
+     *
+     * @return string
+     */
     public function getErrorMessage()
     {
         return OmisePluginHelperCharge::getErrorMessage($this->charge_response);
+    }
+
+    /**
+     * Return Omise charge ID.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->charge_response['id'];
     }
 
     protected function getReturnUri()
@@ -80,6 +107,9 @@ class Charge
             '&key=' . $this->context->customer->secure_key;
     }
 
+    /**
+     * @return string
+     */
     protected function getSecretKey()
     {
         return $this->setting->getSecretKey();
@@ -90,6 +120,20 @@ class Charge
         return OmisePluginHelperCharge::isFailed($this->charge_response);
     }
 
+    /**
+     * @param $id string The Omise charge ID.
+     * @return $this
+     */
+    public function retrieve($id)
+    {
+        $this->charge_response = OmiseCharge::retrieve($id, '', $this->getSecretKey());
+
+        return $this;
+    }
+
+    /**
+     * @param \Setting $setting The instance of class, Setting.
+     */
     public function setSetting($setting)
     {
         $this->setting = $setting;
