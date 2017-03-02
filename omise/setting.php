@@ -98,11 +98,6 @@ class Setting
         return Configuration::get('omise_test_secret_key');
     }
 
-    public function getThreeDomainSecure()
-    {
-        return Configuration::get('omise_three_domain_secure_status');
-    }
-
     /**
      * @return string
      */
