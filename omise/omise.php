@@ -177,6 +177,18 @@ class Omise extends PaymentModule
     }
 
     /**
+     * @return bool
+     */
+    public function uninstall()
+    {
+        $this->setting->delete();
+
+        return parent::uninstall()
+            && $this->unregisterHook('displayOrderConfirmation')
+            && $this->unregisterHook('payment');
+    }
+
+    /**
      * @return \Setting
      */
     public function getSetting()
