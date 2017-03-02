@@ -68,14 +68,19 @@ class PaymentOrder
     /**
      * The successful order status.
      *
-     * @return mixed
+     * @return int
      */
-    protected function getOrderStateAcceptedPayment()
+    public function getOrderStateAcceptedPayment()
     {
         return Configuration::get('PS_OS_PAYMENT');
     }
 
-    protected function getOrderStateProcessingInProgress()
+    /**
+     * The order status that indicate the order is in progress.
+     *
+     * @return int
+     */
+    public function getOrderStateProcessingInProgress()
     {
         return Configuration::get('PS_OS_PREPARATION');
     }
