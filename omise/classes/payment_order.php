@@ -99,24 +99,11 @@ class PaymentOrder
         return false;
     }
 
-    public function save()
+    public function save($order_state = null)
     {
-        $this->module->validateOrder(
-            $this->getCartId(),
-            $this->getOrderStateAcceptedPayment(),
-            $this->getCartOrderTotal(),
-            $this->getModuleDisplayName(),
-            $this->getOptionalMessage(),
-            $this->getExtraVariables(),
-            $this->getCurrencyId(),
-            $this->isNotNeededRoundingCardOrderTotal(),
-            $this->getCustomerSecureKey()
-        );
-    }
-
-    public function saveAsProcessing()
-    {
-        $order_state = $this->getOrderStateProcessingInProgress();
+        if (empty($order_state)) {
+            $order_state = $this->getOrderStateAcceptedPayment();
+        }
 
         $this->module->validateOrder(
             $this->getCartId(),
@@ -129,6 +116,11 @@ class PaymentOrder
             $this->isNotNeededRoundingCardOrderTotal(),
             $this->getCustomerSecureKey()
         );
+    }
+
+    public function saveAsProcessing()
+    {
+        $this->save($this->getOrderStateProcessingInProgress());
     }
 
     /**
