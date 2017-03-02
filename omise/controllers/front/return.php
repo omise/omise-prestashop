@@ -52,7 +52,6 @@ class OmiseReturnModuleFrontController extends OmiseBasePaymentModuleFrontContro
 
         if ($this->order->current_state != $this->payment_order->getOrderStateProcessingInProgress()
             && $this->order->current_state != $this->payment_order->getOrderStateAcceptedPayment()) {
-
             $this->error_message = $this->l('Order status is invalid.');
 
             return false;
@@ -82,7 +81,6 @@ class OmiseReturnModuleFrontController extends OmiseBasePaymentModuleFrontContro
             '&id_cart=' . $id_cart .
             '&id_module=' . $id_module .
             '&id_order=' . $id_order .
-            '&key=' . $key
-        );
+            '&key=' . $key);
     }
 }

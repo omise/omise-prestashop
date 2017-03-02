@@ -153,8 +153,8 @@ class Omise extends PaymentModule
         if (parent::install() == false
             || $this->registerHook('displayOrderConfirmation') == false
             || $this->registerHook('payment') == false
-            || $this->omise_transaction_model->createTable() == false) {
-
+            || $this->omise_transaction_model->createTable() == false
+        ) {
             $this->uninstall();
 
             return false;

@@ -25,7 +25,6 @@ class OmisePaymentModuleFrontController extends OmiseBasePaymentModuleFrontContr
             '&id_cart=' . $this->context->cart->id .
             '&id_module=' . $this->module->id .
             '&id_order=' . $this->module->currentOrder .
-            '&key=' . $this->context->customer->secure_key
-        );
+            '&key=' . $this->context->customer->secure_key);
     }
 }

@@ -60,8 +60,8 @@ class OmiseTransactionModel extends ObjectModel
 
         if (! $result
             || empty($result)
-            || ! array_key_exists('id_charge', $result)) {
-
+            || ! array_key_exists('id_charge', $result)
+        ) {
             return false;
         }
 
