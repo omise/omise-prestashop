@@ -67,6 +67,7 @@ class Omise extends PaymentModule
         $this->confirmUninstall       = $this->l('Are you sure you want to uninstall ' . self::MODULE_DISPLAY_NAME . ' module?');
 
         $this->setCheckoutForm(new CheckoutForm());
+        $this->setOmiseTransactionModel(new OmiseTransactionModel());
         $this->setSetting(new Setting());
     }
 
@@ -186,6 +187,14 @@ class Omise extends PaymentModule
     public function setCheckoutForm($checkout_form)
     {
         $this->checkout_form = $checkout_form;
+    }
+
+    /**
+     * @param \OmiseTransactionModel $omise_transaction_model The instance of class, OmiseTransactionModel.
+     */
+    public function setOmiseTransactionModel($omise_transaction_model)
+    {
+        $this->omise_transaction_model = $omise_transaction_model;
     }
 
     /**
