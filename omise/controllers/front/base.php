@@ -55,4 +55,13 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
     {
         Tools::redirect($this->redirect_after);
     }
+
+    protected function validateCart()
+    {
+        if (Validate::isLoadedObject($this->context->cart) == false
+            || $this->context->cart->OrderExists() == true) {
+
+            Tools::redirect('index.php?controller=order&step=1');
+        }
+    }
 }
