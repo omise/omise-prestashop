@@ -34,6 +34,13 @@ class Omise extends PaymentModule
     const MODULE_VERSION = '1.6.0.0';
 
     /**
+     * The instance of class, OmiseTransactionModel.
+     *
+     * @var \OmiseTransactionModel
+     */
+    protected $omise_transaction_model;
+
+    /**
      * The instance of class, Setting.
      *
      * The Setting class is used to manipulate the configuration of module.
