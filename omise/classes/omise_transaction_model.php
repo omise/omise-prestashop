@@ -46,6 +46,7 @@ class OmiseTransactionModel extends ObjectModel
      * If an Omise charge ID is not found, the false value will be returned.
      *
      * @param $id_order
+     *
      * @return string|false
      */
     public function getIdCharge($id_order)

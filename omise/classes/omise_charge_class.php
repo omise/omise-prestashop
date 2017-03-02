@@ -23,6 +23,7 @@ class OmiseChargeClass
 
     /**
      * @param string $card_token The Omise card token.
+     *
      * @return $this
      */
     public function create($card_token)
@@ -122,6 +123,7 @@ class OmiseChargeClass
 
     /**
      * @param $id string The Omise charge ID.
+     *
      * @return $this
      */
     public function retrieve($id)
