@@ -8,6 +8,21 @@ class Setting
     protected $submit_action = 'omise_save_setting';
 
     /**
+     * Delete all setting values.
+     */
+    public function delete()
+    {
+        Configuration::deleteByName('omise_module_status');
+        Configuration::deleteByName('omise_sandbox_status');
+        Configuration::deleteByName('omise_test_public_key');
+        Configuration::deleteByName('omise_test_secret_key');
+        Configuration::deleteByName('omise_live_public_key');
+        Configuration::deleteByName('omise_live_secret_key');
+        Configuration::deleteByName('omise_title');
+        Configuration::deleteByName('omise_three_domain_secure_status');
+    }
+
+    /**
      * @return string
      */
     public function getLivePublicKey()
