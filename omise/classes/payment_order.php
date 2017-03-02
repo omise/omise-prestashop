@@ -124,7 +124,7 @@ class PaymentOrder
     }
 
     /**
-     * @param \Order $order The instance of class, Order;
+     * @param \Order $order The instance of class, Order.
      */
     public function updateStateToBeSuccess($order)
     {
