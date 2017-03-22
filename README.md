@@ -46,7 +46,7 @@ After the installation, you can configure the module by:
 1. Login to your PrestaShop back office, go to **Module and Services** page.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548922/577a299e-003c-11e7-8ad2-95789f0a62e8.png"></p>
 
-Type **omise** at the search box. The Omise module will be displayed at the list.
+2. Type **omise** at the search box. The Omise module will be displayed at the list.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548936/65309cb2-003c-11e7-8875-638f3f1592e2.png"></p>
 
 3. Click **Configuration** button.
