@@ -23,19 +23,19 @@ The steps below are the method to install the module manually. This method requi
 
 1. Download the [Omise PrestaShop latest version](https://github.com/omise/omise-prestashop/archive/master.zip).
 2. Extract the file that you downloaded.
-<br />
+
 After extracted the file, you will found a folder, **omise**. Copy and place it into the directory, **/modules**, of your PrestaShop site.
 <p align="center"><img width="600" alt="omise-prestashop-master" src="https://cloud.githubusercontent.com/assets/4145121/23548905/44a8fa5c-003c-11e7-97ef-d46111d98c53.png"></p>
-<br />
+
 3. Login to your PrestaShop back office, go to **Module and Services** page.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548922/577a299e-003c-11e7-8ad2-95789f0a62e8.png"></p>
-<br />
+
 Type **omise** at the search box. The Omise module will be displayed at the list.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548936/65309cb2-003c-11e7-8875-638f3f1592e2.png"></p>
-<br />
+
 4. Click **Install** button.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548954/7c0b9cca-003c-11e7-9833-1fb06f417e52.png"></p>
-<br />
+
 Confirm the installation by click **Proceed with the installation** button.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548960/82beae4a-003c-11e7-9895-fc48704df3b4.png"></p>
 
@@ -45,13 +45,13 @@ After the installation, you can configure the module by:
 
 1. Login to your PrestaShop back office, go to **Module and Services** page.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548922/577a299e-003c-11e7-8ad2-95789f0a62e8.png"></p>
-<br />
+
 Type **omise** at the search box. The Omise module will be displayed at the list.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548936/65309cb2-003c-11e7-8875-638f3f1592e2.png"></p>
-<br />
+
 3. Click **Configuration** button.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23549714/193dd23a-0040-11e7-964e-1c5d9906ee36.png"></p>
-<br />
+
 The system will display the module configuration page.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23549713/193834f6-0040-11e7-9f1c-75fd466a6fdf.png"></p>
 
