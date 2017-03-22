@@ -47,7 +47,7 @@ After the installation, you can configure the module by:
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548922/577a299e-003c-11e7-8ad2-95789f0a62e8.png"></p>
 
 2. Type **omise** at the search box. The Omise module will be displayed at the list.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548936/65309cb2-003c-11e7-8875-638f3f1592e2.png"></p>
+<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24213194/35177fa0-0f64-11e7-8c83-1de8f6b8c3ec.png"></p>
 
 3. Click **Configuration** button.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23549714/193dd23a-0040-11e7-964e-1c5d9906ee36.png"></p>
