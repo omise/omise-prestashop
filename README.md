@@ -30,13 +30,13 @@ After extracted the file, you will found a folder, **omise**. Copy and place it 
 3. Login to your PrestaShop back office, go to **Module and Services** page.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548922/577a299e-003c-11e7-8ad2-95789f0a62e8.png"></p>
 
-Type **omise** at the search box. The Omise module will be displayed at the list.
+4. Type **omise** at the search box. The Omise module will be displayed at the list.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548936/65309cb2-003c-11e7-8875-638f3f1592e2.png"></p>
 
-4. Click **Install** button.
+5. Click **Install** button.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548954/7c0b9cca-003c-11e7-9833-1fb06f417e52.png"></p>
 
-Confirm the installation by click **Proceed with the installation** button.
+6. Confirm the installation by click **Proceed with the installation** button.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548960/82beae4a-003c-11e7-9895-fc48704df3b4.png"></p>
 
 ### First Time Setup
