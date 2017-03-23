@@ -11,6 +11,9 @@
     <filter>
         <whitelist>
             <directory suffix=".php">omise</directory>
+            <exclude>
+                <directory>omise/libraries</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>
