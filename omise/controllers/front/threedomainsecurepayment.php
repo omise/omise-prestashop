@@ -23,7 +23,7 @@ class OmiseThreeDomainSecurePaymentModuleFrontController extends OmiseBasePaymen
      * Add a reference between PrestaShop order ID and Omise charge ID
      * to a database table.
      *
-     * This reference will be used to check the status of Omise change
+     * This reference will be used to check the status of Omise charge
      * at the step of redirect back from Omise API.
      * (@see OmiseReturnModuleFrontController::isChargeValid())
      *
