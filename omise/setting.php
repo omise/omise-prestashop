@@ -20,6 +20,7 @@ class Setting
         Configuration::deleteByName('omise_live_secret_key');
         Configuration::deleteByName('omise_title');
         Configuration::deleteByName('omise_three_domain_secure_status');
+        Configuration::deleteByName('omise_internet_banking_status');
     }
 
     /**
