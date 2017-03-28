@@ -110,6 +110,18 @@ class Setting
     /**
      * @return bool
      */
+    public function isInternetBankingEnabled()
+    {
+        if (Configuration::get('omise_internet_banking_status')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
     public function isModuleEnabled()
     {
         if (Configuration::get('omise_module_status')) {
