@@ -5,6 +5,7 @@ if (! defined('_PS_VERSION_')) {
 
 if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_charge_class.php';
+    require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
     require_once _PS_MODULE_DIR_ . 'omise/classes/payment_order.php';
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
 }
@@ -15,6 +16,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
     public $display_column_left = false;
     protected $error_message;
     protected $omise_charge;
+    protected $omise_transaction_model;
     protected $order_reference;
     protected $payment_order;
     protected $setting;
@@ -24,8 +26,30 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         parent::__construct();
 
         $this->omise_charge = new OmiseChargeClass();
+        $this->omise_transaction_model = new OmiseTransactionModel();
         $this->payment_order = new PaymentOrder();
         $this->setting = new Setting();
+    }
+
+    /**
+     * Add a reference between PrestaShop order ID and Omise charge ID
+     * to a database table.
+     *
+     * This reference will be used to check the status of Omise charge
+     * at the step of redirect back from Omise API.
+     * (@see OmiseReturnModuleFrontController::isChargeValid())
+     *
+     * @param string $id_charge The Omise charge ID.
+     * @param int $id_order The PrestaShop order ID.
+     *
+     * @return bool
+     */
+    protected function addOmiseTransaction($id_charge, $id_order)
+    {
+        $this->omise_transaction_model->id_charge = $id_charge;
+        $this->omise_transaction_model->id_order = $id_order;
+
+        return $this->omise_transaction_model->add();
     }
 
     public function initContent()
@@ -38,6 +62,11 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         $this->setTemplate('payment-error.tpl');
     }
 
+    /**
+     * Override parent method.
+     *
+     * @see FrontControllerCore::postProcess()
+     */
     public function postProcess()
     {
         try {
@@ -53,11 +82,20 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         }
     }
 
+    /**
+     * Override parent method.
+     *
+     * @see FrontControllerCore::redirect()
+     */
     public function redirect()
     {
         Tools::redirect($this->redirect_after);
     }
 
+    /**
+     * The function used to check cart information to prevent directly access the payment URL or payment controller
+     * without the cart information or the order of cart has been processed.
+     */
     protected function validateCart()
     {
         if (Validate::isLoadedObject($this->context->cart) == false
@@ -65,5 +103,13 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         ) {
             Tools::redirect('index.php?controller=order&step=1');
         }
+    }
+
+    /**
+     * @param \OmiseTransactionModel $omise_transaction_model The instance of class, OmiseTransactionModel.
+     */
+    public function setOmiseTransactionModel($omise_transaction_model)
+    {
+        $this->omise_transaction_model = $omise_transaction_model;
     }
 }
