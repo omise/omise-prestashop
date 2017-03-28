@@ -11,6 +11,7 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
             ->setMethods(
                 array(
                     '__construct',
+                    'addOmiseTransaction',
                     'postProcess',
                     'setRedirectAfter',
                     'validateCart',
