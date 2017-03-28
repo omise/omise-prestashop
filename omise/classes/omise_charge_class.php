@@ -116,6 +116,11 @@ class OmiseChargeClass
         return $this->charge_response['id'];
     }
 
+    /**
+     * Generate a PrestaShop site URL that is used to receive the redirect back from Omise API.
+     *
+     * @return string
+     */
     protected function getReturnUri()
     {
         $id_order = Order::getOrderByCartId($this->context->cart->id);
