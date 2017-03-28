@@ -262,6 +262,9 @@ class Omise extends PaymentModule
         return $this->setting;
     }
 
+    /**
+     * @param \CheckoutForm $checkout_form The instance of class, CheckoutForm.
+     */
     public function setCheckoutForm($checkout_form)
     {
         $this->checkout_form = $checkout_form;
