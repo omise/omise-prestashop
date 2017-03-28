@@ -111,6 +111,7 @@ class Omise extends PaymentModule
         }
 
         $this->smarty->assign(array(
+            'internet_banking_status' => $this->setting->isInternetBankingEnabled(),
             'live_public_key' => $this->setting->getLivePublicKey(),
             'live_secret_key' => $this->setting->getLiveSecretKey(),
             'module_status' => $this->setting->isModuleEnabled(),
