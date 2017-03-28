@@ -74,7 +74,8 @@ class OmiseChargeClass
     }
 
     /**
-     * Return the URL that is used to redirect in the process of create Omise charge with 3-D Secure.
+     * Return the URL, authorize_uri, from the Omise charge response.
+     * This URL used to redirect in the process of create Omise charge.
      *
      * @return string
      */
