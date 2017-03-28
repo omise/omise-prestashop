@@ -45,6 +45,26 @@ class OmiseChargeClass
         return $this;
     }
 
+    /**
+     * @param string $offsite The parameter used to specify a bank to create Omise internet banking charge.
+     *
+     * @return $this
+     */
+    public function createInternetBanking($offsite)
+    {
+        $charge_request = array(
+            'amount' => $this->getAmount(),
+            'currency' => $this->getCurrencyCode(),
+            'description' => $this->getChargeDescription(),
+            'offsite' => $offsite,
+            'return_uri' => $this->getReturnUri(),
+        );
+
+        $this->charge_response = OmiseCharge::create($charge_request, '', $this->getSecretKey());
+
+        return $this;
+    }
+
     protected function getAmount()
     {
         $currency_code = $this->getCurrencyCode();
