@@ -5,9 +5,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
 {
     private $checkout_form;
     private $omise;
-    private $omise_plugin_helper_charge;
     private $omise_transaction_model;
-    private $payment_module;
     private $setting;
     private $smarty;
 
@@ -41,33 +39,9 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('get')
             ->shouldReceive('deleteByName');
 
-        $this->omise_plugin_helper_charge = m::mock('alias:\OmisePluginHelperCharge')
-            ->shouldReceive('amount')
-            ->andReturn(10025)
-            ->shouldReceive('isCurrentCurrencyApplicable')
-            ->andReturn(true);
-
         $this->omise_transaction_model = $this->getMockedOmiseTransactionModel();
 
-        $this->setting = $this->getMockBuilder(get_class(new Setting()))
-            ->setMethods(
-                array(
-                    'delete',
-                    'getLivePublicKey',
-                    'getLiveSecretKey',
-                    'getPublicKey',
-                    'getSubmitAction',
-                    'getTestPublicKey',
-                    'getTestSecretKey',
-                    'getTitle',
-                    'isModuleEnabled',
-                    'isSandboxEnabled',
-                    'isSubmit',
-                    'isThreeDomainSecureEnabled',
-                    'save',
-                )
-            )
-            ->getMock();
+        $this->setting = $this->getMockedSetting();
 
         $this->smarty = $this->getMockBuilder(get_class(new stdClass()))
             ->setMockClassName('Smarty')
@@ -117,19 +91,13 @@ class OmiseTest extends PHPUnit_Framework_TestCase
 
     public function testGetContent_merchantOpenTheSettingPage_retrieveSettingDataFromTheDatabaseAndDisplayOnThePage()
     {
-        $this->setting->method('getLivePublicKey')->willReturn('live_public_key');
-        $this->setting->method('getLiveSecretKey')->willReturn('live_secret_key');
+        $this->setting->method('isInternetBankingEnabled')->willReturn('internet_banking_status');
         $this->setting->method('isModuleEnabled')->willReturn('module_status');
-        $this->setting->method('isSandboxEnabled')->willReturn('sandbox_status');
-        $this->setting->method('getSubmitAction')->willReturn('submit_action');
-        $this->setting->method('getTestPublicKey')->willReturn('test_public_key');
-        $this->setting->method('getTestSecretKey')->willReturn('test_secret_key');
-        $this->setting->method('getTitle')->willReturn('title');
-        $this->setting->method('isThreeDomainSecureEnabled')->willReturn('three_domain_secure_status');
 
         $this->smarty->expects($this->once())
             ->method('assign')
             ->with(array(
+                'internet_banking_status' => 'internet_banking_status',
                 'live_public_key' => 'live_public_key',
                 'live_secret_key' => 'live_secret_key',
                 'module_status' => 'module_status',
@@ -146,6 +114,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
 
     public function testGetContent_merchantSaveSetting_saveTheSettingData()
     {
+        $this->setting->method('isInternetBankingEnabled')->willReturn('internet_banking_status');
         $this->setting->method('isSubmit')->willReturn(true);
 
         $this->setting->expects($this->once())->method('save');
@@ -153,21 +122,62 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->omise->getContent();
     }
 
-    public function testHookPayment_moduleIsActivatedAndTheSettingOfModuleStatusIsEnabled_displayThePaymentTemplateFile()
+    public function testHookPayment_moduleIsInactivated_noPaymentDisplayed()
     {
-        $this->omise->active = true;
-        $this->setting->method('isModuleEnabled')->willReturn(true);
-        $this->omise->method('display')->willReturn('payment_template_file');
+        $this->omise->active = false;
 
-        $this->assertEquals('payment_template_file', $this->omise->hookPayment());
+        $this->assertNull($this->omise->hookPayment());
     }
 
-    public function testHookPayment_moduleIsActivatedAndTheSettingOfModuleStatusIsEnabled_displayCheckoutForm()
+    public function testHookPayment_moduleIsActivatedButCurrentCurrencyIsNotApplicable_displayInapplicablePayment()
     {
         $this->omise->active = true;
         $this->setting->method('isModuleEnabled')->willReturn(true);
-        $this->setting->method('getPublicKey')->willReturn('omise_public_key');
-        $this->setting->method('getTitle')->willReturn('title_at_header_of_checkout_form');
+        m::mock('alias:\OmisePluginHelperCharge')
+            ->shouldReceive('isCurrentCurrencyApplicable')
+            ->andReturn(false);
+        $this->omise->method('display')->willReturn('inapplicable_payment');
+
+        $this->assertEquals('inapplicable_payment', $this->omise->hookPayment());
+    }
+
+    public function testHookPayment_displayInapplicablePayment_omiseTitleMustBeDisplayed()
+    {
+        $this->omise->active = true;
+        $this->setting->method('isModuleEnabled')->willReturn(true);
+        m::mock('alias:\OmisePluginHelperCharge')
+            ->shouldReceive('isCurrentCurrencyApplicable')
+            ->andReturn(false);
+
+        $this->smarty->expects($this->once())
+            ->method('assign')
+            ->with('omise_title', 'title');
+
+        $this->omise->hookPayment();
+    }
+
+    public function testHookPayment_moduleIsActivatedAndCurrentCurrencyIsApplicableAndModuleStatusIsEnabled_displayPayment()
+    {
+        $this->omise->active = true;
+        m::mock('alias:\OmisePluginHelperCharge')
+            ->shouldReceive('isCurrentCurrencyApplicable')
+            ->andReturn(true);
+        $this->setting->method('isModuleEnabled')->willReturn(true);
+        $this->setting->method('isInternetBankingEnabled')->willReturn(false);
+        $this->omise->method('display')->willReturn('payment');
+
+        $this->assertEquals('payment', $this->omise->hookPayment());
+    }
+
+    public function testHookPayment_displayPayment_theValueMustBeAssignedForDisplayPaymentForm()
+    {
+        $this->omise->active = true;
+        m::mock('alias:\OmisePluginHelperCharge')
+            ->shouldReceive('isCurrentCurrencyApplicable')
+            ->andReturn(true);
+        $this->setting->method('isModuleEnabled')->willReturn(true);
+        $this->setting->method('isInternetBankingEnabled')->willReturn(false);
+
         $this->checkout_form->method('getListOfExpirationYear')->willReturn('list_of_expiration_year');
         $this->omise->context->link->method('getModuleLink')->willReturn('payment');
 
@@ -177,40 +187,54 @@ class OmiseTest extends PHPUnit_Framework_TestCase
                 array('action', 'payment'),
                 array('list_of_expiration_year', 'list_of_expiration_year'),
                 array('omise_public_key', 'omise_public_key'),
-                array('omise_title', 'title_at_header_of_checkout_form')
+                array('omise_title', 'title')
             );
 
         $this->omise->hookPayment();
     }
 
-    public function testHookPayment_moduleIsActivatedButTheSettingOfModuleStatusIsDisabled_paymentFormMustNotBeDisplayed()
+    public function testHookPayment_moduleStatusIsEnabledAndInternetBankingIsEnabled_displayPaymentAndInternetBankingPayment()
     {
         $this->omise->active = true;
-        $this->setting->method('isModuleEnabled')->willReturn(false);
-
-        $this->assertNull($this->omise->hookPayment());
-    }
-
-    public function testHookPayment_moduleIsInactivatedButTheSettingOfModuleStatusIsEnabled_paymentFormMustNotBeDisplayed()
-    {
-        $this->omise->active = false;
+        m::mock('alias:\OmisePluginHelperCharge')
+            ->shouldReceive('isCurrentCurrencyApplicable')
+            ->andReturn(true);
         $this->setting->method('isModuleEnabled')->willReturn(true);
+        $this->setting->method('isInternetBankingEnabled')->willReturn(true);
+        $this->omise->method('display')->willReturnOnConsecutiveCalls('payment', 'paymentInternetBanking');
 
-        $this->assertNull($this->omise->hookPayment());
+        $this->assertEquals('paymentpaymentInternetBanking', $this->omise->hookPayment());
     }
 
-    public function testHookPayment_moduleIsInactivatedAndTheSettingOfModuleStatusIsDisabled_paymentFormMustNotBeDisplayed()
+    public function testHookPayment_moduleStatusIsDisabledButInternetBankingIsEnabled_displayInternetBankingPayment()
     {
-        $this->omise->active = false;
+        $this->omise->active = true;
+        m::mock('alias:\OmisePluginHelperCharge')
+            ->shouldReceive('isCurrentCurrencyApplicable')
+            ->andReturn(true);
         $this->setting->method('isModuleEnabled')->willReturn(false);
+        $this->setting->method('isInternetBankingEnabled')->willReturn(true);
+        $this->omise->method('display')->willReturn('paymentInternetBanking');
 
-        $this->assertNull($this->omise->hookPayment());
+        $this->assertEquals('paymentInternetBanking', $this->omise->hookPayment());
+    }
+
+    public function testHookPayment_moduleStatusIsDisabledAndInternetBankingIsDisabled_noPaymentDisplayed()
+    {
+        $this->omise->active = true;
+        m::mock('alias:\OmisePluginHelperCharge')
+            ->shouldReceive('isCurrentCurrencyApplicable')
+            ->andReturn(true);
+        $this->setting->method('isModuleEnabled')->willReturn(false);
+        $this->setting->method('isInternetBankingEnabled')->willReturn(false);
+
+        $this->assertEquals('', $this->omise->hookPayment());
     }
 
     public function testInstall_installationIsSuccess_true()
     {
         $this->omise->method('install')->willReturn(true);
-        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true));
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true));
         $this->omise_transaction_model->method('createTable')->willReturn(true);
 
         $this->assertTrue($this->omise->install());
@@ -219,7 +243,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testInstall_createTableIsFail_false()
     {
         $this->omise->method('install')->willReturn(true);
-        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true));
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true));
         $this->omise_transaction_model->method('createTable')->willReturn(false);
 
         $this->assertFalse($this->omise->install());
@@ -228,7 +252,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testInstall_parentInstallationIsFail_false()
     {
         $this->omise->method('install')->willReturn(false);
-        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true));
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true));
         $this->omise_transaction_model->method('createTable')->willReturn(true);
 
         $this->assertFalse($this->omise->install());
@@ -237,7 +261,16 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testInstall_registerHookForDisplayOrderConfirmationIsFail_false()
     {
         $this->omise->method('install')->willReturn(true);
-        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(false, true));
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(false, true, true));
+        $this->omise_transaction_model->method('createTable')->willReturn(true);
+
+        $this->assertFalse($this->omise->install());
+    }
+
+    public function testInstall_registerHookForHeaderIsFail_false()
+    {
+        $this->omise->method('install')->willReturn(true);
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, false, true));
         $this->omise_transaction_model->method('createTable')->willReturn(true);
 
         $this->assertFalse($this->omise->install());
@@ -246,7 +279,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testInstall_registerHookForPaymentIsFail_false()
     {
         $this->omise->method('install')->willReturn(true);
-        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, false));
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, false));
         $this->omise_transaction_model->method('createTable')->willReturn(true);
 
         $this->assertFalse($this->omise->install());
@@ -263,7 +296,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testUninstall_uninstallIsSuccess_true()
     {
         $this->omise->method('uninstall')->willReturn(true);
-        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true));
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true, true));
 
         $this->assertTrue($this->omise->uninstall());
     }
@@ -271,7 +304,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testUninstall_parentUninstallIsFail_false()
     {
         $this->omise->method('uninstall')->willReturn(false);
-        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true));
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true, true));
 
         $this->assertFalse($this->omise->uninstall());
     }
@@ -279,7 +312,15 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testUninstall_unregisterHookForDisplayOrderConfirmationIsFail_false()
     {
         $this->omise->method('uninstall')->willReturn(true);
-        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(false, true));
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(false, true, true));
+
+        $this->assertFalse($this->omise->uninstall());
+    }
+
+    public function testUninstall_unregisterHookForHeaderIsFail_false()
+    {
+        $this->omise->method('uninstall')->willReturn(true);
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, false, true));
 
         $this->assertFalse($this->omise->uninstall());
     }
@@ -287,7 +328,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testUninstall_unregisterHookForPaymentIsFail_false()
     {
         $this->omise->method('uninstall')->willReturn(true);
-        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, false));
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true, false));
 
         $this->assertFalse($this->omise->uninstall());
     }
@@ -325,6 +366,42 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->getMock();
 
         return $omise_transaction_model;
+    }
+
+    private function getMockedSetting()
+    {
+        $setting = $this->getMockBuilder(get_class(new Setting()))
+            ->setMethods(
+                array(
+                    'delete',
+                    'getLivePublicKey',
+                    'getLiveSecretKey',
+                    'getPublicKey',
+                    'getSubmitAction',
+                    'getTestPublicKey',
+                    'getTestSecretKey',
+                    'getTitle',
+                    'isInternetBankingEnabled',
+                    'isModuleEnabled',
+                    'isSandboxEnabled',
+                    'isSubmit',
+                    'isThreeDomainSecureEnabled',
+                    'save',
+                )
+            )
+            ->getMock();
+
+        $setting->method('getLivePublicKey')->willReturn('live_public_key');
+        $setting->method('getLiveSecretKey')->willReturn('live_secret_key');
+        $setting->method('getPublicKey')->willReturn('omise_public_key');
+        $setting->method('getSubmitAction')->willReturn('submit_action');
+        $setting->method('getTestPublicKey')->willReturn('test_public_key');
+        $setting->method('getTestSecretKey')->willReturn('test_secret_key');
+        $setting->method('getTitle')->willReturn('title');
+        $setting->method('isSandboxEnabled')->willReturn('sandbox_status');
+        $setting->method('isThreeDomainSecureEnabled')->willReturn('three_domain_secure_status');
+
+        return $setting;
     }
 
     public function tearDown()
