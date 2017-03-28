@@ -89,6 +89,16 @@ class Omise extends PaymentModule
     }
 
     /**
+     * Display the message about the inapplicable internet banking checkout condition.
+     *
+     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
+     */
+    protected function displayInapplicableInternetBankingPayment()
+    {
+        return $this->display(__FILE__, 'inapplicable_internet_banking_payment.tpl');
+    }
+
+    /**
      * Display the internet banking checkout form.
      *
      * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
