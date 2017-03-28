@@ -20,7 +20,8 @@ class SettingTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('deleteByName')->with('omise_live_public_key')->once()
             ->shouldReceive('deleteByName')->with('omise_live_secret_key')->once()
             ->shouldReceive('deleteByName')->with('omise_title')->once()
-            ->shouldReceive('deleteByName')->with('omise_three_domain_secure_status')->once();
+            ->shouldReceive('deleteByName')->with('omise_three_domain_secure_status')->once()
+            ->shouldReceive('deleteByName')->with('omise_internet_banking_status')->once();
 
         $this->setting->delete();
     }
@@ -132,6 +133,26 @@ class SettingTest extends PHPUnit_Framework_TestCase
         $this->setting->getTitle();
     }
 
+    public function testIsInternetBankingEnabled_internetBankingIsDisabled_false()
+    {
+        m::mock('alias:\Configuration')
+            ->shouldReceive('get')
+            ->with('omise_internet_banking_status')
+            ->andReturn(false);
+
+        $this->assertFalse($this->setting->isInternetBankingEnabled());
+    }
+
+    public function testIsInternetBankingEnabled_internetBankingIsEnabled_true()
+    {
+        m::mock('alias:\Configuration')
+            ->shouldReceive('get')
+            ->with('omise_internet_banking_status')
+            ->andReturn(true);
+
+        $this->assertTrue($this->setting->isInternetBankingEnabled());
+    }
+
     public function testIsModuleEnabled_moduleIsDisabled_false()
     {
         m::mock('alias:\Configuration')
@@ -220,7 +241,8 @@ class SettingTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('getValue')->with('live_public_key')->andReturn('livePublicKey')
             ->shouldReceive('getValue')->with('live_secret_key')->andReturn('liveSecretKey')
             ->shouldReceive('getValue')->with('title')->andReturn('title')
-            ->shouldReceive('getValue')->with('three_domain_secure_status')->andReturn('threeDomainSecureStatus');
+            ->shouldReceive('getValue')->with('three_domain_secure_status')->andReturn('threeDomainSecureStatus')
+            ->shouldReceive('getValue')->with('internet_banking_status')->andReturn('internetBankingStatus');
 
         m::mock('alias:\Configuration')
             ->shouldReceive('updateValue')->with('omise_module_status', 'moduleStatus')->once()
@@ -230,7 +252,8 @@ class SettingTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('updateValue')->with('omise_live_public_key', 'livePublicKey')->once()
             ->shouldReceive('updateValue')->with('omise_live_secret_key', 'liveSecretKey')->once()
             ->shouldReceive('updateValue')->with('omise_title', 'title')->once()
-            ->shouldReceive('updateValue')->with('omise_three_domain_secure_status', 'threeDomainSecureStatus')->once();
+            ->shouldReceive('updateValue')->with('omise_three_domain_secure_status', 'threeDomainSecureStatus')->once()
+            ->shouldReceive('updateValue')->with('omise_internet_banking_status', 'internetBankingStatus')->once();
 
         $this->setting->save();
     }
