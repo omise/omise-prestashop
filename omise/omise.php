@@ -221,6 +221,15 @@ class Omise extends PaymentModule
         return OmisePluginHelperCharge::isCurrentCurrencyApplicable($this->context->currency->iso_code);
     }
 
+    /**
+     * Generate the URL that used for receive the payment information that submit from checkout form.
+     *
+     * The URL will be used at the attribute, action, of HTML, form.
+     *
+     * @return string Return the URL that link to module controller.
+     *
+     * @see LinkCore::getModuleLink()
+     */
     protected function getAction()
     {
         $controller = 'payment';
