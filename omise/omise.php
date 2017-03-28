@@ -79,7 +79,7 @@ class Omise extends PaymentModule
     /**
      * Display the message about the inapplicable checkout condition.
      *
-     * @return string rendered template output (@see Smarty_Internal_TemplateBase::display())
+     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
      */
     protected function displayInapplicablePayment()
     {
@@ -115,7 +115,7 @@ class Omise extends PaymentModule
     /**
      * Display the checkout form.
      *
-     * @return string rendered template output (@see Smarty_Internal_TemplateBase::display())
+     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
      */
     protected function displayPayment()
     {
