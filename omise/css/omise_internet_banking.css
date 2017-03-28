@@ -1,0 +1,36 @@
+.omise-internet-banking > li {
+  position: relative;
+  padding: 6px 0 0;
+  margin: 0 0 6px;
+  border-bottom: 1px solid #eee;
+}
+.omise-internet-banking > li > input {
+  position: absolute;
+  top: 18px;
+  left: 14px;
+}
+.omise-internet-banking > li > label {
+  width: 100%;
+  margin-left: 36px;
+  cursor: pointer;
+}
+.omise-internet-banking .omise-logo-wrapper {
+  display: inline-block;
+  padding: 5px;
+  margin: 0 10px;
+  vertical-align: top;
+  border-radius: 2px;
+}
+.omise-internet-banking .omise-logo-wrapper img {
+  width: 30px;
+  height: 30px;
+}
+.omise-internet-banking .omise-bank-text-wrapper { display: inline-block; }
+.omise-internet-banking .secondary-text {
+  font-size: 80%;
+  color: #aaa;
+}
+.omise-internet-banking .scb { background: #4e2e7f none repeat scroll 0 0; }
+.omise-internet-banking .ktb { background: #1ba5e1 none repeat scroll 0 0; }
+.omise-internet-banking .bay { background: #fec43b none repeat scroll 0 0; }
+.omise-internet-banking .bbl { background: #1e4598 none repeat scroll 0 0; }
