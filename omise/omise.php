@@ -165,6 +165,13 @@ class Omise extends PaymentModule
         return $this->display(__FILE__, 'confirmation.tpl');
     }
 
+    public function hookHeader()
+    {
+        if ($this->setting->isInternetBankingEnabled()) {
+            $this->context->controller->addCSS($this->_path . 'css/omise_internet_banking.css', 'all');
+        }
+    }
+
     public function hookPayment()
     {
         if ($this->active == false || $this->setting->isModuleEnabled() == false) {
@@ -182,6 +189,7 @@ class Omise extends PaymentModule
     {
         if (parent::install() == false
             || $this->registerHook('displayOrderConfirmation') == false
+            || $this->registerHook('header') == false
             || $this->registerHook('payment') == false
             || $this->omise_transaction_model->createTable() == false
         ) {
@@ -223,6 +231,7 @@ class Omise extends PaymentModule
 
         return parent::uninstall()
             && $this->unregisterHook('displayOrderConfirmation')
+            && $this->unregisterHook('header')
             && $this->unregisterHook('payment');
     }
 
