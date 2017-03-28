@@ -89,6 +89,20 @@ class Omise extends PaymentModule
     }
 
     /**
+     * Display the internet banking checkout form.
+     *
+     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
+     */
+    protected function displayInternetBankingPayment()
+    {
+        if ($this->isCurrentCurrencyApplicable() == false) {
+            return $this->displayInapplicableInternetBankingPayment();
+        }
+
+        return $this->display(__FILE__, 'internet_banking_payment.tpl');
+    }
+
+    /**
      * Display the checkout form.
      *
      * @return string rendered template output (@see Smarty_Internal_TemplateBase::display())
