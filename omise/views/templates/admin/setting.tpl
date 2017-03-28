@@ -81,6 +81,19 @@
           <p class="help-block">{l s='Enable or disable 3-D Secure for the account. (Japan-based accounts are not eligible for the service.)' mode='omise'}</p>
         </div>
       </div>
+      <div class="form-group">
+        <label class="control-label col-lg-3">{l s='Internet Banking' mode='omise'}</label>
+        <div class="col-lg-9">
+          <span class="switch prestashop-switch fixed-width-lg">
+            <input id="internet_banking_status_enabled" name="internet_banking_status" type="radio" value="1" {if $internet_banking_status == 1}checked="checked"{/if}>
+            <label for="internet_banking_status_enabled">{l s='Yes' mode='omise'}</label>
+            <input id="internet_banking_status_disabled" name="internet_banking_status" type="radio" value="0" {if $internet_banking_status == 0}checked="checked"{/if}>
+            <label for="internet_banking_status_disabled">{l s='No' mode='omise'}</label>
+            <a class="slide-button btn"></a>
+          </span>
+          <p class="help-block">{l s='Enables customers of a bank to easily conduct financial transactions through a bank-operated website (only available in Thailand).' mode='omise'}</p>
+        </div>
+      </div>
     </div>
     <div class="panel-footer">
       <button class="btn btn-default pull-right" name="{$submit_action}" type="submit" value="1">
