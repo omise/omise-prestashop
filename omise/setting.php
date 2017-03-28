@@ -164,5 +164,6 @@ class Setting
         Configuration::updateValue('omise_live_secret_key', strval(Tools::getValue('live_secret_key')));
         Configuration::updateValue('omise_title', strval(Tools::getValue('title')));
         Configuration::updateValue('omise_three_domain_secure_status', strval(Tools::getValue('three_domain_secure_status')));
+        Configuration::updateValue('omise_internet_banking_status', strval(Tools::getValue('internet_banking_status')));
     }
 }
