@@ -99,6 +99,16 @@ class OmiseChargeClassTest extends PHPUnit_Framework_TestCase
         $this->omise_charge_class->create('cardToken');
     }
 
+    public function testCreateInternetBanking_createOmiseInternetBankingCharge_createOnlyOneChargeWithCompletedRequestParameters()
+    {
+        m::mock('alias:\OmiseCharge')
+            ->shouldReceive('create')
+            ->with($this->createInternetBankingChargeRequest(), '', $this->secret_key)
+            ->once();
+
+        $this->omise_charge_class->createInternetBanking('offsite');
+    }
+
     public function testGetAuthorizeUri_afterReceivedThreeDomainSecureResponseFromOmiseApi_authorizeUri()
     {
         m::mock('alias:\OmiseCharge')
@@ -191,6 +201,19 @@ class OmiseChargeClassTest extends PHPUnit_Framework_TestCase
         );
 
         return $response;
+    }
+
+    private function createInternetBankingChargeRequest()
+    {
+        $charge_request = array(
+            'amount' => 10025,
+            'currency' => 'THB',
+            'offsite' => 'offsite',
+            'description' => 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')',
+            'return_uri' => 'returnUri?id_cart=1&id_module=omise&id_order=1234&key=customerSecureKey',
+        );
+
+        return $charge_request;
     }
 
     private function createThreeDomainSecureChargeRequest()
