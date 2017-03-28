@@ -27,6 +27,7 @@ class OmiseReturnModuleFrontController extends OmiseBasePaymentModuleFrontContro
         }
 
         if ($this->charge->isFailed()) {
+            $this->payment_order->updateStateToBeCanceled($this->order);
             $this->error_message = $this->omise_charge->getErrorMessage();
             return false;
         }

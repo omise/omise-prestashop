@@ -76,6 +76,16 @@ class PaymentOrder
     }
 
     /**
+     * The order status that indicate the order is canceled.
+     *
+     * @return int
+     */
+    public function getOrderStateCanceled()
+    {
+        return Configuration::get('PS_OS_CANCELED');
+    }
+
+    /**
      * The order status that indicate the order is in progress.
      *
      * @return int
@@ -121,6 +131,20 @@ class PaymentOrder
     public function saveAsProcessing()
     {
         $this->save($this->getOrderStateProcessingInProgress());
+    }
+
+    /**
+     * @param \Order $order The instance of class, Order.
+     */
+    public function updateStateToBeCanceled($order)
+    {
+        $order_state = $this->getOrderStateCanceled();
+
+        if ($order->current_state == $order_state) {
+            return;
+        }
+
+        $order->setCurrentState($order_state);
     }
 
     /**

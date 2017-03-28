@@ -17,6 +17,7 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
     private $optional_message = null;
     private $order;
     private $order_state_accepted_payment = 'orderStatusPayment';
+    private $order_state_canceled = 'orderStatusCanceled';
     private $order_state_processing_in_progress = 'orderStatusProcessingInProgress';
     private $payment_order;
 
@@ -51,6 +52,9 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
 
         m::mock('alias:\Configuration')
             ->shouldReceive('get')
+            ->with('PS_OS_CANCELED')
+            ->andReturn($this->order_state_canceled)
+            ->shouldReceive('get')
             ->with('PS_OS_PAYMENT')
             ->andReturn($this->order_state_accepted_payment)
             ->shouldReceive('get')
@@ -76,7 +80,7 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
         $this->payment_order = new PaymentOrder();
     }
 
-    public function testGetOrderStateAcceptedPayment_getOrderState_OrderStateAcceptedPayment()
+    public function testGetOrderStateAcceptedPayment_getOrderState_orderStateAcceptedPayment()
     {
         m::mock('alias:\Configuration')
             ->shouldReceive('get')
@@ -88,7 +92,19 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->order_state_accepted_payment, $order_state);
     }
 
-    public function testGetOrderStateProcessingInProgress_getOrderState_OrderStateProcessingInProgress()
+    public function testGetOrderStateCanceled_getOrderState_orderStateCanceled()
+    {
+        m::mock('alias:\Configuration')
+            ->shouldReceive('get')
+            ->with('PS_OS_CANCELED')
+            ->andReturn($this->order_state_canceled);
+
+        $order_state = $this->payment_order->getOrderStateCanceled();
+
+        $this->assertEquals($this->order_state_canceled, $order_state);
+    }
+
+    public function testGetOrderStateProcessingInProgress_getOrderState_orderStateProcessingInProgress()
     {
         m::mock('alias:\Configuration')
             ->shouldReceive('get')
@@ -152,6 +168,28 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
             );
 
         $this->payment_order->saveAsProcessing();
+    }
+
+    public function testUpdateStateToBeCanceled_currentOrderStateIsCanceled_orderStateMustNotBeUpdated()
+    {
+        $this->order->current_state = $this->payment_order->getOrderStateCanceled();
+
+        $this->order->expects($this->never())
+            ->method('setCurrentState')
+            ->with($this->payment_order->getOrderStateCanceled());
+
+        $this->payment_order->updateStateToBeCanceled($this->order);
+    }
+
+    public function testUpdateStateToBeCanceled_currentOrderStateIsNotCanceled_orderStateMustBeUpdated()
+    {
+        $this->order->current_state = $this->payment_order->getOrderStateProcessingInProgress();
+
+        $this->order->expects($this->once())
+            ->method('setCurrentState')
+            ->with($this->payment_order->getOrderStateCanceled());
+
+        $this->payment_order->updateStateToBeCanceled($this->order);
     }
 
     public function testUpdateStateToBeSuccess_currentOrderStateIsAcceptedPayment_orderStateMustNotBeUpdated()
