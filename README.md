@@ -68,6 +68,7 @@ The table below is the settings for the module and the description for each sett
 | Secret key for live | Your LIVE secret key can be found in your Omise dashboard.                               |
 | Title               | Title of Omise payment gateway shown at checkout.                                        |
 | 3-D Secure support  | Enables or disables 3-D Secure payment.                                                  |
+| Internet Banking    | Enables or disables internet banking payment.                                            |
 
 - To enable the module, select the setting for `Enable/Disable` to `Yes`.
 - To enable `sandbox` mode, select the setting for `Sandbox` to `Yes`.
