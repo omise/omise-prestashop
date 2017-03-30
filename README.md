@@ -32,10 +32,10 @@ After extracted the file, you will found a folder, **omise**. Copy and place it 
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548922/577a299e-003c-11e7-8ad2-95789f0a62e8.png"></p>
 
 4. Type **omise** at the search box. The Omise module will be displayed at the list.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548936/65309cb2-003c-11e7-8875-638f3f1592e2.png"></p>
+<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504148/471ec17e-157f-11e7-91ae-170f39e2da50.png"></p>
 
 5. Click **Install** button.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548954/7c0b9cca-003c-11e7-9833-1fb06f417e52.png"></p>
+<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504149/471fd1c2-157f-11e7-9106-44cc67699f1c.png"></p>
 
 6. Confirm the installation by click **Proceed with the installation** button.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548960/82beae4a-003c-11e7-9895-fc48704df3b4.png"></p>
@@ -48,10 +48,10 @@ After the installation, you can configure the module by:
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548922/577a299e-003c-11e7-8ad2-95789f0a62e8.png"></p>
 
 2. Type **omise** at the search box. The Omise module will be displayed at the list.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24213194/35177fa0-0f64-11e7-8c83-1de8f6b8c3ec.png"></p>
+<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504148/471ec17e-157f-11e7-91ae-170f39e2da50.png"></p>
 
 3. Click **Configuration** button.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23549714/193dd23a-0040-11e7-964e-1c5d9906ee36.png"></p>
+<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504149/471fd1c2-157f-11e7-9106-44cc67699f1c.png"></p>
 
 The system will display the module configuration page.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23549713/193834f6-0040-11e7-9f1c-75fd466a6fdf.png"></p>
