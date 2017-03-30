@@ -35,7 +35,7 @@ After extracted the file, you will found a folder, **omise**. Copy and place it 
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504148/471ec17e-157f-11e7-91ae-170f39e2da50.png"></p>
 
 5. Click **Install** button.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504149/471fd1c2-157f-11e7-9106-44cc67699f1c.png"></p>
+<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24506758/b17a471a-1588-11e7-8f47-a4a25c67daf3.png"></p>
 
 6. Confirm the installation by click **Proceed with the installation** button.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548960/82beae4a-003c-11e7-9895-fc48704df3b4.png"></p>
