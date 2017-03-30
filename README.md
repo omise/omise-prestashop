@@ -54,7 +54,7 @@ After the installation, you can configure the module by:
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504149/471fd1c2-157f-11e7-9106-44cc67699f1c.png"></p>
 
 The system will display the module configuration page.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23549713/193834f6-0040-11e7-9f1c-75fd466a6fdf.png"></p>
+<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504150/47264c28-157f-11e7-866f-9dbfa94702c6.png"></p>
 
 The table below is the settings for the module and the description for each setting.
 
