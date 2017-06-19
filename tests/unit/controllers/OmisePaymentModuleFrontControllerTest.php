@@ -20,9 +20,10 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->omise_payment_module_front_controller = new OmisePaymentModuleFrontController();
-        $this->omise_payment_module_front_controller->payment_order = $this->getMockedPaymentOrder();
+        $this->omise_payment_module_front_controller->charge = $this->getMockedCharge();
         $this->omise_payment_module_front_controller->context = $this->getMockedContext();
         $this->omise_payment_module_front_controller->module = $this->getMockedModule();
+        $this->omise_payment_module_front_controller->payment_order = $this->getMockedPaymentOrder();
     }
 
     public function testPostProcess_errorOccurred_noAnyOrderHasBeenSaved()
@@ -38,9 +39,24 @@ class OmisePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
     public function testPostProcess_noErrorOccurred_saveTheOrder()
     {
         $this->payment_order->expects($this->once())
-            ->method('save');
+            ->method('save')
+            ->with(null, $this->omise_payment_module_front_controller->charge->getId());
 
         $this->omise_payment_module_front_controller->postProcess();
+    }
+
+    private function getMockedCharge()
+    {
+        $charge = $this->getMockBuilder(get_class(new stdClass()))
+            ->setMethods(
+                array(
+                    'getAuthorizeUri',
+                    'getId',
+                )
+            )
+            ->getMock();
+
+        return $charge;
     }
 
     private function getMockedContext()

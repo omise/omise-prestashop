@@ -41,13 +41,23 @@ class PaymentOrder
     }
 
     /**
-     * The array of extra variables that will be used to attach to the order email.
+     * Return the array of extra variables.
+     *
+     * The extra variables will be used to save to database and attach to the order email.
+     *
+     * @param string $id_charge The Omise charge ID.
      *
      * @return array
      */
-    protected function getExtraVariables()
+    protected function getExtraVariables($id_charge)
     {
-        return array();
+        $extra_variables = array();
+
+        if (! empty($id_charge)) {
+            $extra_variables['transaction_id'] = $id_charge;
+        }
+
+        return $extra_variables;
     }
 
     protected function getModuleDisplayName()
@@ -109,7 +119,13 @@ class PaymentOrder
         return false;
     }
 
-    public function save($order_state = null)
+    /**
+     * Save an order to database by using PrestaShop core function.
+     *
+     * @param int $order_state
+     * @param string $id_charge The Omise charge ID.
+     */
+    public function save($order_state = null, $id_charge = null)
     {
         if (empty($order_state)) {
             $order_state = $this->getOrderStateAcceptedPayment();
@@ -121,7 +137,7 @@ class PaymentOrder
             $this->getCartOrderTotal(),
             $this->getModuleDisplayName(),
             $this->getOptionalMessage(),
-            $this->getExtraVariables(),
+            $this->getExtraVariables($id_charge),
             $this->getCurrencyId(),
             $this->isNotNeededRoundingCardOrderTotal(),
             $this->getCustomerSecureKey()
