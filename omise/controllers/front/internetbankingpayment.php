@@ -23,6 +23,10 @@ class OmiseInternetBankingPaymentModuleFrontController extends OmiseBasePaymentM
             return;
         }
 
+        $id_order = Order::getOrderByCartId($this->context->cart->id);
+
+        $this->payment_order->updatePaymentTransactionId($id_order, $this->charge->getId());
+
         if ($this->charge->isFailed()) {
             $this->error_message = $this->charge->getErrorMessage();
             return;
@@ -32,7 +36,7 @@ class OmiseInternetBankingPaymentModuleFrontController extends OmiseBasePaymentM
             return;
         }
 
-        $this->addOmiseTransaction($this->charge->getId(), Order::getOrderByCartId($this->context->cart->id));
+        $this->addOmiseTransaction($this->charge->getId(), $id_order);
 
         $this->setRedirectAfter($this->charge->getAuthorizeUri());
     }
