@@ -150,6 +150,29 @@ class PaymentOrder
     }
 
     /**
+     * Update an order payment transaction ID to database.
+     *
+     * Note:
+     * - The PrestaShop order payment transaction ID has been mapped with Omise charge ID.
+     * - PrestaShop has order and order payment separate from each other. So, to update an order payment transaction ID,
+     * it need to retrieve the order payment from the order.
+     *
+     * @param int $id_order
+     * @param string $transaction_id The order payment transaction ID. It is the reference ID between PrestaShop order
+     * payment and Omise payment gateway.
+     */
+    public function updatePaymentTransactionId($id_order, $transaction_id)
+    {
+        $order = new Order($id_order);
+        $order_payment_collection = $order->getOrderPaymentCollection();
+
+        $order_payment = $order_payment_collection[0];
+
+        $order_payment->transaction_id = $transaction_id;
+        $order_payment->update();
+    }
+
+    /**
      * @param \Order $order The instance of class, Order.
      */
     public function updateStateToBeCanceled($order)

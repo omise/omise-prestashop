@@ -116,7 +116,7 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->order_state_processing_in_progress, $order_state);
     }
 
-    public function testSave_theParameterOmiseChargeIdIsEmpty_noAnyOmiseChargeIdIsSavedToDatabaseForReference()
+    public function testSave_theParameterOmiseChargeIdIsEmpty_noAnyOmiseChargeIdSaveToDatabaseForReference()
     {
         $id_charge = '';
 
@@ -136,7 +136,7 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
         $this->payment_order->save(null, $id_charge);
     }
 
-    public function testSave_theParameterOmiseChargeIdIsNull_noAnyOmiseChargeIdIsSavedToDatabaseForReference()
+    public function testSave_theParameterOmiseChargeIdIsNull_noAnyOmiseChargeIdIsSaveToDatabaseForReference()
     {
         $id_charge = null;
 

@@ -38,6 +38,17 @@ class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends PHPUnit_Fra
         $this->omise_three_domain_secure_payment_module_front_controller->postProcess();
     }
 
+    public function testPostProcess_createThreeDomainSecureChargeAndNoErrorOccurred_updatePaymentTransactionId()
+    {
+        $this->omise_three_domain_secure_payment_module_front_controller->error_message = '';
+
+        $this->omise_three_domain_secure_payment_module_front_controller->payment_order
+            ->expects($this->once())
+            ->method('updatePaymentTransactionId');
+
+        $this->omise_three_domain_secure_payment_module_front_controller->postProcess();
+    }
+
     public function testPostProcess_createThreeDomainSecureChargeAndNoErrorOccurred_redirectToAuthorizeUri()
     {
         $this->omise_three_domain_secure_payment_module_front_controller->error_message = '';
@@ -91,6 +102,7 @@ class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends PHPUnit_Fra
             ->setMethods(
                 array(
                     'saveAsProcessing',
+                    'updatePaymentTransactionId',
                 )
             )
             ->getMock();
