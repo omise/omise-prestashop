@@ -13,8 +13,10 @@ class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends PHPUnit_Fra
             ->setMethods(
                 array(
                     '__construct',
+                    'addOmiseTransaction',
                     'postProcess',
                     'setRedirectAfter',
+                    'validateCart',
                 )
             )
             ->getMock();
