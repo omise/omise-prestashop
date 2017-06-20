@@ -19,11 +19,14 @@ class OmiseThreeDomainSecurePaymentModuleFrontController extends OmiseBasePaymen
 
         $id_order = Order::getOrderByCartId($this->context->cart->id);
 
+        if (! empty($this->charge)) {
+            $this->payment_order->updatePaymentTransactionId($id_order, $this->charge->getId());
+        }
+
         if (! empty($this->error_message)) {
             return;
         }
 
-        $this->payment_order->updatePaymentTransactionId($id_order, $this->charge->getId());
         $this->addOmiseTransaction($this->charge->getId(), $id_order);
 
         $this->setRedirectAfter($this->charge->getAuthorizeUri());
