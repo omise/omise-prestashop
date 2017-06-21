@@ -31,7 +31,7 @@ class Omise extends PaymentModule
      *
      * @var string
      */
-    const MODULE_VERSION = '1.1';
+    const MODULE_VERSION = '1.2';
 
     /**
      * The instance of class, CheckoutForm.
