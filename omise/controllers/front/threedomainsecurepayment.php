@@ -24,6 +24,7 @@ class OmiseThreeDomainSecurePaymentModuleFrontController extends OmiseBasePaymen
         }
 
         if (! empty($this->error_message)) {
+            $this->payment_order->updateStateToBeCanceled(new Order($id_order));
             return;
         }
 

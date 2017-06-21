@@ -73,6 +73,17 @@ class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends PHPUnit_Fra
         $this->omise_three_domain_secure_payment_module_front_controller->postProcess();
     }
 
+    public function testPostProcess_errorOccurredAfterProcess_updateOrderStateToBeCanceled()
+    {
+        $this->omise_three_domain_secure_payment_module_front_controller->error_message = 'errorMessage';
+
+        $this->omise_three_domain_secure_payment_module_front_controller->payment_order
+            ->expects($this->once())
+            ->method('updateStateToBeCanceled');
+
+        $this->omise_three_domain_secure_payment_module_front_controller->postProcess();
+    }
+
     private function getMockedCharge()
     {
         $charge = $this->getMockBuilder(get_class(new stdClass()))
@@ -105,6 +116,7 @@ class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends PHPUnit_Fra
                 array(
                     'saveAsProcessing',
                     'updatePaymentTransactionId',
+                    'updateStateToBeCanceled',
                 )
             )
             ->getMock();
