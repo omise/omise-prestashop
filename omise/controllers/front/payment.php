@@ -19,7 +19,7 @@ class OmisePaymentModuleFrontController extends OmiseBasePaymentModuleFrontContr
             return;
         }
 
-        $this->payment_order->save();
+        $this->payment_order->save(null, $this->charge->getId());
 
         $this->setRedirectAfter('index.php?controller=order-confirmation' .
             '&id_cart=' . $this->context->cart->id .

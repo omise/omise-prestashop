@@ -116,6 +116,66 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->order_state_processing_in_progress, $order_state);
     }
 
+    public function testSave_theParameterOmiseChargeIdIsEmpty_noAnyOmiseChargeIdSaveToDatabaseForReference()
+    {
+        $id_charge = '';
+
+        $this->module->expects($this->once())
+            ->method('validateOrder')
+            ->with($this->cart_id,
+                $this->order_state_accepted_payment,
+                $this->cart_order_total,
+                $this->module_display_name,
+                $this->optional_message,
+                array(),
+                $this->currency_id,
+                $this->is_not_needed_rounding_card_order_total,
+                $this->customer_secure_key
+            );
+
+        $this->payment_order->save(null, $id_charge);
+    }
+
+    public function testSave_theParameterOmiseChargeIdIsNull_noAnyOmiseChargeIdIsSaveToDatabaseForReference()
+    {
+        $id_charge = null;
+
+        $this->module->expects($this->once())
+            ->method('validateOrder')
+            ->with($this->cart_id,
+                $this->order_state_accepted_payment,
+                $this->cart_order_total,
+                $this->module_display_name,
+                $this->optional_message,
+                array(),
+                $this->currency_id,
+                $this->is_not_needed_rounding_card_order_total,
+                $this->customer_secure_key
+            );
+
+        $this->payment_order->save(null, $id_charge);
+    }
+
+    public function testSave_theParameterOmiseChargeIdIsNotEmpty_saveAnOmiseChargeIdToDatabaseForReference()
+    {
+        $id_charge = 'id_charge';
+
+        $this->module->expects($this->once())
+            ->method('validateOrder')
+            ->with($this->cart_id,
+                $this->order_state_accepted_payment,
+                $this->cart_order_total,
+                $this->module_display_name,
+                $this->optional_message,
+                array('transaction_id' => $id_charge),
+                $this->currency_id,
+                $this->is_not_needed_rounding_card_order_total,
+                $this->customer_secure_key
+            );
+
+        $this->payment_order->save(null, $id_charge);
+    }
+
     public function testSave_theParameterOrderStateIsEmpty_onlyOneOrderHasBeenSaved()
     {
         $this->module->expects($this->once())

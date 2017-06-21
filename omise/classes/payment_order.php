@@ -41,13 +41,23 @@ class PaymentOrder
     }
 
     /**
-     * The array of extra variables that will be used to attach to the order email.
+     * Return the array of extra variables.
+     *
+     * The extra variables will be used to save to database and attach to the order email.
+     *
+     * @param string $id_charge The Omise charge ID.
      *
      * @return array
      */
-    protected function getExtraVariables()
+    protected function getExtraVariables($id_charge)
     {
-        return array();
+        $extra_variables = array();
+
+        if (! empty($id_charge)) {
+            $extra_variables['transaction_id'] = $id_charge;
+        }
+
+        return $extra_variables;
     }
 
     protected function getModuleDisplayName()
@@ -109,7 +119,13 @@ class PaymentOrder
         return false;
     }
 
-    public function save($order_state = null)
+    /**
+     * Save an order to database by using PrestaShop core function.
+     *
+     * @param int $order_state
+     * @param string $id_charge The Omise charge ID.
+     */
+    public function save($order_state = null, $id_charge = null)
     {
         if (empty($order_state)) {
             $order_state = $this->getOrderStateAcceptedPayment();
@@ -121,7 +137,7 @@ class PaymentOrder
             $this->getCartOrderTotal(),
             $this->getModuleDisplayName(),
             $this->getOptionalMessage(),
-            $this->getExtraVariables(),
+            $this->getExtraVariables($id_charge),
             $this->getCurrencyId(),
             $this->isNotNeededRoundingCardOrderTotal(),
             $this->getCustomerSecureKey()
@@ -131,6 +147,29 @@ class PaymentOrder
     public function saveAsProcessing()
     {
         $this->save($this->getOrderStateProcessingInProgress());
+    }
+
+    /**
+     * Update an order payment transaction ID to database.
+     *
+     * Note:
+     * - The PrestaShop order payment transaction ID has been mapped with Omise charge ID.
+     * - PrestaShop has order and order payment separate from each other. So, to update an order payment transaction ID,
+     * it need to retrieve the order payment from the order.
+     *
+     * @param int $id_order
+     * @param string $transaction_id The order payment transaction ID. It is the reference ID between PrestaShop order
+     * payment and Omise payment gateway.
+     */
+    public function updatePaymentTransactionId($id_order, $transaction_id)
+    {
+        $order = new Order($id_order);
+        $order_payment_collection = $order->getOrderPaymentCollection();
+
+        $order_payment = $order_payment_collection[0];
+
+        $order_payment->transaction_id = $transaction_id;
+        $order_payment->update();
     }
 
     /**
