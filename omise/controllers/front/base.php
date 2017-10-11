@@ -10,6 +10,10 @@ if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
 }
 
+if (! defined('OMISE_USER_AGENT_SUFFIX')) {
+    define('OMISE_USER_AGENT_SUFFIX', sprintf('OmisePrestaShop/%s PrestaShop/%s', Omise::MODULE_VERSION, _PS_VERSION_));
+}
+
 abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontController
 {
     protected $charge;
