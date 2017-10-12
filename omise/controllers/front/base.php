@@ -10,6 +10,14 @@ if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
 }
 
+/**
+ * Specify the software version when sending the request to Omise API. The specified versions will be displayed at
+ * Omise dashboard.
+ *
+ * This constant is used to append to request header, User-Agent. The request is send by library, Omise PHP.
+ *
+ * @see OmiseApiResource::genOptions() The function in library, Omise PHP, that uses this constant.
+ */
 if (! defined('OMISE_USER_AGENT_SUFFIX')) {
     define('OMISE_USER_AGENT_SUFFIX', sprintf('OmisePrestaShop/%s PrestaShop/%s', Omise::MODULE_VERSION, _PS_VERSION_));
 }
