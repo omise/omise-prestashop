@@ -3,6 +3,8 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
+use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+
 if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
     require_once _PS_MODULE_DIR_ . 'omise/libraries/omise-plugin/Omise.php';
@@ -12,6 +14,15 @@ if (defined('_PS_MODULE_DIR_')) {
 
 class Omise extends PaymentModule
 {
+    /**
+     * The default title of card payment.
+     *
+     * This constant will be saved to the database at the module installation step. (@see Omise::install())
+     *
+     * @var string
+     */
+    const DEFAULT_CARD_PAYMENT_TITLE = 'Pay by Credit / Debit Card';
+
     /**
      * The name that will be display to the user at the back-end.
      *
@@ -195,13 +206,30 @@ class Omise extends PaymentModule
         return $payment;
     }
 
+    public function hookPaymentOptions()
+    {
+        if ($this->setting->isModuleEnabled() == false) {
+            return;
+        }
+
+        $payment_options = array();
+
+        $payment_option = new PaymentOption();
+        $payment_option->setCallToActionText($this->setting->getTitle());
+        $payment_options[] = $payment_option;
+
+        return $payment_options;
+    }
+
     public function install()
     {
         if (parent::install() == false
             || $this->registerHook('displayOrderConfirmation') == false
             || $this->registerHook('header') == false
             || $this->registerHook('payment') == false
+            || $this->registerHook('paymentOptions') == false
             || $this->omise_transaction_model->createTable() == false
+            || $this->setting->saveTitle(self::DEFAULT_CARD_PAYMENT_TITLE) == false
         ) {
             $this->uninstall();
 
@@ -251,7 +279,8 @@ class Omise extends PaymentModule
         return parent::uninstall()
             && $this->unregisterHook('displayOrderConfirmation')
             && $this->unregisterHook('header')
-            && $this->unregisterHook('payment');
+            && $this->unregisterHook('payment')
+            && $this->unregisterHook('paymentOptions');
     }
 
     /**

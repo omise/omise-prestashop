@@ -231,11 +231,35 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->omise->hookPayment());
     }
 
+    public function testHookPaymentOptions_moduleStatusIsDisabled_paymentOptionsIsNull()
+    {
+        $this->setting->method('isModuleEnabled')->willReturn(false);
+
+        $payment_options = $this->omise->hookPaymentOptions();
+
+        $this->assertNull($payment_options);
+    }
+
+    public function testHookPaymentOptions_moduleStatusIsEnabled_paymentOptionsIsNotNull()
+    {
+        $this->setting->method('isModuleEnabled')->willReturn(true);
+
+        m::mock('overload:PrestaShop\PrestaShop\Core\Payment\PaymentOption')
+            ->shouldReceive('setCallToActionText')
+            ->once()
+            ->with($this->setting->getTitle());
+
+        $payment_options = $this->omise->hookPaymentOptions();
+
+        $this->assertNotNull($payment_options);
+    }
+
     public function testInstall_installationIsSuccess_true()
     {
         $this->omise->method('install')->willReturn(true);
-        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true));
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true, true));
         $this->omise_transaction_model->method('createTable')->willReturn(true);
+        $this->setting->method('saveTitle')->with(Omise::DEFAULT_CARD_PAYMENT_TITLE)->willReturn(true);
 
         $this->assertTrue($this->omise->install());
     }
@@ -243,7 +267,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testInstall_createTableIsFail_false()
     {
         $this->omise->method('install')->willReturn(true);
-        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true));
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true, true));
         $this->omise_transaction_model->method('createTable')->willReturn(false);
 
         $this->assertFalse($this->omise->install());
@@ -252,7 +276,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testInstall_parentInstallationIsFail_false()
     {
         $this->omise->method('install')->willReturn(false);
-        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true));
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true, true));
         $this->omise_transaction_model->method('createTable')->willReturn(true);
 
         $this->assertFalse($this->omise->install());
@@ -261,7 +285,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testInstall_registerHookForDisplayOrderConfirmationIsFail_false()
     {
         $this->omise->method('install')->willReturn(true);
-        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(false, true, true));
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(false, true, true, true));
         $this->omise_transaction_model->method('createTable')->willReturn(true);
 
         $this->assertFalse($this->omise->install());
@@ -270,7 +294,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testInstall_registerHookForHeaderIsFail_false()
     {
         $this->omise->method('install')->willReturn(true);
-        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, false, true));
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, false, true, true));
         $this->omise_transaction_model->method('createTable')->willReturn(true);
 
         $this->assertFalse($this->omise->install());
@@ -279,8 +303,27 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testInstall_registerHookForPaymentIsFail_false()
     {
         $this->omise->method('install')->willReturn(true);
-        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, false));
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, false, true));
         $this->omise_transaction_model->method('createTable')->willReturn(true);
+
+        $this->assertFalse($this->omise->install());
+    }
+
+    public function testInstall_registerHookForPaymentOptionsIsFail_false()
+    {
+        $this->omise->method('install')->willReturn(true);
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true, false));
+        $this->omise_transaction_model->method('createTable')->willReturn(true);
+
+        $this->assertFalse($this->omise->install());
+    }
+
+    public function testInstall_saveDefaultCardPaymentTitleIsFail_false()
+    {
+        $this->omise->method('install')->willReturn(true);
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true, true));
+        $this->omise_transaction_model->method('createTable')->willReturn(true);
+        $this->setting->method('saveTitle')->with(Omise::DEFAULT_CARD_PAYMENT_TITLE)->willReturn(false);
 
         $this->assertFalse($this->omise->install());
     }
@@ -296,7 +339,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testUninstall_uninstallIsSuccess_true()
     {
         $this->omise->method('uninstall')->willReturn(true);
-        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true, true));
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true, true, true));
 
         $this->assertTrue($this->omise->uninstall());
     }
@@ -304,7 +347,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testUninstall_parentUninstallIsFail_false()
     {
         $this->omise->method('uninstall')->willReturn(false);
-        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true, true));
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true, true, true));
 
         $this->assertFalse($this->omise->uninstall());
     }
@@ -312,7 +355,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testUninstall_unregisterHookForDisplayOrderConfirmationIsFail_false()
     {
         $this->omise->method('uninstall')->willReturn(true);
-        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(false, true, true));
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(false, true, true, true));
 
         $this->assertFalse($this->omise->uninstall());
     }
@@ -320,7 +363,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testUninstall_unregisterHookForHeaderIsFail_false()
     {
         $this->omise->method('uninstall')->willReturn(true);
-        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, false, true));
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, false, true, true));
 
         $this->assertFalse($this->omise->uninstall());
     }
@@ -328,7 +371,15 @@ class OmiseTest extends PHPUnit_Framework_TestCase
     public function testUninstall_unregisterHookForPaymentIsFail_false()
     {
         $this->omise->method('uninstall')->willReturn(true);
-        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true, false));
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true, false, true));
+
+        $this->assertFalse($this->omise->uninstall());
+    }
+
+    public function testUninstall_unregisterHookPaymentOptionsIsFail_false()
+    {
+        $this->omise->method('uninstall')->willReturn(true);
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true, true, false));
 
         $this->assertFalse($this->omise->uninstall());
     }
@@ -387,6 +438,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
                     'isSubmit',
                     'isThreeDomainSecureEnabled',
                     'save',
+                    'saveTitle',
                 )
             )
             ->getMock();
