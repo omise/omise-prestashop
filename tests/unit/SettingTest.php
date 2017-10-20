@@ -258,6 +258,30 @@ class SettingTest extends PHPUnit_Framework_TestCase
         $this->setting->save();
     }
 
+    public function testSaveTitle_saveTheTitle_titleHasBeenSaved()
+    {
+        m::mock('alias:\Configuration')
+            ->shouldReceive('updateValue')->with('omise_title', 'title')->once();
+
+        $this->setting->saveTitle('title');
+    }
+
+    public function testSaveTitle_saveTheTitleIsFail_false()
+    {
+        m::mock('alias:\Configuration')
+            ->shouldReceive('updateValue')->andReturn(false);
+
+        $this->assertFalse($this->setting->saveTitle('title'));
+    }
+
+    public function testSaveTitle_saveTheTitleIsSuccess_true()
+    {
+        m::mock('alias:\Configuration')
+            ->shouldReceive('updateValue')->andReturn(true);
+
+        $this->assertTrue($this->setting->saveTitle('title'));
+    }
+
     public function tearDown()
     {
         m::close();
