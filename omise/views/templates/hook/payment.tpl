@@ -3,8 +3,6 @@
     <p class="payment_module">
       <div class="box">
         <div class="row">
-          <div class="col-sm-12">
-          </div>
           <div class="col-sm-8 col-md-5 col-lg-4">
             <form id="omise_checkout_form" method="post">
               <input id="omise_card_token" name="omise_card_token" type="hidden">
