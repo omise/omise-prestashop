@@ -58,9 +58,6 @@
                 </div>
               </div>
             </form>
-            <button class="button btn btn-default standard-checkout button-medium" id="omise_checkout_button" onclick="omiseCheckout();">
-              <span id="omise_checkout_text">{l s='Submit Payment' mod='omise'}</span>
-            </button>
           </div>
         </div>
       </div>
