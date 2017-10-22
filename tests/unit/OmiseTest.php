@@ -240,14 +240,17 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->assertNull($payment_options);
     }
 
-    public function testHookPaymentOptions_moduleStatusIsEnabled_paymentOptionsIsNotNull()
+    public function testHookPaymentOptions_moduleStatusIsEnabled_displayCardPaymentOption()
     {
         $this->setting->method('isModuleEnabled')->willReturn(true);
+        m::mock('alias:\OmisePluginHelperCharge')
+            ->shouldReceive('isCurrentCurrencyApplicable')
+            ->andReturn(true);
+        $this->omise->method('display')->willReturn('payment');
 
         m::mock('overload:PrestaShop\PrestaShop\Core\Payment\PaymentOption')
-            ->shouldReceive('setCallToActionText')
-            ->once()
-            ->with($this->setting->getTitle());
+            ->shouldReceive('setAdditionalInformation')->with('payment')->once()
+            ->shouldReceive('setCallToActionText')->with($this->setting->getTitle())->once();
 
         $payment_options = $this->omise->hookPaymentOptions();
 
