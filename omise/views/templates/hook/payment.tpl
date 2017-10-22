@@ -3,7 +3,7 @@
     <p class="payment_module">
       <div class="box">
         <div class="row">
-          <div class="col-sm-8 col-md-5 col-lg-4">
+          <div class="col-sm-12">
             <form id="omise_checkout_form" method="post">
               <input id="omise_card_token" name="omise_card_token" type="hidden">
               <div class="row">
@@ -19,7 +19,7 @@
                   </div>
               </div>
               <div class="row">
-                <div class="col-sm-5">
+                <div class="col-sm-6">
                   <div class="form-group">
                     <label for="omise_card_expiration_month">{l s='Expiration month' mod='omise'}</label>
                     <select class="form-control" id="omise_card_expiration_month">
@@ -38,7 +38,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-5 pull-right">
+                <div class="col-sm-6 pull-right">
                   <div class="form-group">
                     <label for="omise_card_expiration_year">{l s='Expiration year' mod='omise'}</label>
                     <select class="form-control" id="omise_card_expiration_year">
@@ -48,7 +48,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-sm-5">
+                <div class="col-sm-6">
                   <div class="form-group">
                     <label for="omise_card_security_code">{l s='Security code' mod='omise'}</label>
                     <input class="form-control" id="omise_card_security_code" type="password" placeholder="{l s='Security code' mod='omise'}">
