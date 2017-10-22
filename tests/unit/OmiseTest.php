@@ -181,13 +181,11 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->checkout_form->method('getListOfExpirationYear')->willReturn('list_of_expiration_year');
         $this->omise->context->link->method('getModuleLink')->willReturn('payment');
 
-        $this->smarty->expects($this->exactly(4))
+        $this->smarty->expects($this->exactly(2))
             ->method('assign')
             ->withConsecutive(
-                array('action', 'payment'),
                 array('list_of_expiration_year', 'list_of_expiration_year'),
-                array('omise_public_key', 'omise_public_key'),
-                array('omise_title', 'title')
+                array('omise_public_key', 'omise_public_key')
             );
 
         $this->omise->hookPayment();
