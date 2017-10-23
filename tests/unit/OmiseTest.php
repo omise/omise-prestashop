@@ -247,8 +247,8 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->omise->method('display')->willReturn('payment');
 
         m::mock('overload:PrestaShop\PrestaShop\Core\Payment\PaymentOption')
-            ->shouldReceive('setAdditionalInformation')->with('payment')->once()
-            ->shouldReceive('setCallToActionText')->with($this->setting->getTitle())->once();
+            ->shouldReceive('setCallToActionText')->with($this->setting->getTitle())->once()
+            ->shouldReceive('setForm')->with('payment')->once();
 
         $payment_options = $this->omise->hookPaymentOptions();
 

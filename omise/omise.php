@@ -213,8 +213,8 @@ class Omise extends PaymentModule
         $payment_options = array();
 
         $payment_option = new PaymentOption();
-        $payment_option->setAdditionalInformation($this->displayPayment());
         $payment_option->setCallToActionText($this->setting->getTitle());
+        $payment_option->setForm($this->displayPayment());
         $payment_options[] = $payment_option;
 
         return $payment_options;
