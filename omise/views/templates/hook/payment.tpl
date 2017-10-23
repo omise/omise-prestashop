@@ -4,10 +4,7 @@
       <div class="box">
         <div class="row">
           <div class="col-sm-12">
-            <h3>{$omise_title}</h3>
-          </div>
-          <div class="col-sm-8 col-md-5 col-lg-4">
-            <form id="omise_checkout_form" method="post" action="{$action|escape:'html'}">
+            <form id="omise_checkout_form" method="post">
               <input id="omise_card_token" name="omise_card_token" type="hidden">
               <div class="row">
                 <div class="form-group col-sm-12">
@@ -22,7 +19,7 @@
                   </div>
               </div>
               <div class="row">
-                <div class="col-sm-5">
+                <div class="col-sm-6">
                   <div class="form-group">
                     <label for="omise_card_expiration_month">{l s='Expiration month' mod='omise'}</label>
                     <select class="form-control" id="omise_card_expiration_month">
@@ -41,7 +38,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-5 pull-right">
+                <div class="col-sm-6 pull-right">
                   <div class="form-group">
                     <label for="omise_card_expiration_year">{l s='Expiration year' mod='omise'}</label>
                     <select class="form-control" id="omise_card_expiration_year">
@@ -51,7 +48,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-sm-5">
+                <div class="col-sm-6">
                   <div class="form-group">
                     <label for="omise_card_security_code">{l s='Security code' mod='omise'}</label>
                     <input class="form-control" id="omise_card_security_code" type="password" placeholder="{l s='Security code' mod='omise'}">
@@ -59,9 +56,6 @@
                 </div>
               </div>
             </form>
-            <button class="button btn btn-default standard-checkout button-medium" id="omise_checkout_button" onclick="omiseCheckout();">
-              <span id="omise_checkout_text">{l s='Submit Payment' mod='omise'}</span>
-            </button>
           </div>
         </div>
       </div>
