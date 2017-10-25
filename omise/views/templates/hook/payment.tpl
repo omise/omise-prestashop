@@ -137,6 +137,11 @@
           event.preventDefault();
           event.stopPropagation();
 
+          if (typeof Omise === 'undefined') {
+            alert('{l s='Unable to process the payment, loading the external card processing library is failed. Please contact the merchant.' mod='omise'}');
+            return false;
+          }
+
           lockOmiseCardPaymentForm(omiseCardPaymentForm);
           paymentConfirmationButton.disabled = true;
           paymentConfirmationButton.innerHTML = '{l s='Processing' mod='omise'}';
