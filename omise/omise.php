@@ -15,6 +15,18 @@ if (defined('_PS_MODULE_DIR_')) {
 class Omise extends PaymentModule
 {
     /**
+     * The name that used as the identifier of card payment option.
+     *
+     * A payment module can has more than one payment option. At the front office, each payment options can be
+     * identified by using module name (@see PaymentOption::setModuleName()).
+     *
+     * The module name is displayed at front office as an attribute of the payment option.
+     *
+     * @var string
+     */
+    const CARD_PAYMENT_OPTION_NAME = 'omise-card-payment';
+
+    /**
      * The default title of card payment.
      *
      * This constant will be saved to the database at the module installation step. (@see Omise::install())
@@ -215,6 +227,7 @@ class Omise extends PaymentModule
         $payment_option = new PaymentOption();
         $payment_option->setCallToActionText($this->setting->getTitle());
         $payment_option->setForm($this->displayPayment());
+        $payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
         $payment_options[] = $payment_option;
 
         return $payment_options;

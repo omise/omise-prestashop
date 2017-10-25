@@ -14,9 +14,9 @@
               </div>
               <div class="row">
                 <div class="form-group col-sm-12">
-                    <label for="omise_card_holder_name">{l s='Name on card' mod='omise'}</label>
-                    <input class="form-control" id="omise_card_holder_name" type="text" placeholder="{l s='Name on card' mod='omise'}">
-                  </div>
+                  <label for="omise_card_holder_name">{l s='Name on card' mod='omise'}</label>
+                  <input class="form-control" id="omise_card_holder_name" type="text" placeholder="{l s='Name on card' mod='omise'}">
+                </div>
               </div>
               <div class="row">
                 <div class="col-sm-6">
@@ -66,63 +66,86 @@
 <script src="https://cdn.omise.co/omise.js.gz"></script>
 
 <script>
-  const omiseCheckout = function omiseCheckout() {
-    if (typeof Omise === 'undefined') {
-      alert('{l s='Unable to process the payment, loading the external card processing library is failed. Please contact the merchant.' mod='omise'}');
-      return false;
-    }
+  (function() {
+    var originalPaymentConfirmationText;
+    var paymentConfirmationButton;
 
-    omiseLockCheckoutForm(omiseCheckoutForm);
+    var createOmiseToken = function createOmiseToken(form) {
+      var card = {
+        name: form.name.value,
+        number: form.number.value,
+        expiration_month: form.expiration_month.value,
+        expiration_year: form.expiration_year.value,
+        security_code: form.security_code.value,
+      };
 
-    const card = {
-      name: omiseCheckoutForm.name.value,
-      number: omiseCheckoutForm.number.value,
-      expiration_month: omiseCheckoutForm.expiration_month.value,
-      expiration_year: omiseCheckoutForm.expiration_year.value,
-      security_code: omiseCheckoutForm.security_code.value,
+      Omise.setPublicKey('{$omise_public_key}');
+      Omise.createToken('card', card, omiseCreateTokenCallback);
     };
 
-    Omise.setPublicKey('{$omise_public_key}');
-    Omise.createToken('card', card, omiseCreateTokenCallback);
-  }
+    var isOmiseCardPaymentOptionSelected = function isOmiseCardPaymentOptionSelected() {
+      var omiseCardPaymentOption = document.querySelector('[data-module-name="omise-card-payment"]');
 
-  const omiseCreateTokenCallback = function omiseCreateTokenCallback(statusCode, response) {
-    if (statusCode === 200) {
-      document.getElementById('omise_card_token').value = response.id;
-      document.getElementById('omise_checkout_form').submit();
-    } else {
-      alert(response.message);
-      omiseUnlockCheckoutForm(omiseCheckoutForm);
-    }
-  };
+      if (omiseCardPaymentOption.checked) {
+        return true;
+      }
 
-  const omiseCheckoutForm = {
-    name: document.getElementById('omise_card_holder_name'),
-    number: document.getElementById('omise_card_number'),
-    expiration_month: document.getElementById('omise_card_expiration_month'),
-    expiration_year: document.getElementById('omise_card_expiration_year'),
-    security_code: document.getElementById('omise_card_security_code'),
-    checkout_button: document.getElementById('omise_checkout_button'),
-    checkout_text: document.getElementById('omise_checkout_text'),
-  };
+      return false;
+    };
 
-  const omiseLockCheckoutForm = function omiseLockCheckoutForm(form) {
-    form.name.disabled = true;
-    form.number.disabled = true;
-    form.expiration_month.disabled = true;
-    form.expiration_year.disabled = true;
-    form.security_code.disabled = true;
-    form.checkout_button.disabled = true;
-    form.checkout_text.innerHTML = '{l s='Processing' mod='omise'}';
-  };
+    var lockOmiseCardPaymentForm = function lockOmiseCardPaymentForm(form) {
+      form.name.disabled = true;
+      form.number.disabled = true;
+      form.expiration_month.disabled = true;
+      form.expiration_year.disabled = true;
+      form.security_code.disabled = true;
+    };
 
-  const omiseUnlockCheckoutForm = function omiseUnlockCheckoutForm(form) {
-    form.name.disabled = false;
-    form.number.disabled = false;
-    form.expiration_month.disabled = false;
-    form.expiration_year.disabled = false;
-    form.security_code.disabled = false;
-    form.checkout_button.disabled = false;
-    form.checkout_text.innerHTML = '{l s='Submit Payment' mod='omise'}';
-  };
+    var omiseCardPaymentForm = {
+      name: document.getElementById('omise_card_holder_name'),
+      number: document.getElementById('omise_card_number'),
+      expiration_month: document.getElementById('omise_card_expiration_month'),
+      expiration_year: document.getElementById('omise_card_expiration_year'),
+      security_code: document.getElementById('omise_card_security_code'),
+    };
+
+    var omiseCreateTokenCallback = function omiseCreateTokenCallback(statusCode, response) {
+      if (statusCode === 200) {
+        document.getElementById('omise_card_token').value = response.id;
+      } else {
+        alert(response.message);
+        unlockOmiseCardPaymentForm(omiseCardPaymentForm);
+        paymentConfirmationButton.disabled = false;
+        paymentConfirmationButton.innerHTML = originalPaymentConfirmationText;
+      }
+    };
+
+    var unlockOmiseCardPaymentForm = function unlockOmiseCardPaymentForm(form) {
+      form.name.disabled = false;
+      form.number.disabled = false;
+      form.expiration_month.disabled = false;
+      form.expiration_year.disabled = false;
+      form.security_code.disabled = false;
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+      paymentConfirmationButton = document.getElementById('payment-confirmation').getElementsByTagName('button')[0];
+      originalPaymentConfirmationText = paymentConfirmationButton.innerHTML;
+
+      paymentConfirmationButton.addEventListener('click', function (event) {
+        if (isOmiseCardPaymentOptionSelected()) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          lockOmiseCardPaymentForm(omiseCardPaymentForm);
+          paymentConfirmationButton.disabled = true;
+          paymentConfirmationButton.innerHTML = '{l s='Processing' mod='omise'}';
+
+          createOmiseToken(omiseCardPaymentForm);
+
+          return false;
+        }
+      });
+    });
+  })();
 </script>
