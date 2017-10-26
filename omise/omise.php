@@ -146,6 +146,7 @@ class Omise extends PaymentModule
             return $this->displayInapplicablePayment();
         }
 
+        $this->smarty->assign('action', $this->getAction());
         $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
         $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
 
