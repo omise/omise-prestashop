@@ -182,11 +182,11 @@ class Omise extends PaymentModule
             return;
         }
 
-        if ($params['objOrder']->module != $this->name) {
+        if ($params['order']->module != $this->name) {
             return;
         }
 
-        $this->smarty->assign('order_reference', $params['objOrder']->reference);
+        $this->smarty->assign('order_reference', $params['order']->reference);
 
         return $this->display(__FILE__, 'confirmation.tpl');
     }
