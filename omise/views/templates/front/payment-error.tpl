@@ -28,3 +28,6 @@
     </div>
   </section>
 {/block}
+
+{block name='page_content_container'}
+{/block}
