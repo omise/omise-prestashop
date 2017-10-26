@@ -146,6 +146,7 @@ class Omise extends PaymentModule
             return $this->displayInapplicablePayment();
         }
 
+        $this->smarty->assign('action', $this->getAction());
         $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
         $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
 
@@ -181,11 +182,11 @@ class Omise extends PaymentModule
             return;
         }
 
-        if ($params['objOrder']->module != $this->name) {
+        if ($params['order']->module != $this->name) {
             return;
         }
 
-        $this->smarty->assign('order_reference', $params['objOrder']->reference);
+        $this->smarty->assign('order_reference', $params['order']->reference);
 
         return $this->display(__FILE__, 'confirmation.tpl');
     }

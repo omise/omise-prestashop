@@ -3,7 +3,7 @@
     <div class="box">
       <div class="row">
         <div class="col-sm-12">
-          <form id="omise_checkout_form" method="post">
+          <form id="omise_checkout_form" method="post" action="{$action|escape:'html'}">
             <input id="omise_card_token" name="omise_card_token" type="hidden">
             <div class="row">
               <div class="form-group col-sm-12">
@@ -110,6 +110,7 @@
     var omiseCreateTokenCallback = function omiseCreateTokenCallback(statusCode, response) {
       if (statusCode === 200) {
         document.getElementById('omise_card_token').value = response.id;
+        document.getElementById('omise_checkout_form').submit();
       } else {
         alert(response.message);
         unlockOmiseCardPaymentForm(omiseCardPaymentForm);
