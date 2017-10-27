@@ -21,7 +21,7 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="omise_card_expiration_month">{l s='Expiration month' mod='omise'}</label>
-                  <select class="form-control" id="omise_card_expiration_month">
+                  <select class="form-control form-control-select" id="omise_card_expiration_month">
                     <option value="01">01</option>
                     <option value="02">02</option>
                     <option value="03">03</option>
@@ -40,7 +40,7 @@
               <div class="col-sm-6 pull-right">
                 <div class="form-group">
                   <label for="omise_card_expiration_year">{l s='Expiration year' mod='omise'}</label>
-                  <select class="form-control" id="omise_card_expiration_year">
+                  <select class="form-control form-control-select" id="omise_card_expiration_year">
                     {html_options values=$list_of_expiration_year output=$list_of_expiration_year}
                   </select>
                 </div>
