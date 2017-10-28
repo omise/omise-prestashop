@@ -9,7 +9,7 @@
                 <input class="no-uniform" id="omiseInternetBankingScb" name="offsite" type="radio" value="internet_banking_scb" autocomplete="off">
                 <label for="omiseInternetBankingScb">
                   <div class="omise-logo-wrapper scb">
-                    <img src="modules/omise/img/scb.svg" class="scb">
+                    <img src="/modules/omise/img/scb.svg" class="scb">
                   </div>
                   <div class="omise-bank-text-wrapper">
                     <span class="title">{l s='Siam Commercial Bank' mod='omise'}</span><br>
@@ -21,7 +21,7 @@
                 <input class="no-uniform" id="omiseInternetBankingKtb" name="offsite" type="radio" value="internet_banking_ktb" autocomplete="off">
                 <label for="omiseInternetBankingKtb">
                   <div class="omise-logo-wrapper ktb">
-                    <img src="modules/omise/img/ktb.svg" class="ktb">
+                    <img src="/modules/omise/img/ktb.svg" class="ktb">
                   </div>
                   <div class="omise-bank-text-wrapper">
                     <span class="title">{l s='Krungthai Bank' mod='omise'}</span><br>
@@ -33,7 +33,7 @@
                 <input class="no-uniform" id="omiseInternetBankingBay" name="offsite" type="radio" value="internet_banking_bay" autocomplete="off">
                 <label for="omiseInternetBankingBay">
                   <div class="omise-logo-wrapper bay">
-                    <img src="modules/omise/img/bay.svg" class="bay">
+                    <img src="/modules/omise/img/bay.svg" class="bay">
                   </div>
                   <div class="omise-bank-text-wrapper">
                     <span class="title">{l s='Krungsri Bank' mod='omise'}</span><br>
@@ -45,7 +45,7 @@
                 <input class="no-uniform" id="omiseInternetBankingBbl" name="offsite" type="radio" value="internet_banking_bbl" autocomplete="off">
                 <label for="omiseInternetBankingBbl">
                   <div class="omise-logo-wrapper bbl">
-                    <img src="modules/omise/img/bbl.svg" class="bbl">
+                    <img src="/modules/omise/img/bbl.svg" class="bbl">
                   </div>
                   <div class="omise-bank-text-wrapper">
                     <span class="title">{l s='Bangkok Bank' mod='omise'}</span><br>
