@@ -2,7 +2,7 @@
   <div class="col-xs-12">
     <div class="box">
       <div class="row">
-        <div class="col-sm-8 col-md-5 col-lg-4">
+        <div class="col-sm-12">
           <form id="omiseInternetBankingCheckoutForm" method="post" action="{$link->getModuleLink('omise', 'internetbankingpayment', [], true)|escape:'html'}">
             <ul class="omise-internet-banking">
               <li class="item">
