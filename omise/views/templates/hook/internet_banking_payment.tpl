@@ -57,9 +57,6 @@
                 </label>
               </li>
             </ul>
-            <button class="button btn btn-default standard-checkout button-medium" id="omiseInternetBankingCheckoutButton">
-              <span>{l s='Submit Payment' mod='omise'}</span>
-            </button>
           </form>
         </div>
       </div>
