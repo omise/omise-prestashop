@@ -230,7 +230,24 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->omise->hookPayment());
     }
 
-    public function testHookPaymentOptions_moduleStatusIsDisabled_paymentOptionsIsNull()
+    public function testHookPaymentOptions_internetBankingIsEnabled_displayInternetBankingPaymentOption() {
+        $this->setting->method('isInternetBankingEnabled')->willReturn(true);
+        m::mock('alias:\OmisePluginHelperCharge')
+            ->shouldReceive('isCurrentCurrencyApplicable')
+            ->andReturn(true);
+        $this->omise->method('display')->willReturn('internetBankingPayment');
+
+        m::mock('overload:PrestaShop\PrestaShop\Core\Payment\PaymentOption')
+            ->shouldReceive('setCallToActionText')->with('Internet Banking')->once()
+            ->shouldReceive('setForm')->with('internetBankingPayment')->once()
+            ->shouldReceive('setModuleName')->with(Omise::INTERNET_BANKING_PAYMENT_OPTION_NAME);
+
+        $payment_options = $this->omise->hookPaymentOptions();
+
+        $this->assertNotNull($payment_options);
+    }
+
+    public function testHookPaymentOptions_moduleStatusIsDisabledAndInternetBankingIsDisabled_paymentOptionsIsNull()
     {
         $this->setting->method('isModuleEnabled')->willReturn(false);
 

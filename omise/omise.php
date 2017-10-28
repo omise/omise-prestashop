@@ -36,6 +36,25 @@ class Omise extends PaymentModule
     const DEFAULT_CARD_PAYMENT_TITLE = 'Pay by Credit / Debit Card';
 
     /**
+     * The default title of internet banking payment.
+     *
+     * @var string
+     */
+    const DEFAULT_INTERNET_BANKING_PAYMENT_TITLE = 'Internet Banking';
+
+    /**
+     * The name that used as the identifier of internet banking payment option.
+     *
+     * A payment module can has more than one payment option. At the front office, each payment options can be
+     * identified by using module name (@see PaymentOption::setModuleName()).
+     *
+     * The module name is displayed at front office as an attribute of the payment option.
+     *
+     * @var string
+     */
+    const INTERNET_BANKING_PAYMENT_OPTION_NAME = 'omise-internet-banking-payment';
+
+    /**
      * The name that will be display to the user at the back-end.
      *
      * @var string
@@ -219,17 +238,27 @@ class Omise extends PaymentModule
 
     public function hookPaymentOptions()
     {
-        if ($this->setting->isModuleEnabled() == false) {
-            return;
-        }
-
         $payment_options = array();
 
-        $payment_option = new PaymentOption();
-        $payment_option->setCallToActionText($this->setting->getTitle());
-        $payment_option->setForm($this->displayPayment());
-        $payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
-        $payment_options[] = $payment_option;
+        if ($this->setting->isModuleEnabled()) {
+            $card_payment_option = new PaymentOption();
+            $card_payment_option->setCallToActionText($this->setting->getTitle());
+            $card_payment_option->setForm($this->displayPayment());
+            $card_payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
+            $payment_options[] = $card_payment_option;
+        }
+
+        if ($this->setting->isInternetBankingEnabled()) {
+            $internet_banking_payment_option = new PaymentOption();
+            $internet_banking_payment_option->setCallToActionText(self::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE);
+            $internet_banking_payment_option->setForm($this->displayInternetBankingPayment());
+            $internet_banking_payment_option->setModuleName(self::INTERNET_BANKING_PAYMENT_OPTION_NAME);
+            $payment_options[] = $internet_banking_payment_option;
+        }
+
+        if (count($payment_options) == 0) {
+            return null;
+        }
 
         return $payment_options;
     }
