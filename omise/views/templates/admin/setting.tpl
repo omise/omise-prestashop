@@ -1,4 +1,4 @@
-{$confirmation}
+{if isset($confirmation)}{$confirmation}{/if}
 
 <form class="defaultForm form-horizontal" method="post">
   <div class="panel">
