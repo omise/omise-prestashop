@@ -147,10 +147,6 @@ class Omise extends PaymentModule
      */
     protected function displayInternetBankingPayment()
     {
-        if ($this->isCurrentCurrencyApplicable() == false) {
-            return $this->displayInapplicableInternetBankingPayment();
-        }
-
         return $this->display(__FILE__, 'internet_banking_payment.tpl');
     }
 
@@ -161,10 +157,6 @@ class Omise extends PaymentModule
      */
     protected function displayPayment()
     {
-        if ($this->isCurrentCurrencyApplicable() == false) {
-            return $this->displayInapplicablePayment();
-        }
-
         $this->smarty->assign('action', $this->getAction());
         $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
         $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
