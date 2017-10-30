@@ -10,8 +10,10 @@
   left: 14px;
 }
 .omise-internet-banking > li > label {
+  display: block !important;
   width: 100%;
   margin-left: 36px;
+  text-align: left;
   cursor: pointer;
 }
 .omise-internet-banking .omise-logo-wrapper {

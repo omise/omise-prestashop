@@ -36,6 +36,25 @@ class Omise extends PaymentModule
     const DEFAULT_CARD_PAYMENT_TITLE = 'Pay by Credit / Debit Card';
 
     /**
+     * The default title of internet banking payment.
+     *
+     * @var string
+     */
+    const DEFAULT_INTERNET_BANKING_PAYMENT_TITLE = 'Internet Banking';
+
+    /**
+     * The name that used as the identifier of internet banking payment option.
+     *
+     * A payment module can has more than one payment option. At the front office, each payment options can be
+     * identified by using module name (@see PaymentOption::setModuleName()).
+     *
+     * The module name is displayed at front office as an attribute of the payment option.
+     *
+     * @var string
+     */
+    const INTERNET_BANKING_PAYMENT_OPTION_NAME = 'omise-internet-banking-payment';
+
+    /**
      * The name that will be display to the user at the back-end.
      *
      * @var string
@@ -112,26 +131,12 @@ class Omise extends PaymentModule
     }
 
     /**
-     * Display the message about the inapplicable internet banking checkout condition.
-     *
-     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
-     */
-    protected function displayInapplicableInternetBankingPayment()
-    {
-        return $this->display(__FILE__, 'inapplicable_internet_banking_payment.tpl');
-    }
-
-    /**
      * Display the internet banking checkout form.
      *
      * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
      */
     protected function displayInternetBankingPayment()
     {
-        if ($this->isCurrentCurrencyApplicable() == false) {
-            return $this->displayInapplicableInternetBankingPayment();
-        }
-
         return $this->display(__FILE__, 'internet_banking_payment.tpl');
     }
 
@@ -140,17 +145,51 @@ class Omise extends PaymentModule
      *
      * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
      */
-    protected function displayPayment()
+    protected function displayCardPayment()
     {
-        if ($this->isCurrentCurrencyApplicable() == false) {
-            return $this->displayInapplicablePayment();
-        }
-
         $this->smarty->assign('action', $this->getAction());
         $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
         $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
 
-        return $this->display(__FILE__, 'payment.tpl');
+        return $this->display(__FILE__, 'card_payment.tpl');
+    }
+
+    /**
+     * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     */
+    protected function generateCardPaymentOption()
+    {
+        $payment_option = new PaymentOption();
+
+        $payment_option->setCallToActionText($this->setting->getTitle());
+        $payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
+
+        if ($this->isCurrentCurrencyApplicable()) {
+            $payment_option->setForm($this->displayCardPayment());
+        } else {
+            $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
+        }
+
+        return $payment_option;
+    }
+
+    /**
+     * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     */
+    protected function generateInternetBankingPaymentOption()
+    {
+        $payment_option = new PaymentOption();
+
+        $payment_option->setCallToActionText(self::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE);
+        $payment_option->setModuleName(self::INTERNET_BANKING_PAYMENT_OPTION_NAME);
+
+        if ($this->isCurrentCurrencyApplicable()) {
+            $payment_option->setForm($this->displayInternetBankingPayment());
+        } else {
+            $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
+        }
+
+        return $payment_option;
     }
 
     public function getContent()
@@ -198,38 +237,21 @@ class Omise extends PaymentModule
         }
     }
 
-    public function hookPayment()
+    public function hookPaymentOptions()
     {
-        if ($this->active == false) {
-            return;
-        }
-
-        $payment = '';
+        $payment_options = array();
 
         if ($this->setting->isModuleEnabled()) {
-            $payment .= $this->displayPayment();
+            $payment_options[] = $this->generateCardPaymentOption();
         }
 
         if ($this->setting->isInternetBankingEnabled()) {
-            $payment .= $this->displayInternetBankingPayment();
+            $payment_options[] = $this->generateInternetBankingPaymentOption();
         }
 
-        return $payment;
-    }
-
-    public function hookPaymentOptions()
-    {
-        if ($this->setting->isModuleEnabled() == false) {
-            return;
+        if (count($payment_options) == 0) {
+            return null;
         }
-
-        $payment_options = array();
-
-        $payment_option = new PaymentOption();
-        $payment_option->setCallToActionText($this->setting->getTitle());
-        $payment_option->setForm($this->displayPayment());
-        $payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
-        $payment_options[] = $payment_option;
 
         return $payment_options;
     }
@@ -239,7 +261,6 @@ class Omise extends PaymentModule
         if (parent::install() == false
             || $this->registerHook('displayOrderConfirmation') == false
             || $this->registerHook('header') == false
-            || $this->registerHook('payment') == false
             || $this->registerHook('paymentOptions') == false
             || $this->omise_transaction_model->createTable() == false
             || $this->setting->saveTitle(self::DEFAULT_CARD_PAYMENT_TITLE) == false
@@ -292,7 +313,6 @@ class Omise extends PaymentModule
         return parent::uninstall()
             && $this->unregisterHook('displayOrderConfirmation')
             && $this->unregisterHook('header')
-            && $this->unregisterHook('payment')
             && $this->unregisterHook('paymentOptions');
     }
 
