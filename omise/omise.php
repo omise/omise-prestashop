@@ -172,6 +172,44 @@ class Omise extends PaymentModule
         return $this->display(__FILE__, 'payment.tpl');
     }
 
+    /**
+     * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     */
+    protected function generateCardPaymentOption()
+    {
+        $payment_option = new PaymentOption();
+
+        $payment_option->setCallToActionText($this->setting->getTitle());
+        $payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
+
+        if ($this->isCurrentCurrencyApplicable()) {
+            $payment_option->setForm($this->displayPayment());
+        } else {
+            $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
+        }
+
+        return $payment_option;
+    }
+
+    /**
+     * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     */
+    protected function generateInternetBankingPaymentOption()
+    {
+        $payment_option = new PaymentOption();
+
+        $payment_option->setCallToActionText(self::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE);
+        $payment_option->setModuleName(self::INTERNET_BANKING_PAYMENT_OPTION_NAME);
+
+        if ($this->isCurrentCurrencyApplicable()) {
+            $payment_option->setForm($this->displayInternetBankingPayment());
+        } else {
+            $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
+        }
+
+        return $payment_option;
+    }
+
     public function getContent()
     {
         if ($this->setting->isSubmit()) {
@@ -241,19 +279,11 @@ class Omise extends PaymentModule
         $payment_options = array();
 
         if ($this->setting->isModuleEnabled()) {
-            $card_payment_option = new PaymentOption();
-            $card_payment_option->setCallToActionText($this->setting->getTitle());
-            $card_payment_option->setForm($this->displayPayment());
-            $card_payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
-            $payment_options[] = $card_payment_option;
+            $payment_options[] = $this->generateCardPaymentOption();
         }
 
         if ($this->setting->isInternetBankingEnabled()) {
-            $internet_banking_payment_option = new PaymentOption();
-            $internet_banking_payment_option->setCallToActionText(self::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE);
-            $internet_banking_payment_option->setForm($this->displayInternetBankingPayment());
-            $internet_banking_payment_option->setModuleName(self::INTERNET_BANKING_PAYMENT_OPTION_NAME);
-            $payment_options[] = $internet_banking_payment_option;
+            $payment_options[] = $this->generateInternetBankingPaymentOption();
         }
 
         if (count($payment_options) == 0) {
