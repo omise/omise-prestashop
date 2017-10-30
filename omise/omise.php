@@ -255,25 +255,6 @@ class Omise extends PaymentModule
         }
     }
 
-    public function hookPayment()
-    {
-        if ($this->active == false) {
-            return;
-        }
-
-        $payment = '';
-
-        if ($this->setting->isModuleEnabled()) {
-            $payment .= $this->displayPayment();
-        }
-
-        if ($this->setting->isInternetBankingEnabled()) {
-            $payment .= $this->displayInternetBankingPayment();
-        }
-
-        return $payment;
-    }
-
     public function hookPaymentOptions()
     {
         $payment_options = array();
@@ -298,7 +279,6 @@ class Omise extends PaymentModule
         if (parent::install() == false
             || $this->registerHook('displayOrderConfirmation') == false
             || $this->registerHook('header') == false
-            || $this->registerHook('payment') == false
             || $this->registerHook('paymentOptions') == false
             || $this->omise_transaction_model->createTable() == false
             || $this->setting->saveTitle(self::DEFAULT_CARD_PAYMENT_TITLE) == false
@@ -351,7 +331,6 @@ class Omise extends PaymentModule
         return parent::uninstall()
             && $this->unregisterHook('displayOrderConfirmation')
             && $this->unregisterHook('header')
-            && $this->unregisterHook('payment')
             && $this->unregisterHook('paymentOptions');
     }
 
