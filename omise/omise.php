@@ -145,13 +145,13 @@ class Omise extends PaymentModule
      *
      * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
      */
-    protected function displayPayment()
+    protected function displayCardPayment()
     {
         $this->smarty->assign('action', $this->getAction());
         $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
         $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
 
-        return $this->display(__FILE__, 'payment.tpl');
+        return $this->display(__FILE__, 'card_payment.tpl');
     }
 
     /**
@@ -165,7 +165,7 @@ class Omise extends PaymentModule
         $payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
 
         if ($this->isCurrentCurrencyApplicable()) {
-            $payment_option->setForm($this->displayPayment());
+            $payment_option->setForm($this->displayCardPayment());
         } else {
             $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
         }
