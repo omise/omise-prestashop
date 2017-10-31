@@ -23,7 +23,7 @@ class OmiseInternetBankingPaymentModuleFrontController extends OmiseBasePaymentM
             return;
         }
 
-        $id_order = Order::getOrderByCartId($this->context->cart->id);
+        $id_order = Order::getIdByCartId($this->context->cart->id);
 
         $this->payment_order->updatePaymentTransactionId($id_order, $this->charge->getId());
 
