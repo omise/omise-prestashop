@@ -60,3 +60,46 @@
     </div>
   </div>
 </div>
+
+<script>
+  (function() {
+    var omiseHasAnyBankSelected = function omiseHasAnyBankSelected() {
+      var selectedBank = document.getElementsByName('offsite');
+
+      for (var i = 0; i < selectedBank.length; i++) {
+        if (selectedBank[i].checked == true) {
+          return true;
+        }
+      }
+
+      return false;
+    };
+
+    var isOmiseInternetBankingOptionSelected = function isOmiseInternetBankingOptionSelected() {
+      var omiseInternetBankingOption = document.querySelector('[data-module-name="omise-internet-banking-payment"]');
+
+      if (omiseInternetBankingOption.checked) {
+        return true;
+      }
+
+      return false;
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var paymentConfirmationButton = document.getElementById('payment-confirmation').getElementsByTagName('button')[0];
+
+      paymentConfirmationButton.addEventListener('click', function (event) {
+        if (isOmiseInternetBankingOptionSelected()) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          if (omiseHasAnyBankSelected() == false) {
+            return false;
+          }
+
+          document.getElementById('omiseInternetBankingCheckoutForm').submit();
+        }
+      });
+    });
+  })();
+</script>
