@@ -234,6 +234,7 @@ class Omise extends PaymentModule
     {
         if ($this->setting->isInternetBankingEnabled()) {
             $this->context->controller->addCSS($this->_path . 'css/omise_internet_banking.css', 'all');
+            $this->context->controller->addJqueryPlugin('fancybox.js');
         }
     }
 
