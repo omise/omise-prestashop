@@ -3,11 +3,11 @@
     <div class="box">
       <div class="row">
         <div class="col-sm-12">
-          <form id="omiseInternetBankingCheckoutForm" method="post" action="{$link->getModuleLink('omise', 'internetbankingpayment', [], true)|escape:'html'}">
+          <form id="omise-internet-banking-payment-form" method="post" action="{$link->getModuleLink('omise', 'internetbankingpayment', [], true)|escape:'html'}">
             <ul class="omise-internet-banking">
               <li class="item">
-                <input class="no-uniform" id="omiseInternetBankingScb" name="offsite" type="radio" value="internet_banking_scb" autocomplete="off">
-                <label for="omiseInternetBankingScb">
+                <input class="no-uniform" id="omise-internet-banking-scb" name="offsite" type="radio" value="internet_banking_scb" autocomplete="off">
+                <label for="omise-internet-banking-scb">
                   <div class="omise-logo-wrapper scb">
                     <img src="/modules/omise/img/scb.svg" class="scb">
                   </div>
@@ -18,8 +18,8 @@
                 </label>
               </li>
               <li class="item">
-                <input class="no-uniform" id="omiseInternetBankingKtb" name="offsite" type="radio" value="internet_banking_ktb" autocomplete="off">
-                <label for="omiseInternetBankingKtb">
+                <input class="no-uniform" id="omise-internet-banking-ktb" name="offsite" type="radio" value="internet_banking_ktb" autocomplete="off">
+                <label for="omise-internet-banking-ktb">
                   <div class="omise-logo-wrapper ktb">
                     <img src="/modules/omise/img/ktb.svg" class="ktb">
                   </div>
@@ -30,8 +30,8 @@
                 </label>
               </li>
               <li class="item">
-                <input class="no-uniform" id="omiseInternetBankingBay" name="offsite" type="radio" value="internet_banking_bay" autocomplete="off">
-                <label for="omiseInternetBankingBay">
+                <input class="no-uniform" id="omise-internet-banking-bay" name="offsite" type="radio" value="internet_banking_bay" autocomplete="off">
+                <label for="omise-internet-banking-bay">
                   <div class="omise-logo-wrapper bay">
                     <img src="/modules/omise/img/bay.svg" class="bay">
                   </div>
@@ -42,8 +42,8 @@
                 </label>
               </li>
               <li class="item">
-                <input class="no-uniform" id="omiseInternetBankingBbl" name="offsite" type="radio" value="internet_banking_bbl" autocomplete="off">
-                <label for="omiseInternetBankingBbl">
+                <input class="no-uniform" id="omise-internet-banking-bbl" name="offsite" type="radio" value="internet_banking_bbl" autocomplete="off">
+                <label for="omise-internet-banking-bbl">
                   <div class="omise-logo-wrapper bbl">
                     <img src="/modules/omise/img/bbl.svg" class="bbl">
                   </div>
@@ -119,7 +119,7 @@
             return false;
           }
 
-          document.getElementById('omiseInternetBankingCheckoutForm').submit();
+          document.getElementById('omise-internet-banking-payment-form').submit();
         }
       });
     });
