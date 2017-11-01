@@ -22,7 +22,7 @@ class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends PHPUnit_Fra
             ->getMock();
 
         m::mock('alias:\Order')
-            ->shouldReceive('getOrderByCartId')
+            ->shouldReceive('getIdByCartId')
             ->andReturn('order');
 
         $this->omise_three_domain_secure_payment_module_front_controller = new OmiseThreeDomainSecurePaymentModuleFrontController();

@@ -17,7 +17,7 @@ class OmiseThreeDomainSecurePaymentModuleFrontController extends OmiseBasePaymen
 
         parent::postProcess();
 
-        $id_order = Order::getOrderByCartId($this->context->cart->id);
+        $id_order = Order::getIdByCartId($this->context->cart->id);
 
         if (! empty($this->charge)) {
             $this->payment_order->updatePaymentTransactionId($id_order, $this->charge->getId());
