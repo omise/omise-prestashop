@@ -53,6 +53,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->omise = new Omise();
+        $this->omise->_path = '_path/';
         $this->omise->context = $this->getMockedContext();
         $this->omise->setCheckoutForm($this->checkout_form);
         $this->omise->setSetting($this->setting);
@@ -120,6 +121,26 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $this->setting->expects($this->once())->method('save');
 
         $this->omise->getContent();
+    }
+
+    public function testHookHeader_internetBankingIsEnabled_addOmiseInternetBankingCssToThePage() {
+        $this->setting->method('isInternetBankingEnabled')->willReturn(true);
+
+        $this->omise->context->controller->expects($this->once())
+            ->method('addCSS')
+            ->with('_path/css/omise_internet_banking.css', 'all');
+
+        $this->omise->hookHeader();
+    }
+
+    public function testHookHeader_internetBankingIsEnabled_addJqueryFancyboxToThePage() {
+        $this->setting->method('isInternetBankingEnabled')->willReturn(true);
+
+        $this->omise->context->controller->expects($this->once())
+            ->method('addJqueryPlugin')
+            ->with('fancybox');
+
+        $this->omise->hookHeader();
     }
 
     public function testHookPaymentOptions_internetBankingIsEnabled_displayInternetBankingPaymentOption() {
@@ -281,6 +302,15 @@ class OmiseTest extends PHPUnit_Framework_TestCase
 
     private function getMockedContext()
     {
+        $controller = $this->getMockBuilder(get_class(new stdClass()))
+            ->setMethods(
+                array(
+                    'addCSS',
+                    'addJqueryPlugin',
+                )
+            )
+            ->getMock();
+
         $currency = $this->getMockBuilder(get_class(new stdClass()));
         $currency->iso_code = 'THB';
 
@@ -293,6 +323,7 @@ class OmiseTest extends PHPUnit_Framework_TestCase
             ->getMock();
 
         $context = $this->getMockBuilder(get_class(new stdClass()))->getMock();
+        $context->controller = $controller;
         $context->currency = $currency;
         $context->link = $link;
 
