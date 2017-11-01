@@ -124,7 +124,7 @@ class OmiseChargeClass
      */
     protected function getReturnUri()
     {
-        $id_order = Order::getOrderByCartId($this->context->cart->id);
+        $id_order = Order::getIdByCartId($this->context->cart->id);
         $module = Module::getInstanceByName(Omise::MODULE_NAME);
 
         return $this->context->link->getModuleLink(Omise::MODULE_NAME, 'return', [], true) .

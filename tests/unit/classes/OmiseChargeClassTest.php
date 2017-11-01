@@ -47,7 +47,7 @@ class OmiseChargeClassTest extends PHPUnit_Framework_TestCase
             ->andReturn($module);
 
         m::mock('alias:\Order')
-            ->shouldReceive('getOrderByCartId')
+            ->shouldReceive('getIdByCartId')
             ->andReturn(1234);
 
         $this->getMockBuilder(get_class(new stdClass()))
