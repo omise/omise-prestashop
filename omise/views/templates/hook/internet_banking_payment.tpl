@@ -6,7 +6,7 @@
           <form id="omise-internet-banking-payment-form" method="post" action="{$link->getModuleLink('omise', 'internetbankingpayment', [], true)|escape:'html'}">
             <ul class="omise-internet-banking">
               <li class="item">
-                <input class="no-uniform" id="omise-internet-banking-scb" name="offsite" type="radio" value="internet_banking_scb" autocomplete="off">
+                <input id="omise-internet-banking-scb" name="offsite" type="radio" value="internet_banking_scb" autocomplete="off">
                 <label for="omise-internet-banking-scb">
                   <div class="omise-logo-wrapper scb">
                     <img src="/modules/omise/img/scb.svg" class="scb">
@@ -18,7 +18,7 @@
                 </label>
               </li>
               <li class="item">
-                <input class="no-uniform" id="omise-internet-banking-ktb" name="offsite" type="radio" value="internet_banking_ktb" autocomplete="off">
+                <input id="omise-internet-banking-ktb" name="offsite" type="radio" value="internet_banking_ktb" autocomplete="off">
                 <label for="omise-internet-banking-ktb">
                   <div class="omise-logo-wrapper ktb">
                     <img src="/modules/omise/img/ktb.svg" class="ktb">
@@ -30,7 +30,7 @@
                 </label>
               </li>
               <li class="item">
-                <input class="no-uniform" id="omise-internet-banking-bay" name="offsite" type="radio" value="internet_banking_bay" autocomplete="off">
+                <input id="omise-internet-banking-bay" name="offsite" type="radio" value="internet_banking_bay" autocomplete="off">
                 <label for="omise-internet-banking-bay">
                   <div class="omise-logo-wrapper bay">
                     <img src="/modules/omise/img/bay.svg" class="bay">
@@ -42,7 +42,7 @@
                 </label>
               </li>
               <li class="item">
-                <input class="no-uniform" id="omise-internet-banking-bbl" name="offsite" type="radio" value="internet_banking_bbl" autocomplete="off">
+                <input id="omise-internet-banking-bbl" name="offsite" type="radio" value="internet_banking_bbl" autocomplete="off">
                 <label for="omise-internet-banking-bbl">
                   <div class="omise-logo-wrapper bbl">
                     <img src="/modules/omise/img/bbl.svg" class="bbl">
