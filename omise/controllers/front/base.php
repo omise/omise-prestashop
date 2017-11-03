@@ -11,6 +11,17 @@ if (defined('_PS_MODULE_DIR_')) {
 }
 
 /**
+ * Specify the version of Omise API that the module, Omise PrestaShop, is compatible.
+ *
+ * This constant is used to append to request header. The request is send by library, Omise PHP.
+ *
+ * @see OmiseApiResource::genOptions() The function in library, Omise PHP, that uses this constant.
+ */
+if (! defined('OMISE_API_VERSION')) {
+    define('OMISE_API_VERSION', '2015-11-17');
+}
+
+/**
  * Specify the software version when sending the request to Omise API. The specified versions will be displayed at
  * Omise dashboard.
  *
