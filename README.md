@@ -26,33 +26,33 @@ The steps below are the method to install the module manually. This method requi
 1. Download the [Omise PrestaShop latest version](https://github.com/omise/omise-prestashop/archive/master.zip).
 2. Extract the file that you downloaded.
 
-After extracted the file, you will found a folder, **omise**. Copy and place it into the directory, **/modules**, of your PrestaShop site.
-<p align="center"><img width="600" alt="omise-prestashop-master" src="https://cloud.githubusercontent.com/assets/4145121/23548905/44a8fa5c-003c-11e7-97ef-d46111d98c53.png"></p>
+    After extracted the file, you will found a folder, **omise**. Copy and place it into the directory, **/modules**, of your PrestaShop site.
+    <p align="center"><img width="600" alt="omise-prestashop-master" src="https://cloud.githubusercontent.com/assets/4145121/23548905/44a8fa5c-003c-11e7-97ef-d46111d98c53.png"></p>
 
 3. Login to your PrestaShop back office, go to **Module and Services** page.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548922/577a299e-003c-11e7-8ad2-95789f0a62e8.png"></p>
+    <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548922/577a299e-003c-11e7-8ad2-95789f0a62e8.png"></p>
 
 4. Type **omise** at the search box. The Omise module will be displayed at the list.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24507163/f34cd36e-1589-11e7-86ee-b52aa2aed533.png"></p>
+    <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24507163/f34cd36e-1589-11e7-86ee-b52aa2aed533.png"></p>
 
 5. Click **Install** button.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24506758/b17a471a-1588-11e7-8f47-a4a25c67daf3.png"></p>
+    <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24506758/b17a471a-1588-11e7-8f47-a4a25c67daf3.png"></p>
 
 6. Confirm the installation by click **Proceed with the installation** button.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548960/82beae4a-003c-11e7-9895-fc48704df3b4.png"></p>
+    <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548960/82beae4a-003c-11e7-9895-fc48704df3b4.png"></p>
 
 ### First Time Setup
 
 After the installation, you can configure the module by:
 
 1. Login to your PrestaShop back office, go to **Module and Services** page.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548922/577a299e-003c-11e7-8ad2-95789f0a62e8.png"></p>
+    <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/23548922/577a299e-003c-11e7-8ad2-95789f0a62e8.png"></p>
 
 2. Type **omise** at the search box. The Omise module will be displayed at the list.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504148/471ec17e-157f-11e7-91ae-170f39e2da50.png"></p>
+    <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504148/471ec17e-157f-11e7-91ae-170f39e2da50.png"></p>
 
 3. Click **Configuration** button.
-<p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504149/471fd1c2-157f-11e7-9106-44cc67699f1c.png"></p>
+    <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504149/471fd1c2-157f-11e7-9106-44cc67699f1c.png"></p>
 
 The system will display the module configuration page.
 <p align="center"><img width="800" src="https://cloud.githubusercontent.com/assets/4145121/24504150/47264c28-157f-11e7-866f-9dbfa94702c6.png"></p>
