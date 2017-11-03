@@ -32,6 +32,15 @@ class OmiseBasePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCa
     }
 
     /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testOmiseApiVersion_beforeSendTheRequestToOmiseApi_omiseApiVersionIs20151117()
+    {
+        $this->assertEquals('2015-11-17', OMISE_API_VERSION);
+    }
+
+    /**
       * @runInSeparateProcess
       * @preserveGlobalState disabled
       */
