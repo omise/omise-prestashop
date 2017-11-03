@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.3] 2017-11-03
+- *`Added`* Specify Omise API version to be 2015-11-17
+
 ## [1.2] 2017-06-21
 - *`Added`* Save the Omise charge ID to order payment transaction ID for reference
 - *`Changed`* 3-D Secure payment, if charge is failed, update the order status to be **Canceled** instead of remain it **Processing in progress**
