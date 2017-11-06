@@ -16,6 +16,7 @@ class OmiseInternetBankingPaymentModuleFrontControllerTest extends PHPUnit_Frame
                 array(
                     '__construct',
                     'addOmiseTransaction',
+                    'l',
                     'postProcess',
                     'setRedirectAfter',
                     'validateCart',

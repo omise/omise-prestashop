@@ -14,6 +14,7 @@ class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends PHPUnit_Fra
                 array(
                     '__construct',
                     'addOmiseTransaction',
+                    'l',
                     'postProcess',
                     'setRedirectAfter',
                     'validateCart',
