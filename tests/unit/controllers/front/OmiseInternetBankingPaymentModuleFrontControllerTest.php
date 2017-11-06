@@ -1,7 +1,7 @@
 <?php
 use \Mockery as m;
 
-class OmiseInternetBankingPaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
+class OmiseInternetBankingPaymentModuleFrontControllerTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     private $charge;
     private $omise_charge;
@@ -163,10 +163,5 @@ class OmiseInternetBankingPaymentModuleFrontControllerTest extends PHPUnit_Frame
             ->getMock();
 
         return $payment_order;
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 }

@@ -1,7 +1,7 @@
 <?php
 use \Mockery as m;
 
-class OmiseChargeClassTest extends PHPUnit_Framework_TestCase
+class OmiseChargeClassTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     private $omise_charge_class;
     private $omise_plugin_helper_charge;
@@ -236,11 +236,6 @@ class OmiseChargeClassTest extends PHPUnit_Framework_TestCase
     private function createChargeErrorMessage()
     {
         return '(failureCode) failureMessage';
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 }
 

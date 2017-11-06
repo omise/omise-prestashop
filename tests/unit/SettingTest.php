@@ -1,7 +1,7 @@
 <?php
 use \Mockery as m;
 
-class SettingTest extends PHPUnit_Framework_TestCase
+class SettingTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     private $setting;
 
@@ -280,10 +280,5 @@ class SettingTest extends PHPUnit_Framework_TestCase
             ->shouldReceive('updateValue')->andReturn(true);
 
         $this->assertTrue($this->setting->saveTitle('title'));
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 }

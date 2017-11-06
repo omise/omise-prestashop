@@ -1,7 +1,7 @@
 <?php
 use \Mockery as m;
 
-class OmiseBasePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
+class OmiseBasePaymentModuleFrontControllerTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     public function setup()
     {
@@ -64,10 +64,5 @@ class OmiseBasePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCa
         $omise_user_agent_suffix = explode(' ', OMISE_USER_AGENT_SUFFIX);
 
         $this->assertEquals($prestashop_version, $omise_user_agent_suffix[1]);
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 }

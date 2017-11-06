@@ -1,7 +1,7 @@
 <?php
 use \Mockery as m;
 
-class OmiseTest extends PHPUnit_Framework_TestCase
+class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     private $checkout_form;
     private $omise;
@@ -380,10 +380,5 @@ class OmiseTest extends PHPUnit_Framework_TestCase
         $setting->method('isThreeDomainSecureEnabled')->willReturn('three_domain_secure_status');
 
         return $setting;
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 }

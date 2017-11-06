@@ -1,7 +1,7 @@
 <?php
 use \Mockery as m;
 
-class PaymentOrderTest extends PHPUnit_Framework_TestCase
+class PaymentOrderTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     private $cart_id = 1234;
     private $cart_order_total = 100.25;
@@ -272,11 +272,6 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
             ->with($this->payment_order->getOrderStateAcceptedPayment());
 
         $this->payment_order->updateStateToBeSuccess($this->order);
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 
     private function createMockedOrder()

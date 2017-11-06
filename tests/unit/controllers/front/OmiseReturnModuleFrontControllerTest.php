@@ -1,7 +1,7 @@
 <?php
 use \Mockery as m;
 
-class OmiseReturnModuleFrontControllerTest extends PHPUnit_Framework_TestCase
+class OmiseReturnModuleFrontControllerTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     private $omise_return_module_front_controller;
 
@@ -70,10 +70,5 @@ class OmiseReturnModuleFrontControllerTest extends PHPUnit_Framework_TestCase
             ->getMock();
 
         return $payment_order;
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 }

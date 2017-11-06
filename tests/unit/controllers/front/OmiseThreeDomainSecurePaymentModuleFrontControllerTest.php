@@ -1,7 +1,7 @@
 <?php
 use \Mockery as m;
 
-class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
+class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     private $omise_base_payment_module_front_controller;
     private $omise_three_domain_secure_payment_module_front_controller;
@@ -123,10 +123,5 @@ class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends PHPUnit_Fra
             ->getMock();
 
         return $payment_order;
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 }
