@@ -164,4 +164,9 @@ class OmiseInternetBankingPaymentModuleFrontControllerTest extends PHPUnit_Frame
 
         return $payment_order;
     }
+
+    public function tearDown()
+    {
+        m::close();
+    }
 }
