@@ -141,11 +141,6 @@ class PaymentOrder
         );
     }
 
-    public function saveAsProcessing()
-    {
-        $this->save($this->getOrderStateProcessingInProgress());
-    }
-
     /**
      * Update an order payment transaction ID to database.
      *
