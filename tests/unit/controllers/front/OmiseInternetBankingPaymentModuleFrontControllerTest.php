@@ -10,19 +10,10 @@ class OmiseInternetBankingPaymentModuleFrontControllerTest extends Mockery\Adapt
 
     public function setup()
     {
-        $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('OmiseBasePaymentModuleFrontController')
-            ->setMethods(
-                array(
-                    '__construct',
-                    'addOmiseTransaction',
-                    'l',
-                    'postProcess',
-                    'setRedirectAfter',
-                    'validateCart',
-                )
-            )
-            ->getMock();
+        $unit_test_helper = new UnitTestHelper();
+
+        $unit_test_helper->getMockedOmiseBasePaymentModuleFrontController();
+        $unit_test_helper->getMockedPaymentModule();
 
         m::mock('alias:\Order')
             ->shouldReceive('getIdByCartId')
@@ -33,9 +24,9 @@ class OmiseInternetBankingPaymentModuleFrontControllerTest extends Mockery\Adapt
             ->with('offsite')
             ->andReturn('mocked_offsite');
 
-        $this->charge = $this->getMockedCharge();
+        $this->charge = $unit_test_helper->getMockedCharge();
         $this->omise_charge = $this->getMockedOmiseCharge();
-        $this->payment_order = $this->getMockedPaymentOrder();
+        $this->payment_order = $unit_test_helper->getMockedPaymentOrder();
 
         $this->omise_internet_banking_payment_module_front_controller = new OmiseInternetBankingPaymentModuleFrontController();
         $this->omise_internet_banking_payment_module_front_controller->charge = $this->charge;
@@ -58,7 +49,7 @@ class OmiseInternetBankingPaymentModuleFrontControllerTest extends Mockery\Adapt
     {
         $this->payment_order
             ->expects($this->once())
-            ->method('saveAsProcessing');
+            ->method('save');
 
         $this->omise_internet_banking_payment_module_front_controller->postProcess();
     }
@@ -109,22 +100,6 @@ class OmiseInternetBankingPaymentModuleFrontControllerTest extends Mockery\Adapt
         $this->omise_internet_banking_payment_module_front_controller->postProcess();
     }
 
-    private function getMockedCharge()
-    {
-        $charge = $this->getMockBuilder(get_class(new stdClass()))
-            ->setMethods(
-                array(
-                    'getAuthorizeUri',
-                    'getErrorMessage',
-                    'getId',
-                    'isFailed',
-                )
-            )
-            ->getMock();
-
-        return $charge;
-    }
-
     private function getMockedContext()
     {
         $cart = $this->getMockBuilder(get_class(new stdClass()))->getMock();
@@ -149,19 +124,5 @@ class OmiseInternetBankingPaymentModuleFrontControllerTest extends Mockery\Adapt
         $omise_charge->method('createInternetBanking')->willReturn($this->charge);
 
         return $omise_charge;
-    }
-
-    private function getMockedPaymentOrder()
-    {
-        $payment_order = $this->getMockBuilder(get_class(new stdClass()))
-            ->setMethods(
-                array(
-                    'saveAsProcessing',
-                    'updatePaymentTransactionId',
-                )
-            )
-            ->getMock();
-
-        return $payment_order;
     }
 }
