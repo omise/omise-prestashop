@@ -13,7 +13,10 @@ class OmiseThreeDomainSecurePaymentModuleFrontController extends OmiseBasePaymen
     {
         $this->validateCart();
 
-        $this->payment_order->saveAsProcessing();
+        $this->payment_order->save(
+            $this->payment_order->getOrderStateProcessingInProgress(),
+            $this->setting->getTitle()
+        );
 
         parent::postProcess();
 
