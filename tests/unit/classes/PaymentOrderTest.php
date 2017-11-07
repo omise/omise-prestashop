@@ -123,7 +123,7 @@ class PaymentOrderTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->module->expects($this->once())
             ->method('validateOrder')
             ->with($this->cart_id,
-                $this->order_state_accepted_payment,
+                'idOrderState',
                 $this->cart_order_total,
                 $this->module_display_name,
                 $this->optional_message,
@@ -133,7 +133,7 @@ class PaymentOrderTest extends Mockery\Adapter\Phpunit\MockeryTestCase
                 $this->customer_secure_key
             );
 
-        $this->payment_order->save(null, $id_charge);
+        $this->payment_order->save('idOrderState', $id_charge);
     }
 
     public function testSave_theParameterOmiseChargeIdIsNull_noAnyOmiseChargeIdIsSaveToDatabaseForReference()
@@ -143,7 +143,7 @@ class PaymentOrderTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->module->expects($this->once())
             ->method('validateOrder')
             ->with($this->cart_id,
-                $this->order_state_accepted_payment,
+                'idOrderState',
                 $this->cart_order_total,
                 $this->module_display_name,
                 $this->optional_message,
@@ -153,7 +153,7 @@ class PaymentOrderTest extends Mockery\Adapter\Phpunit\MockeryTestCase
                 $this->customer_secure_key
             );
 
-        $this->payment_order->save(null, $id_charge);
+        $this->payment_order->save('idOrderState', $id_charge);
     }
 
     public function testSave_theParameterOmiseChargeIdIsNotEmpty_saveAnOmiseChargeIdToDatabaseForReference()
@@ -163,7 +163,7 @@ class PaymentOrderTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->module->expects($this->once())
             ->method('validateOrder')
             ->with($this->cart_id,
-                $this->order_state_accepted_payment,
+                'idOrderState',
                 $this->cart_order_total,
                 $this->module_display_name,
                 $this->optional_message,
@@ -173,7 +173,7 @@ class PaymentOrderTest extends Mockery\Adapter\Phpunit\MockeryTestCase
                 $this->customer_secure_key
             );
 
-        $this->payment_order->save(null, $id_charge);
+        $this->payment_order->save('idOrderState', $id_charge);
     }
 
     public function testSave_theParameterOrderStateIsEmpty_onlyOneOrderHasBeenSaved()
@@ -181,7 +181,7 @@ class PaymentOrderTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->module->expects($this->once())
             ->method('validateOrder')
             ->with($this->cart_id,
-                $this->order_state_accepted_payment,
+                'idOrderState',
                 $this->cart_order_total,
                 $this->module_display_name,
                 $this->optional_message,
@@ -191,7 +191,7 @@ class PaymentOrderTest extends Mockery\Adapter\Phpunit\MockeryTestCase
                 $this->customer_secure_key
             );
 
-        $this->payment_order->save();
+        $this->payment_order->save('idOrderState');
     }
 
     public function testSave_theParameterOrderStateIsNotEmpty_onlyOneOrderHasBeenSaved()

@@ -125,12 +125,8 @@ class PaymentOrder
      * @param int $id_order_state
      * @param string $id_charge The Omise charge ID.
      */
-    public function save($id_order_state = null, $id_charge = null)
+    public function save($id_order_state, $id_charge = null)
     {
-        if (empty($id_order_state)) {
-            $id_order_state = $this->getOrderStateAcceptedPayment();
-        }
-
         $this->module->validateOrder(
             $this->getCartId(),
             $id_order_state,
