@@ -122,31 +122,23 @@ class PaymentOrder
     /**
      * Save an order to database by using PrestaShop core function.
      *
-     * @param int $order_state
+     * @param int $id_order_state
+     * @param string $payment_method The name of payment method.
      * @param string $id_charge The Omise charge ID.
      */
-    public function save($order_state = null, $id_charge = null)
+    public function save($id_order_state, $payment_method, $id_charge = null)
     {
-        if (empty($order_state)) {
-            $order_state = $this->getOrderStateAcceptedPayment();
-        }
-
         $this->module->validateOrder(
             $this->getCartId(),
-            $order_state,
+            $id_order_state,
             $this->getCartOrderTotal(),
-            $this->getModuleDisplayName(),
+            $payment_method,
             $this->getOptionalMessage(),
             $this->getExtraVariables($id_charge),
             $this->getCurrencyId(),
             $this->isNotNeededRoundingCardOrderTotal(),
             $this->getCustomerSecureKey()
         );
-    }
-
-    public function saveAsProcessing()
-    {
-        $this->save($this->getOrderStateProcessingInProgress());
     }
 
     /**

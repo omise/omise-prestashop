@@ -11,21 +11,9 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 
     public function setup()
     {
-        $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('PaymentModule')
-            ->setMethods(
-                array(
-                    '__construct',
-                    'display',
-                    'displayConfirmation',
-                    'install',
-                    'l',
-                    'registerHook',
-                    'uninstall',
-                    'unregisterHook',
-                )
-            )
-            ->getMock();
+        $unit_test_helper = new UnitTestHelper();
+
+        $unit_test_helper->getMockedPaymentModule();
 
         $this->checkout_form = $this->getMockBuilder(get_class(new CheckoutForm()))
             ->setMethods(
@@ -41,7 +29,7 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 
         $this->omise_transaction_model = $this->getMockedOmiseTransactionModel();
 
-        $this->setting = $this->getMockedSetting();
+        $this->setting = $unit_test_helper->getMockedSetting();
 
         $this->smarty = $this->getMockBuilder(get_class(new stdClass()))
             ->setMockClassName('Smarty')
@@ -56,9 +44,9 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->omise->_path = '_path/';
         $this->omise->context = $this->getMockedContext();
         $this->omise->setCheckoutForm($this->checkout_form);
+        $this->omise->setOmiseTransactionModel($this->omise_transaction_model);
         $this->omise->setSetting($this->setting);
         $this->omise->setSmarty($this->smarty);
-        $this->omise->setOmiseTransactionModel($this->omise_transaction_model);
     }
 
     public function testConstructor_whenInitiateTheNewInstance_theDefaultValueOfTheAttributeSettingMustBeAvailable()
@@ -343,42 +331,5 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
             ->getMock();
 
         return $omise_transaction_model;
-    }
-
-    private function getMockedSetting()
-    {
-        $setting = $this->getMockBuilder(get_class(new Setting()))
-            ->setMethods(
-                array(
-                    'delete',
-                    'getLivePublicKey',
-                    'getLiveSecretKey',
-                    'getPublicKey',
-                    'getSubmitAction',
-                    'getTestPublicKey',
-                    'getTestSecretKey',
-                    'getTitle',
-                    'isInternetBankingEnabled',
-                    'isModuleEnabled',
-                    'isSandboxEnabled',
-                    'isSubmit',
-                    'isThreeDomainSecureEnabled',
-                    'save',
-                    'saveTitle',
-                )
-            )
-            ->getMock();
-
-        $setting->method('getLivePublicKey')->willReturn('live_public_key');
-        $setting->method('getLiveSecretKey')->willReturn('live_secret_key');
-        $setting->method('getPublicKey')->willReturn('omise_public_key');
-        $setting->method('getSubmitAction')->willReturn('submit_action');
-        $setting->method('getTestPublicKey')->willReturn('test_public_key');
-        $setting->method('getTestSecretKey')->willReturn('test_secret_key');
-        $setting->method('getTitle')->willReturn('title');
-        $setting->method('isSandboxEnabled')->willReturn('sandbox_status');
-        $setting->method('isThreeDomainSecureEnabled')->willReturn('three_domain_secure_status');
-
-        return $setting;
     }
 }

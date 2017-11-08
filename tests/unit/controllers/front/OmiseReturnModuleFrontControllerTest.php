@@ -7,28 +7,22 @@ class OmiseReturnModuleFrontControllerTest extends Mockery\Adapter\Phpunit\Mocke
 
     public function setup()
     {
-        $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('OmiseBasePaymentModuleFrontController')
-            ->setMethods(
-                array(
-                    '__construct',
-                    'addOmiseTransaction',
-                    'l',
-                    'postProcess',
-                    'setRedirectAfter',
-                    'validateCart',
-                )
-            )
-            ->getMock();
+        $unit_test_helper = new UnitTestHelper();
 
-        m::mock('overload:\Order');
+        $unit_test_helper->getMockedOmiseBasePaymentModuleFrontController();
 
-        m::mock('alias:\Tools')->shouldIgnoreMissing();
+        m::mock('alias:\Order');
+
+        m::mock('alias:\Tools')
+            ->shouldReceive('getValue')->with('id_cart')->andReturn('idCart')
+            ->shouldReceive('getValue')->with('id_module')->andReturn('idModule')
+            ->shouldReceive('getValue')->with('id_order')->andReturn('idOrder')
+            ->shouldReceive('getValue')->with('key')->andReturn('key');
 
         m::mock('alias:\Validate')->shouldIgnoreMissing();
 
         $this->omise_return_module_front_controller = new OmiseReturnModuleFrontController();
-        $this->omise_return_module_front_controller->payment_order = $this->getMockedPaymentOrder();
+        $this->omise_return_module_front_controller->payment_order = $unit_test_helper->getMockedPaymentOrder();
     }
 
     public function testPostProcess_orderIsNotFound_errorMessageMustBeDefined()
@@ -54,21 +48,5 @@ class OmiseReturnModuleFrontControllerTest extends Mockery\Adapter\Phpunit\Mocke
             ->shouldReceive('getValue')->with('key')->andReturn('key');
 
         $this->omise_return_module_front_controller->postProcess();
-    }
-
-    private function getMockedPaymentOrder()
-    {
-        $payment_order = $this->getMockBuilder(get_class(new stdClass()))
-            ->setMethods(
-                array(
-                    'saveAsProcessing',
-                    'updatePaymentTransactionId',
-                    'updateStateToBeCanceled',
-                    'updateStateToBeSuccess',
-                )
-            )
-            ->getMock();
-
-        return $payment_order;
     }
 }

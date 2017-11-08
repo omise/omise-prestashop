@@ -14,7 +14,10 @@ class OmiseInternetBankingPaymentModuleFrontController extends OmiseBasePaymentM
     {
         $this->validateCart();
 
-        $this->payment_order->saveAsProcessing();
+        $this->payment_order->save(
+            $this->payment_order->getOrderStateProcessingInProgress(),
+            Omise::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE
+        );
 
         try {
             $this->charge = $this->omise_charge->createInternetBanking(Tools::getValue('offsite'));

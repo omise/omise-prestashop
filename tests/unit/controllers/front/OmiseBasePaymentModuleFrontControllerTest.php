@@ -5,17 +5,12 @@ class OmiseBasePaymentModuleFrontControllerTest extends Mockery\Adapter\Phpunit\
 {
     public function setup()
     {
-        $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('ModuleFrontController')
-            ->setMethods(
-                array(
-                    '__construct',
-                )
-            )
-            ->getMock();
+        $unit_test_helper = new UnitTestHelper();
+
+        $unit_test_helper->getMockedPaymentModule();
 
         $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('PaymentModule')
+            ->setMockClassName('ModuleFrontController')
             ->setMethods(
                 array(
                     '__construct',

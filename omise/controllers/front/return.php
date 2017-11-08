@@ -46,7 +46,7 @@ class OmiseReturnModuleFrontController extends OmiseBasePaymentModuleFrontContro
 
         $this->order_reference = $this->order->reference;
 
-        if ($this->order->payment != Omise::MODULE_DISPLAY_NAME) {
+        if ($this->order->module != Omise::MODULE_NAME) {
             $this->error_message = $this->l('Payment method is invalid.');
             return false;
         }
