@@ -118,6 +118,14 @@ class OmiseChargeClass
     }
 
     /**
+     * @return array
+     */
+    protected function getMetadata()
+    {
+        return array('order_id' => Order::getIdByCartId($this->context->cart->id));
+    }
+
+    /**
      * Generate a PrestaShop site URL that is used to receive the redirect back from Omise API.
      *
      * @return string
