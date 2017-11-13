@@ -189,6 +189,7 @@ class OmiseChargeClassTest extends Mockery\Adapter\Phpunit\MockeryTestCase
             'capture' => 'true',
             'currency' => 'THB',
             'description' => 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')',
+            'metadata' => array('order_id' => 1234),
         );
 
         return $charge_request;
@@ -208,6 +209,7 @@ class OmiseChargeClassTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $charge_request = array(
             'amount' => 10025,
             'currency' => 'THB',
+            'metadata' => array('order_id' => 1234),
             'offsite' => 'offsite',
             'description' => 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')',
             'return_uri' => 'returnUri?id_cart=1&id_module=omise&id_order=1234&key=customerSecureKey',

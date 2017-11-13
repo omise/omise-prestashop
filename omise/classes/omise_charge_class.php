@@ -34,6 +34,7 @@ class OmiseChargeClass
             'capture' => 'true',
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),
+            'metadata' => $this->getMetadata(),
         );
 
         if ($this->setting->isThreeDomainSecureEnabled()) {
@@ -56,6 +57,7 @@ class OmiseChargeClass
             'amount' => $this->getAmount(),
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),
+            'metadata' => $this->getMetadata(),
             'offsite' => $offsite,
             'return_uri' => $this->getReturnUri(),
         );
@@ -115,6 +117,14 @@ class OmiseChargeClass
     public function getId()
     {
         return $this->charge_response['id'];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getMetadata()
+    {
+        return array('order_id' => Order::getIdByCartId($this->context->cart->id));
     }
 
     /**
