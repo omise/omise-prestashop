@@ -3,7 +3,6 @@ use \Mockery as m;
 
 class OmisePaymentModuleFrontControllerTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
-    private $omise_base_payment_module_front_controller;
     private $omise_payment_module_front_controller;
     private $payment_order;
 
@@ -11,7 +10,7 @@ class OmisePaymentModuleFrontControllerTest extends Mockery\Adapter\Phpunit\Mock
     {
         $unit_test_helper = new UnitTestHelper();
 
-        $this->omise_base_payment_module_front_controller = $unit_test_helper->getMockedOmiseBasePaymentModuleFrontController();
+        $unit_test_helper->getMockedOmiseBasePaymentModuleFrontController();
 
         m::mock('alias:\Order')
             ->shouldReceive('getIdByCartId')
