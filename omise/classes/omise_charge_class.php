@@ -34,6 +34,7 @@ class OmiseChargeClass
             'capture' => 'true',
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),
+            'metadata' => $this->getMetadata(),
         );
 
         if ($this->setting->isThreeDomainSecureEnabled()) {

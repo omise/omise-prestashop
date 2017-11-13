@@ -189,6 +189,7 @@ class OmiseChargeClassTest extends Mockery\Adapter\Phpunit\MockeryTestCase
             'capture' => 'true',
             'currency' => 'THB',
             'description' => 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')',
+            'metadata' => array('order_id' => 1234),
         );
 
         return $charge_request;
