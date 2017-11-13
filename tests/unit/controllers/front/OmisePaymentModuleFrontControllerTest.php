@@ -61,7 +61,7 @@ class OmisePaymentModuleFrontControllerTest extends Mockery\Adapter\Phpunit\Mock
         $this->omise_payment_module_front_controller->postProcess();
     }
 
-    public function testPostProcess_createChargeIsSuccess_redirectToOrderConfirmationPage()
+    public function testPostProcess_createChargeIsSuccess_updateOrderStatusToBeSuccess()
     {
         $this->omise_payment_module_front_controller->error_message = '';
 
