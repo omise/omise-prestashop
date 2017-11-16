@@ -80,6 +80,7 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 
     public function testGetContent_merchantOpenTheSettingPage_retrieveSettingDataFromTheDatabaseAndDisplayOnThePage()
     {
+        $this->omise->context->link->method('getModuleLink')->willReturn('webhooks_endpoint');
         $this->setting->method('isInternetBankingEnabled')->willReturn('internet_banking_status');
         $this->setting->method('isModuleEnabled')->willReturn('module_status');
 
@@ -96,6 +97,7 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
                 'test_secret_key' => 'test_secret_key',
                 'title' => 'title',
                 'three_domain_secure_status' => 'three_domain_secure_status',
+                'webhooks_endpoint' => 'webhooks_endpoint',
             ));
 
         $this->omise->getContent();

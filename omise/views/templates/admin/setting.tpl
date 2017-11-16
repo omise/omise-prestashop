@@ -59,6 +59,14 @@
         </div>
       </div>
       <div class="form-group">
+        <label class="control-label col-lg-3" for="webhooks_endpoint">{l s='Webhooks endpoint' mode='omise'}</label>
+        <div class="col-lg-9">
+          <p class="form-control-static">
+            <code>{$webhooks_endpoint}</code>
+          </p>
+        </div>
+      </div>
+      <div class="form-group">
         <label class="control-label col-lg-3"><b>{l s='Advance Settings' mode='omise'}</b></label>
       </div>
       <div class="form-group">
