@@ -67,4 +67,30 @@ class OmiseTransactionModel extends ObjectModel
 
         return $result['id_charge'];
     }
+
+    /**
+     * Return a PrestaShop order ID by searching from a given parameter, Omise charge ID.
+     *
+     * @param string $id_charge An Omise charge ID.
+     *
+     * @return int|false A PrestaShop order ID or false, if a PrestaShop order ID is not found.
+     */
+    public function getIdOrder($id_charge)
+    {
+        $query = new DbQuery();
+        $query->select('id_order');
+        $query->from('omise_transaction');
+        $query->where('id_charge = \'' . pSQL($id_charge) . '\'');
+
+        $result = Db::getInstance()->getRow($query);
+
+        if (! $result
+            || empty($result)
+            || ! array_key_exists('id_order', $result)
+        ) {
+            return false;
+        }
+
+        return $result['id_order'];
+    }
 }
