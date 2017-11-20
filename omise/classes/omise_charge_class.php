@@ -11,6 +11,9 @@ if (defined('_PS_MODULE_DIR_')) {
 
 class OmiseChargeClass
 {
+    const STATUS_FAILED = 'failed';
+    const STATUS_SUCCESSFUL = 'successful';
+
     protected $context;
     protected $charge_response;
     protected $setting;
