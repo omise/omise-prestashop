@@ -32,6 +32,10 @@ class OmiseReturnModuleFrontController extends OmiseBasePaymentModuleFrontContro
             return false;
         }
 
+        if (! $this->charge->isPaid()) {
+            return false;
+        }
+
         return true;
     }
 
