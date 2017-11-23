@@ -210,9 +210,25 @@ class Omise extends PaymentModule
             'test_secret_key' => $this->setting->getTestSecretKey(),
             'title' => $this->setting->getTitle(),
             'three_domain_secure_status' => $this->setting->isThreeDomainSecureEnabled(),
+            'webhooks_endpoint' => $this->getWebhooksEndpoint(),
         ));
 
         return $this->display(__FILE__, 'views/templates/admin/setting.tpl');
+    }
+
+    /**
+     * Generate the URL to receive the requests from Omise server when events are triggered.
+     *
+     * The examples of events such as charge has been created, updated or charge is completed.
+     *
+     * @return string Return the URL that link to front module controller.
+     *
+     * @see LinkCore::getModuleLink() The PrestaShop function used to generate link.
+     * @see OmiseWebhooksModuleFrontController The Omise controller used to handle requests from Omise server.
+     */
+    protected function getWebhooksEndpoint()
+    {
+        return $this->context->link->getModuleLink(Omise::MODULE_NAME, 'webhooks', [], true);
     }
 
     public function hookDisplayOrderConfirmation($params)

@@ -111,5 +111,25 @@ if (! class_exists('OmisePluginHelperCharge')) {
 
             return false;
         }
+
+        /**
+         *
+         * @param \omise-php\OmiseCharge $charge
+         * @return boolean
+         */
+        public static function isPaid($charge)
+        {
+            if (! self::isChargeObject($charge)) {
+                return false;
+            }
+
+            // support Omise API version '2014-07-27' by checking if 'captured' exist.
+            $paid = isset($charge['captured']) ? $charge['captured'] : $charge['paid'];
+            if ($paid === true) {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

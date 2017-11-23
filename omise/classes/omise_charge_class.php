@@ -11,6 +11,9 @@ if (defined('_PS_MODULE_DIR_')) {
 
 class OmiseChargeClass
 {
+    const STATUS_FAILED = 'failed';
+    const STATUS_SUCCESSFUL = 'successful';
+
     protected $context;
     protected $charge_response;
     protected $setting;
@@ -155,6 +158,11 @@ class OmiseChargeClass
     public function isFailed()
     {
         return OmisePluginHelperCharge::isFailed($this->charge_response);
+    }
+
+    public function isPaid()
+    {
+        return OmisePluginHelperCharge::isPaid($this->charge_response);
     }
 
     /**
