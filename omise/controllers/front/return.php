@@ -32,10 +32,6 @@ class OmiseReturnModuleFrontController extends OmiseBasePaymentModuleFrontContro
             return false;
         }
 
-        if (! $this->charge->isPaid()) {
-            return false;
-        }
-
         return true;
     }
 
@@ -80,7 +76,9 @@ class OmiseReturnModuleFrontController extends OmiseBasePaymentModuleFrontContro
             return;
         }
 
-        $this->payment_order->updateStateToBeSuccess($this->order);
+        if ($this->charge->isPaid()) {
+            $this->payment_order->updateStateToBeSuccess($this->order);
+        }
 
         $this->setRedirectAfter('index.php?controller=order-confirmation' .
             '&id_cart=' . $id_cart .
