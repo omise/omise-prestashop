@@ -1,41 +1,33 @@
 <?php
 use \Mockery as m;
 
-class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
+class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
-    private $omise_base_payment_module_front_controller;
     private $omise_three_domain_secure_payment_module_front_controller;
 
     public function setup()
     {
-        $this->omise_base_payment_module_front_controller = $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('OmiseBasePaymentModuleFrontController')
-            ->setMethods(
-                array(
-                    '__construct',
-                    'addOmiseTransaction',
-                    'postProcess',
-                    'setRedirectAfter',
-                    'validateCart',
-                )
-            )
-            ->getMock();
+        $unit_test_helper = new UnitTestHelper();
+
+        $unit_test_helper->getMockedOmiseBasePaymentModuleFrontController();
 
         m::mock('alias:\Order')
-            ->shouldReceive('getOrderByCartId')
+            ->shouldReceive('getIdByCartId')
             ->andReturn('order');
 
         $this->omise_three_domain_secure_payment_module_front_controller = new OmiseThreeDomainSecurePaymentModuleFrontController();
-        $this->omise_three_domain_secure_payment_module_front_controller->charge = $this->getMockedCharge();
+        $this->omise_three_domain_secure_payment_module_front_controller->charge = $unit_test_helper->getMockedCharge();
         $this->omise_three_domain_secure_payment_module_front_controller->context = $this->getMockedContext();
-        $this->omise_three_domain_secure_payment_module_front_controller->payment_order = $this->getMockedPaymentOrder();
+        $this->omise_three_domain_secure_payment_module_front_controller->payment_order = $unit_test_helper->getMockedPaymentOrder();
+        $this->omise_three_domain_secure_payment_module_front_controller->setting = $unit_test_helper->getMockedSetting();
     }
 
     public function testPostProcess_createThreeDomainSecureCharge_saveAnOrderWithProcessingInProgressStatus()
     {
         $this->omise_three_domain_secure_payment_module_front_controller->payment_order
             ->expects($this->once())
-            ->method('saveAsProcessing');
+            ->method('save')
+            ->with('orderStatusProcessingInProgress', 'title');
 
         $this->omise_three_domain_secure_payment_module_front_controller->postProcess();
     }
@@ -84,20 +76,6 @@ class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends PHPUnit_Fra
         $this->omise_three_domain_secure_payment_module_front_controller->postProcess();
     }
 
-    private function getMockedCharge()
-    {
-        $charge = $this->getMockBuilder(get_class(new stdClass()))
-            ->setMethods(
-                array(
-                    'getAuthorizeUri',
-                    'getId',
-                )
-            )
-            ->getMock();
-
-        return $charge;
-    }
-
     private function getMockedContext()
     {
         $context = $this->getMockBuilder(get_class(new stdClass()))->getMock();
@@ -107,25 +85,5 @@ class OmiseThreeDomainSecurePaymentModuleFrontControllerTest extends PHPUnit_Fra
         $context->cart = $cart;
 
         return $context;
-    }
-
-    private function getMockedPaymentOrder()
-    {
-        $payment_order = $this->getMockBuilder(get_class(new stdClass()))
-            ->setMethods(
-                array(
-                    'saveAsProcessing',
-                    'updatePaymentTransactionId',
-                    'updateStateToBeCanceled',
-                )
-            )
-            ->getMock();
-
-        return $payment_order;
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 }

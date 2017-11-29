@@ -11,6 +11,9 @@ if (defined('_PS_MODULE_DIR_')) {
 
 class OmiseChargeClass
 {
+    const STATUS_FAILED = 'failed';
+    const STATUS_SUCCESSFUL = 'successful';
+
     protected $context;
     protected $charge_response;
     protected $setting;
@@ -34,6 +37,7 @@ class OmiseChargeClass
             'capture' => 'true',
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),
+            'metadata' => $this->getMetadata(),
         );
 
         if ($this->setting->isThreeDomainSecureEnabled()) {
@@ -56,6 +60,7 @@ class OmiseChargeClass
             'amount' => $this->getAmount(),
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),
+            'metadata' => $this->getMetadata(),
             'offsite' => $offsite,
             'return_uri' => $this->getReturnUri(),
         );
@@ -118,13 +123,21 @@ class OmiseChargeClass
     }
 
     /**
+     * @return array
+     */
+    protected function getMetadata()
+    {
+        return array('order_id' => Order::getIdByCartId($this->context->cart->id));
+    }
+
+    /**
      * Generate a PrestaShop site URL that is used to receive the redirect back from Omise API.
      *
      * @return string
      */
     protected function getReturnUri()
     {
-        $id_order = Order::getOrderByCartId($this->context->cart->id);
+        $id_order = Order::getIdByCartId($this->context->cart->id);
         $module = Module::getInstanceByName(Omise::MODULE_NAME);
 
         return $this->context->link->getModuleLink(Omise::MODULE_NAME, 'return', [], true) .
@@ -145,6 +158,11 @@ class OmiseChargeClass
     public function isFailed()
     {
         return OmisePluginHelperCharge::isFailed($this->charge_response);
+    }
+
+    public function isPaid()
+    {
+        return OmisePluginHelperCharge::isPaid($this->charge_response);
     }
 
     /**

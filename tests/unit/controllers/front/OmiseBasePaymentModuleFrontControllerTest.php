@@ -1,21 +1,16 @@
 <?php
 use \Mockery as m;
 
-class OmiseBasePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCase
+class OmiseBasePaymentModuleFrontControllerTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     public function setup()
     {
-        $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('ModuleFrontController')
-            ->setMethods(
-                array(
-                    '__construct',
-                )
-            )
-            ->getMock();
+        $unit_test_helper = new UnitTestHelper();
+
+        $unit_test_helper->getMockedPaymentModule();
 
         $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('PaymentModule')
+            ->setMockClassName('ModuleFrontController')
             ->setMethods(
                 array(
                     '__construct',
@@ -64,10 +59,5 @@ class OmiseBasePaymentModuleFrontControllerTest extends PHPUnit_Framework_TestCa
         $omise_user_agent_suffix = explode(' ', OMISE_USER_AGENT_SUFFIX);
 
         $this->assertEquals($prestashop_version, $omise_user_agent_suffix[1]);
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 }

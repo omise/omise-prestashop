@@ -179,4 +179,14 @@ class Setting
         Configuration::updateValue('omise_three_domain_secure_status', strval(Tools::getValue('three_domain_secure_status')));
         Configuration::updateValue('omise_internet_banking_status', strval(Tools::getValue('internet_banking_status')));
     }
+
+    /**
+     * @param string $title
+     *
+     * @return bool
+     */
+    public function saveTitle($title)
+    {
+        return Configuration::updateValue('omise_title', strval($title));
+    }
 }

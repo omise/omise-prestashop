@@ -1,4 +1,4 @@
-{$confirmation}
+{if isset($confirmation)}{$confirmation}{/if}
 
 <form class="defaultForm form-horizontal" method="post">
   <div class="panel">
@@ -56,6 +56,14 @@
         <div class="col-lg-9">
           <input id="live_secret_key" name="live_secret_key" type="password" value="{$live_secret_key}">
           <p class="help-block">{l s='The "Live" mode secret key can be found in Omise Dashboard.' mode='omise'}</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-lg-3" for="webhooks_endpoint">{l s='Webhooks endpoint' mode='omise'}</label>
+        <div class="col-lg-9">
+          <p class="form-control-static">
+            <code>{$webhooks_endpoint}</code>
+          </p>
         </div>
       </div>
       <div class="form-group">

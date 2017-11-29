@@ -1,7 +1,7 @@
 <?php
 use \Mockery as m;
 
-class PaymentOrderTest extends PHPUnit_Framework_TestCase
+class PaymentOrderTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     private $cart_id = 1234;
     private $cart_order_total = 100.25;
@@ -23,9 +23,9 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->getMockBuilder(get_class(new stdClass()))
-            ->setMockClassName('PaymentModule')
-            ->getMock();
+        $unit_test_helper = new UnitTestHelper();
+
+        $unit_test_helper->getMockedPaymentModule();
 
         $cart = $this->getMockBuilder(get_class(new stdClass()))
             ->setMethods(
@@ -122,18 +122,19 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
 
         $this->module->expects($this->once())
             ->method('validateOrder')
-            ->with($this->cart_id,
-                $this->order_state_accepted_payment,
+            ->with(
+                $this->cart_id,
+                'idOrderState',
                 $this->cart_order_total,
-                $this->module_display_name,
+                'paymentMethod',
                 $this->optional_message,
-                array(),
+                $this->extra_variables,
                 $this->currency_id,
                 $this->is_not_needed_rounding_card_order_total,
                 $this->customer_secure_key
             );
 
-        $this->payment_order->save(null, $id_charge);
+        $this->payment_order->save('idOrderState', 'paymentMethod', $id_charge);
     }
 
     public function testSave_theParameterOmiseChargeIdIsNull_noAnyOmiseChargeIdIsSaveToDatabaseForReference()
@@ -142,18 +143,19 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
 
         $this->module->expects($this->once())
             ->method('validateOrder')
-            ->with($this->cart_id,
-                $this->order_state_accepted_payment,
+            ->with(
+                $this->cart_id,
+                'idOrderState',
                 $this->cart_order_total,
-                $this->module_display_name,
+                'paymentMethod',
                 $this->optional_message,
-                array(),
+                $this->extra_variables,
                 $this->currency_id,
                 $this->is_not_needed_rounding_card_order_total,
                 $this->customer_secure_key
             );
 
-        $this->payment_order->save(null, $id_charge);
+        $this->payment_order->save('idOrderState', 'paymentMethod', $id_charge);
     }
 
     public function testSave_theParameterOmiseChargeIdIsNotEmpty_saveAnOmiseChargeIdToDatabaseForReference()
@@ -162,10 +164,11 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
 
         $this->module->expects($this->once())
             ->method('validateOrder')
-            ->with($this->cart_id,
-                $this->order_state_accepted_payment,
+            ->with(
+                $this->cart_id,
+                'idOrderState',
                 $this->cart_order_total,
-                $this->module_display_name,
+                'paymentMethod',
                 $this->optional_message,
                 array('transaction_id' => $id_charge),
                 $this->currency_id,
@@ -173,61 +176,7 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
                 $this->customer_secure_key
             );
 
-        $this->payment_order->save(null, $id_charge);
-    }
-
-    public function testSave_theParameterOrderStateIsEmpty_onlyOneOrderHasBeenSaved()
-    {
-        $this->module->expects($this->once())
-            ->method('validateOrder')
-            ->with($this->cart_id,
-                $this->order_state_accepted_payment,
-                $this->cart_order_total,
-                $this->module_display_name,
-                $this->optional_message,
-                $this->extra_variables,
-                $this->currency_id,
-                $this->is_not_needed_rounding_card_order_total,
-                $this->customer_secure_key
-            );
-
-        $this->payment_order->save();
-    }
-
-    public function testSave_theParameterOrderStateIsNotEmpty_onlyOneOrderHasBeenSaved()
-    {
-        $this->module->expects($this->once())
-            ->method('validateOrder')
-            ->with($this->cart_id,
-                'orderState',
-                $this->cart_order_total,
-                $this->module_display_name,
-                $this->optional_message,
-                $this->extra_variables,
-                $this->currency_id,
-                $this->is_not_needed_rounding_card_order_total,
-                $this->customer_secure_key
-            );
-
-        $this->payment_order->save('orderState');
-    }
-
-    public function testSaveAsProcessing_saveTheOrder_saveAnOrderWithProcessingInProgressState()
-    {
-        $this->module->expects($this->once())
-            ->method('validateOrder')
-            ->with($this->cart_id,
-                $this->order_state_processing_in_progress,
-                $this->cart_order_total,
-                $this->module_display_name,
-                $this->optional_message,
-                $this->extra_variables,
-                $this->currency_id,
-                $this->is_not_needed_rounding_card_order_total,
-                $this->customer_secure_key
-            );
-
-        $this->payment_order->saveAsProcessing();
+        $this->payment_order->save('idOrderState', 'paymentMethod', $id_charge);
     }
 
     public function testUpdateStateToBeCanceled_currentOrderStateIsCanceled_orderStateMustNotBeUpdated()
@@ -272,11 +221,6 @@ class PaymentOrderTest extends PHPUnit_Framework_TestCase
             ->with($this->payment_order->getOrderStateAcceptedPayment());
 
         $this->payment_order->updateStateToBeSuccess($this->order);
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 
     private function createMockedOrder()

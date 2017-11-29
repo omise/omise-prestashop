@@ -1,7 +1,7 @@
 <?php
 use \Mockery as m;
 
-class OmiseChargeClassTest extends PHPUnit_Framework_TestCase
+class OmiseChargeClassTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     private $omise_charge_class;
     private $omise_plugin_helper_charge;
@@ -47,7 +47,7 @@ class OmiseChargeClassTest extends PHPUnit_Framework_TestCase
             ->andReturn($module);
 
         m::mock('alias:\Order')
-            ->shouldReceive('getOrderByCartId')
+            ->shouldReceive('getIdByCartId')
             ->andReturn(1234);
 
         $this->getMockBuilder(get_class(new stdClass()))
@@ -189,6 +189,7 @@ class OmiseChargeClassTest extends PHPUnit_Framework_TestCase
             'capture' => 'true',
             'currency' => 'THB',
             'description' => 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')',
+            'metadata' => array('order_id' => 1234),
         );
 
         return $charge_request;
@@ -208,6 +209,7 @@ class OmiseChargeClassTest extends PHPUnit_Framework_TestCase
         $charge_request = array(
             'amount' => 10025,
             'currency' => 'THB',
+            'metadata' => array('order_id' => 1234),
             'offsite' => 'offsite',
             'description' => 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')',
             'return_uri' => 'returnUri?id_cart=1&id_module=omise&id_order=1234&key=customerSecureKey',
@@ -236,11 +238,6 @@ class OmiseChargeClassTest extends PHPUnit_Framework_TestCase
     private function createChargeErrorMessage()
     {
         return '(failureCode) failureMessage';
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 }
 

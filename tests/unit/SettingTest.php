@@ -1,7 +1,7 @@
 <?php
 use \Mockery as m;
 
-class SettingTest extends PHPUnit_Framework_TestCase
+class SettingTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     private $setting;
 
@@ -258,8 +258,27 @@ class SettingTest extends PHPUnit_Framework_TestCase
         $this->setting->save();
     }
 
-    public function tearDown()
+    public function testSaveTitle_saveTheTitle_titleHasBeenSaved()
     {
-        m::close();
+        m::mock('alias:\Configuration')
+            ->shouldReceive('updateValue')->with('omise_title', 'title')->once();
+
+        $this->setting->saveTitle('title');
+    }
+
+    public function testSaveTitle_saveTheTitleIsFail_false()
+    {
+        m::mock('alias:\Configuration')
+            ->shouldReceive('updateValue')->andReturn(false);
+
+        $this->assertFalse($this->setting->saveTitle('title'));
+    }
+
+    public function testSaveTitle_saveTheTitleIsSuccess_true()
+    {
+        m::mock('alias:\Configuration')
+            ->shouldReceive('updateValue')->andReturn(true);
+
+        $this->assertTrue($this->setting->saveTitle('title'));
     }
 }

@@ -3,6 +3,8 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
+use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+
 if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
     require_once _PS_MODULE_DIR_ . 'omise/libraries/omise-plugin/Omise.php';
@@ -12,6 +14,46 @@ if (defined('_PS_MODULE_DIR_')) {
 
 class Omise extends PaymentModule
 {
+    /**
+     * The name that used as the identifier of card payment option.
+     *
+     * A payment module can has more than one payment option. At the front office, each payment options can be
+     * identified by using module name (@see PaymentOption::setModuleName()).
+     *
+     * The module name is displayed at front office as an attribute of the payment option.
+     *
+     * @var string
+     */
+    const CARD_PAYMENT_OPTION_NAME = 'omise-card-payment';
+
+    /**
+     * The default title of card payment.
+     *
+     * This constant will be saved to the database at the module installation step. (@see Omise::install())
+     *
+     * @var string
+     */
+    const DEFAULT_CARD_PAYMENT_TITLE = 'Pay by Credit / Debit Card';
+
+    /**
+     * The default title of internet banking payment.
+     *
+     * @var string
+     */
+    const DEFAULT_INTERNET_BANKING_PAYMENT_TITLE = 'Internet Banking';
+
+    /**
+     * The name that used as the identifier of internet banking payment option.
+     *
+     * A payment module can has more than one payment option. At the front office, each payment options can be
+     * identified by using module name (@see PaymentOption::setModuleName()).
+     *
+     * The module name is displayed at front office as an attribute of the payment option.
+     *
+     * @var string
+     */
+    const INTERNET_BANKING_PAYMENT_OPTION_NAME = 'omise-internet-banking-payment';
+
     /**
      * The name that will be display to the user at the back-end.
      *
@@ -63,7 +105,7 @@ class Omise extends PaymentModule
         $this->version                = self::MODULE_VERSION;
         $this->author                 = 'Omise';
         $this->need_instance          = 0;
-        $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.6');
+        $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.7');
         $this->bootstrap              = true;
 
         parent::__construct();
@@ -89,26 +131,12 @@ class Omise extends PaymentModule
     }
 
     /**
-     * Display the message about the inapplicable internet banking checkout condition.
-     *
-     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
-     */
-    protected function displayInapplicableInternetBankingPayment()
-    {
-        return $this->display(__FILE__, 'inapplicable_internet_banking_payment.tpl');
-    }
-
-    /**
      * Display the internet banking checkout form.
      *
      * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
      */
     protected function displayInternetBankingPayment()
     {
-        if ($this->isCurrentCurrencyApplicable() == false) {
-            return $this->displayInapplicableInternetBankingPayment();
-        }
-
         return $this->display(__FILE__, 'internet_banking_payment.tpl');
     }
 
@@ -117,18 +145,51 @@ class Omise extends PaymentModule
      *
      * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
      */
-    protected function displayPayment()
+    protected function displayCardPayment()
     {
-        if ($this->isCurrentCurrencyApplicable() == false) {
-            return $this->displayInapplicablePayment();
-        }
-
         $this->smarty->assign('action', $this->getAction());
         $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
         $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
-        $this->smarty->assign('omise_title', $this->setting->getTitle());
 
-        return $this->display(__FILE__, 'payment.tpl');
+        return $this->display(__FILE__, 'card_payment.tpl');
+    }
+
+    /**
+     * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     */
+    protected function generateCardPaymentOption()
+    {
+        $payment_option = new PaymentOption();
+
+        $payment_option->setCallToActionText($this->setting->getTitle());
+        $payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
+
+        if ($this->isCurrentCurrencyApplicable()) {
+            $payment_option->setForm($this->displayCardPayment());
+        } else {
+            $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
+        }
+
+        return $payment_option;
+    }
+
+    /**
+     * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     */
+    protected function generateInternetBankingPaymentOption()
+    {
+        $payment_option = new PaymentOption();
+
+        $payment_option->setCallToActionText(self::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE);
+        $payment_option->setModuleName(self::INTERNET_BANKING_PAYMENT_OPTION_NAME);
+
+        if ($this->isCurrentCurrencyApplicable()) {
+            $payment_option->setForm($this->displayInternetBankingPayment());
+        } else {
+            $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
+        }
+
+        return $payment_option;
     }
 
     public function getContent()
@@ -149,9 +210,25 @@ class Omise extends PaymentModule
             'test_secret_key' => $this->setting->getTestSecretKey(),
             'title' => $this->setting->getTitle(),
             'three_domain_secure_status' => $this->setting->isThreeDomainSecureEnabled(),
+            'webhooks_endpoint' => $this->getWebhooksEndpoint(),
         ));
 
         return $this->display(__FILE__, 'views/templates/admin/setting.tpl');
+    }
+
+    /**
+     * Generate the URL to receive the requests from Omise server when events are triggered.
+     *
+     * The examples of events such as charge has been created, updated or charge is completed.
+     *
+     * @return string Return the URL that link to front module controller.
+     *
+     * @see LinkCore::getModuleLink() The PrestaShop function used to generate link.
+     * @see OmiseWebhooksModuleFrontController The Omise controller used to handle requests from Omise server.
+     */
+    protected function getWebhooksEndpoint()
+    {
+        return $this->context->link->getModuleLink(Omise::MODULE_NAME, 'webhooks', [], true);
     }
 
     public function hookDisplayOrderConfirmation($params)
@@ -160,11 +237,11 @@ class Omise extends PaymentModule
             return;
         }
 
-        if ($params['objOrder']->module != $this->name) {
+        if ($params['order']->module != $this->name) {
             return;
         }
 
-        $this->smarty->assign('order_reference', $params['objOrder']->reference);
+        $this->smarty->assign('order_reference', $params['order']->reference);
 
         return $this->display(__FILE__, 'confirmation.tpl');
     }
@@ -173,26 +250,27 @@ class Omise extends PaymentModule
     {
         if ($this->setting->isInternetBankingEnabled()) {
             $this->context->controller->addCSS($this->_path . 'css/omise_internet_banking.css', 'all');
+            $this->context->controller->addJqueryPlugin('fancybox');
         }
     }
 
-    public function hookPayment()
+    public function hookPaymentOptions()
     {
-        if ($this->active == false) {
-            return;
-        }
-
-        $payment = '';
+        $payment_options = array();
 
         if ($this->setting->isModuleEnabled()) {
-            $payment .= $this->displayPayment();
+            $payment_options[] = $this->generateCardPaymentOption();
         }
 
         if ($this->setting->isInternetBankingEnabled()) {
-            $payment .= $this->displayInternetBankingPayment();
+            $payment_options[] = $this->generateInternetBankingPaymentOption();
         }
 
-        return $payment;
+        if (count($payment_options) == 0) {
+            return null;
+        }
+
+        return $payment_options;
     }
 
     public function install()
@@ -200,8 +278,9 @@ class Omise extends PaymentModule
         if (parent::install() == false
             || $this->registerHook('displayOrderConfirmation') == false
             || $this->registerHook('header') == false
-            || $this->registerHook('payment') == false
+            || $this->registerHook('paymentOptions') == false
             || $this->omise_transaction_model->createTable() == false
+            || $this->setting->saveTitle(self::DEFAULT_CARD_PAYMENT_TITLE) == false
         ) {
             $this->uninstall();
 
@@ -251,7 +330,7 @@ class Omise extends PaymentModule
         return parent::uninstall()
             && $this->unregisterHook('displayOrderConfirmation')
             && $this->unregisterHook('header')
-            && $this->unregisterHook('payment');
+            && $this->unregisterHook('paymentOptions');
     }
 
     /**

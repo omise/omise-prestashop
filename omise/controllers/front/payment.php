@@ -13,13 +13,25 @@ class OmisePaymentModuleFrontController extends OmiseBasePaymentModuleFrontContr
     {
         $this->validateCart();
 
+        $this->payment_order->save(
+            $this->payment_order->getOrderStateProcessingInProgress(),
+            $this->setting->getTitle()
+        );
+
         parent::postProcess();
 
+        $id_order = Order::getIdByCartId($this->context->cart->id);
+
+        if (! empty($this->charge)) {
+            $this->payment_order->updatePaymentTransactionId($id_order, $this->charge->getId());
+        }
+
         if (! empty($this->error_message)) {
+            $this->payment_order->updateStateToBeCanceled(new Order($id_order));
             return;
         }
 
-        $this->payment_order->save(null, $this->charge->getId());
+        $this->payment_order->updateStateToBeSuccess(new Order($id_order));
 
         $this->setRedirectAfter('index.php?controller=order-confirmation' .
             '&id_cart=' . $this->context->cart->id .

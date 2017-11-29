@@ -14,7 +14,10 @@ class OmiseInternetBankingPaymentModuleFrontController extends OmiseBasePaymentM
     {
         $this->validateCart();
 
-        $this->payment_order->saveAsProcessing();
+        $this->payment_order->save(
+            $this->payment_order->getOrderStateProcessingInProgress(),
+            Omise::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE
+        );
 
         try {
             $this->charge = $this->omise_charge->createInternetBanking(Tools::getValue('offsite'));
@@ -23,7 +26,7 @@ class OmiseInternetBankingPaymentModuleFrontController extends OmiseBasePaymentM
             return;
         }
 
-        $id_order = Order::getOrderByCartId($this->context->cart->id);
+        $id_order = Order::getIdByCartId($this->context->cart->id);
 
         $this->payment_order->updatePaymentTransactionId($id_order, $this->charge->getId());
 

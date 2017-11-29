@@ -82,7 +82,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         $this->context->smarty->assign('error_message', $this->error_message);
         $this->context->smarty->assign('order_reference', $this->order_reference);
 
-        $this->setTemplate('payment-error.tpl');
+        $this->setTemplate('module:omise/views/templates/front/payment-error.tpl');
     }
 
     /**

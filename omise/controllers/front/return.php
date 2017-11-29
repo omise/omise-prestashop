@@ -46,15 +46,8 @@ class OmiseReturnModuleFrontController extends OmiseBasePaymentModuleFrontContro
 
         $this->order_reference = $this->order->reference;
 
-        if ($this->order->payment != Omise::MODULE_DISPLAY_NAME) {
+        if ($this->order->module != Omise::MODULE_NAME) {
             $this->error_message = $this->l('Payment method is invalid.');
-            return false;
-        }
-
-        if ($this->order->current_state != $this->payment_order->getOrderStateProcessingInProgress()
-            && $this->order->current_state != $this->payment_order->getOrderStateAcceptedPayment()) {
-            $this->error_message = $this->l('Order status is invalid.');
-
             return false;
         }
 
@@ -76,7 +69,9 @@ class OmiseReturnModuleFrontController extends OmiseBasePaymentModuleFrontContro
             return;
         }
 
-        $this->payment_order->updateStateToBeSuccess($this->order);
+        if ($this->charge->isPaid()) {
+            $this->payment_order->updateStateToBeSuccess($this->order);
+        }
 
         $this->setRedirectAfter('index.php?controller=order-confirmation' .
             '&id_cart=' . $id_cart .
