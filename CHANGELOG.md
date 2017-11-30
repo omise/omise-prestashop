@@ -1,5 +1,11 @@
 # Change Log
 
+## [[1.4] 2017-11-30](https://github.com/omise/omise-prestashop/releases/tag/v1.4)
+- *`Added`* Implement a new feature, Omise Webhooks, and handle an event, charge.complete
+- *`Added`* Add PrestaShop order ID to metadata of Omise charge
+- *`Changed`* Save and display payment method name as selected by payer instead of fixed module name, Omise
+- *`Updated`* Update the module to work with PrestaShop 1.7
+
 ## [[1.3] 2017-11-03](https://github.com/omise/omise-prestashop/releases/tag/v1.3)
 - *`Added`* Specify Omise API version to be 2015-11-17
 
