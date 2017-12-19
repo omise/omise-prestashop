@@ -1,7 +1,3 @@
-<div class="row">
-  <div class="col-xs-12">
-    <div class="box">
-      <div class="row">
         <div class="col-sm-12">
           <form id="omise_checkout_form" method="post" action="{$action|escape:'html'}">
             <input id="omise_card_token" name="omise_card_token" type="hidden">
@@ -56,10 +52,6 @@
             </div>
           </form>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script src="https://cdn.omise.co/omise.js.gz"></script>
 
