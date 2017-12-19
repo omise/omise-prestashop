@@ -1,7 +1,3 @@
-<div class="row">
-  <div class="col-xs-12">
-    <div class="box">
-      <div class="row">
         <div class="col-sm-12">
           <form id="omise-internet-banking-payment-form" method="post" action="{$link->getModuleLink('omise', 'internetbankingpayment', [], true)|escape:'html'}">
             <ul class="omise-internet-banking">
@@ -56,10 +52,6 @@
             </ul>
           </form>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div id="omise-message" hidden="hidden">
   <p class="fancybox-error">{l s='Please select a bank before continuing.' js=1 mod='omise'}</p>
