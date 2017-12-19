@@ -1,4 +1,4 @@
-        <div class="col-sm-12">
+        <div class="additional-information">
           <form id="omise-internet-banking-payment-form" method="post" action="{$link->getModuleLink('omise', 'internetbankingpayment', [], true)|escape:'html'}">
             <ul class="omise-internet-banking">
               <li class="item">
