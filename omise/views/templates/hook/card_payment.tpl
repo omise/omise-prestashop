@@ -1,4 +1,4 @@
-        <div class="col-sm-12">
+        <div class="additional-information">
           <form id="omise_checkout_form" method="post" action="{$action|escape:'html'}">
             <input id="omise_card_token" name="omise_card_token" type="hidden">
             <div class="row">
