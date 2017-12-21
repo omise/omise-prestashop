@@ -40,6 +40,13 @@
         <input class="form-control" id="omise_card_security_code" type="password" placeholder="{l s='Security code' mod='omise'}">
       </div>
     </div>
+    <div class="form-group">
+      <div class="form-check">
+        <label class="form-check-label">
+          <input class="form-check-input" type="checkbox"> {l s='Remember this card' mod='omise'}
+        </label>
+      </div>
+    </div>
   </form>
 </div>
 
