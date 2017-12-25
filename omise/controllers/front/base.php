@@ -5,6 +5,7 @@ if (! defined('_PS_VERSION_')) {
 
 if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_charge_class.php';
+    require_once _PS_MODULE_DIR_ . 'omise/classes/omise_customer_class.php';
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
     require_once _PS_MODULE_DIR_ . 'omise/classes/payment_order.php';
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
@@ -36,9 +37,11 @@ if (! defined('OMISE_USER_AGENT_SUFFIX')) {
 abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontController
 {
     protected $charge;
+    protected $customer;
     public $display_column_left = false;
     protected $error_message;
     protected $omise_charge;
+    protected $omise_customer;
     protected $omise_transaction_model;
     protected $order_reference;
     protected $payment_order;
@@ -49,6 +52,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         parent::__construct();
 
         $this->omise_charge = new OmiseChargeClass();
+        $this->omise_customer = new OmiseCustomerClass();
         $this->omise_transaction_model = new OmiseTransactionModel();
         $this->payment_order = new PaymentOrder();
         $this->setting = new Setting();
@@ -92,8 +96,24 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
      */
     public function postProcess()
     {
+        $customer_id = null;
+
+        if (Tools::getValue('omise_save_customer_card')) {
+            try {
+                $customer = $this->omise_customer->create(Tools::getValue('omise_card_token'));
+            } catch (Exception $e) {
+                $this->error_message = $e->getMessage();
+                return;
+            }
+
+            $customer_id = $customer->getId();
+        }
+
         try {
-            $this->charge = $this->omise_charge->create(Tools::getValue('omise_card_token'));
+            $this->charge = $this->omise_charge->create(
+                Tools::getValue('omise_card_token'),
+                $customer_id
+            );
         } catch (Exception $e) {
             $this->error_message = $e->getMessage();
             return;

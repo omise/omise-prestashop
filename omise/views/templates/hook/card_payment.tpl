@@ -43,7 +43,7 @@
     <div class="form-group">
       <div class="form-check">
         <label class="form-check-label">
-          <input class="form-check-input" type="checkbox"> {l s='Remember this card' mod='omise'}
+          <input class="form-check-input" name="omise_save_customer_card" type="checkbox"> {l s='Remember this card' mod='omise'}
         </label>
       </div>
     </div>
