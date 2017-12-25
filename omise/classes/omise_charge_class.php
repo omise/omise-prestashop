@@ -26,19 +26,25 @@ class OmiseChargeClass
 
     /**
      * @param string $card_token The Omise card token.
+     * @param string $customer_id The Omise customer ID.
      *
      * @return $this
      */
-    public function create($card_token)
+    public function create($card_token, $customer_id = null)
     {
         $charge_request = array(
             'amount' => $this->getAmount(),
-            'card' => $card_token,
             'capture' => 'true',
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),
             'metadata' => $this->getMetadata(),
         );
+
+        if (! is_null($customer_id)) {
+            $charge_request['customer'] = $customer_id;
+        } else {
+            $charge_request['card'] = $card_token;
+        }
 
         if ($this->setting->isThreeDomainSecureEnabled()) {
             $charge_request['return_uri'] = $this->getReturnUri();
