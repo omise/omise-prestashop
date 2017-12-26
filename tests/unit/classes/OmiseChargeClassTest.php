@@ -85,6 +85,16 @@ class OmiseChargeClassTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->omise_charge_class->create('cardToken');
     }
 
+    public function testCreate_createOmiseChargeWithOmiseCustomerId_createOnlyOneOmiseChargeWithCustomerId()
+    {
+        m::mock('alias:\OmiseCharge')
+            ->shouldReceive('create')
+            ->with($this->createChargeRequestWithCustomerId(), '', $this->secret_key)
+            ->once();
+
+        $this->omise_charge_class->create('cardToken', 'customerId');
+    }
+
     public function testCreate_createThreeDomainSecureOmiseCharge_returnUriMustBeAddedToRequest()
     {
         $this->setting
@@ -188,6 +198,20 @@ class OmiseChargeClassTest extends Mockery\Adapter\Phpunit\MockeryTestCase
             'card' => 'cardToken',
             'capture' => 'true',
             'currency' => 'THB',
+            'description' => 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')',
+            'metadata' => array('order_id' => 1234),
+        );
+
+        return $charge_request;
+    }
+
+    private function createChargeRequestWithCustomerId()
+    {
+        $charge_request = array(
+            'amount' => 10025,
+            'capture' => 'true',
+            'currency' => 'THB',
+            'customer' => 'customerId',
             'description' => 'Charge a card using a token from PrestaShop (' . _PS_VERSION_ . ')',
             'metadata' => array('order_id' => 1234),
         );
