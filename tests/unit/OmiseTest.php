@@ -5,6 +5,7 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
     private $checkout_form;
     private $omise;
+    private $omise_customer_model;
     private $omise_transaction_model;
     private $setting;
     private $smarty;
@@ -27,6 +28,8 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
             ->shouldReceive('get')
             ->shouldReceive('deleteByName');
 
+        $this->omise_customer_model = $this->getMockedOmiseCustomerModel();
+
         $this->omise_transaction_model = $this->getMockedOmiseTransactionModel();
 
         $this->setting = $unit_test_helper->getMockedSetting();
@@ -44,6 +47,7 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->omise->_path = '_path/';
         $this->omise->context = $this->getMockedContext();
         $this->omise->setCheckoutForm($this->checkout_form);
+        $this->omise->setOmiseCustomerModel($this->omise_customer_model);
         $this->omise->setOmiseTransactionModel($this->omise_transaction_model);
         $this->omise->setSetting($this->setting);
         $this->omise->setSmarty($this->smarty);
@@ -181,16 +185,27 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
     {
         $this->omise->method('install')->willReturn(true);
         $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true));
-        $this->omise_transaction_model->method('createTable')->willReturn(true);
+        $this->omise_customer_model->expects($this->once())->method('createTable')->willReturn(true);
+        $this->omise_transaction_model->expects($this->once())->method('createTable')->willReturn(true);
         $this->setting->method('saveTitle')->with(Omise::DEFAULT_CARD_PAYMENT_TITLE)->willReturn(true);
 
         $this->assertTrue($this->omise->install());
     }
 
-    public function testInstall_createTableIsFail_false()
+    public function testInstall_createOmiseCustomerTableIsFail_false()
     {
         $this->omise->method('install')->willReturn(true);
         $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true));
+        $this->omise_customer_model->method('createTable')->willReturn(false);
+
+        $this->assertFalse($this->omise->install());
+    }
+
+    public function testInstall_createOmiseTransactionTableIsFail_false()
+    {
+        $this->omise->method('install')->willReturn(true);
+        $this->omise->method('registerHook')->will($this->onConsecutiveCalls(true, true, true));
+        $this->omise_customer_model->method('createTable')->willReturn(true);
         $this->omise_transaction_model->method('createTable')->willReturn(false);
 
         $this->assertFalse($this->omise->install());
@@ -242,6 +257,15 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->assertFalse($this->omise->install());
     }
 
+    public function testUninstall_dropOmiseCustomerTableIsFail_false()
+    {
+        $this->omise->method('uninstall')->willReturn(true);
+        $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true, true));
+        $this->omise_customer_model->method('dropTable')->willReturn(false);
+
+        $this->assertFalse($this->omise->uninstall());
+    }
+
     public function testUninstall_uninstallTheModule_theSettingMustBeDeleted()
     {
         $this->setting->expects($this->once())
@@ -254,6 +278,7 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
     {
         $this->omise->method('uninstall')->willReturn(true);
         $this->omise->method('unregisterHook')->will($this->onConsecutiveCalls(true, true, true));
+        $this->omise_customer_model->expects($this->once())->method('dropTable')->willReturn(true);
 
         $this->assertTrue($this->omise->uninstall());
     }
@@ -318,6 +343,21 @@ class OmiseTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $context->link = $link;
 
         return $context;
+    }
+
+    private function getMockedOmiseCustomerModel()
+    {
+        $omise_customer_model = $this->getMockBuilder(get_class(new stdClass()))
+            ->setMockClassName('OmiseCustomerModel')
+            ->setMethods(
+                array(
+                    'createTable',
+                    'dropTable',
+                )
+            )
+            ->getMock();
+
+        return $omise_customer_model;
     }
 
     private function getMockedOmiseTransactionModel()

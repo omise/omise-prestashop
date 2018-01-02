@@ -6,6 +6,7 @@ if (! defined('_PS_VERSION_')) {
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 
 if (defined('_PS_MODULE_DIR_')) {
+    require_once _PS_MODULE_DIR_ . 'omise/classes/omise_customer_model.php';
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
     require_once _PS_MODULE_DIR_ . 'omise/libraries/omise-plugin/Omise.php';
     require_once _PS_MODULE_DIR_ . 'omise/checkout_form.php';
@@ -83,6 +84,13 @@ class Omise extends PaymentModule
     protected $checkout_form;
 
     /**
+     * The instance of class, OmiseCustomerModel.
+     *
+     * @var \OmiseCustomerModel
+     */
+    protected $omise_customer_model;
+
+    /**
      * The instance of class, OmiseTransactionModel.
      *
      * @var \OmiseTransactionModel
@@ -114,6 +122,7 @@ class Omise extends PaymentModule
         $this->confirmUninstall       = $this->l('Are you sure you want to uninstall ' . self::MODULE_DISPLAY_NAME . ' module?');
 
         $this->setCheckoutForm(new CheckoutForm());
+        $this->setOmiseCustomerModel(new OmiseCustomerModel());
         $this->setOmiseTransactionModel(new OmiseTransactionModel());
         $this->setSetting(new Setting());
     }
@@ -279,6 +288,7 @@ class Omise extends PaymentModule
             || $this->registerHook('displayOrderConfirmation') == false
             || $this->registerHook('header') == false
             || $this->registerHook('paymentOptions') == false
+            || $this->omise_customer_model->createTable() == false
             || $this->omise_transaction_model->createTable() == false
             || $this->setting->saveTitle(self::DEFAULT_CARD_PAYMENT_TITLE) == false
         ) {
@@ -330,7 +340,8 @@ class Omise extends PaymentModule
         return parent::uninstall()
             && $this->unregisterHook('displayOrderConfirmation')
             && $this->unregisterHook('header')
-            && $this->unregisterHook('paymentOptions');
+            && $this->unregisterHook('paymentOptions')
+            && $this->omise_customer_model->dropTable();
     }
 
     /**
@@ -347,6 +358,14 @@ class Omise extends PaymentModule
     public function setCheckoutForm($checkout_form)
     {
         $this->checkout_form = $checkout_form;
+    }
+
+    /**
+     * @param \OmiseCustomerModel $omise_customer_model The instance of class, OmiseCustomerModel.
+     */
+    public function setOmiseCustomerModel($omise_customer_model)
+    {
+        $this->omise_customer_model = $omise_customer_model;
     }
 
     /**
