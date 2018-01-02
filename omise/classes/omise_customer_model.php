@@ -44,13 +44,13 @@ class OmiseCustomerModel extends ObjectModel
     public function createTable()
     {
         $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'omise_customer` (
-			`id_prestashop_customer` int(10) unsigned NOT NULL,
-			`id_omise_test_customer` varchar(255) NULL,
-			`id_omise_live_customer` varchar(255) NULL,
-			PRIMARY KEY (`id_prestashop_customer`),
-			UNIQUE KEY `id_omise_test_customer` (`id_omise_test_customer`),
-			UNIQUE KEY `id_omise_live_customer` (`id_omise_live_customer`)
-			) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
+            `id_prestashop_customer` int(10) unsigned NOT NULL,
+            `id_omise_test_customer` varchar(255) NULL,
+            `id_omise_live_customer` varchar(255) NULL,
+            PRIMARY KEY (`id_prestashop_customer`),
+            UNIQUE KEY `id_omise_test_customer` (`id_omise_test_customer`),
+            UNIQUE KEY `id_omise_live_customer` (`id_omise_live_customer`)
+            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
 
         return Db::getInstance()->execute($sql);
     }
