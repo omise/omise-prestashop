@@ -154,7 +154,6 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
     {
         $omise_customer_model = new OmiseCustomerModel($id_prestashop_customer);
 
-
         if ($this->setting->isSandboxEnabled()) {
             $omise_customer_model->id_omise_test_customer = $id_omise_customer;
         } else {
