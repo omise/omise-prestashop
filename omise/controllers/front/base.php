@@ -98,26 +98,26 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
      */
     public function postProcess()
     {
-        $customer_id = null;
+        $id_omise_customer = null;
 
         if (Tools::getValue('omise_save_customer_card')) {
             try {
-                $customer = $this->omise_customer->create(Tools::getValue('omise_card_token'));
+                $omise_customer = $this->omise_customer->create(Tools::getValue('omise_card_token'));
             } catch (Exception $e) {
                 $this->error_message = $e->getMessage();
                 return;
             }
 
             $id_prestashop_customer = (int) $this->context->customer->id;
-            $customer_id = $customer->getId();
+            $id_omise_customer = $omise_customer->getId();
 
-            $this->saveOmiseCustomerId($id_prestashop_customer, $customer_id);
+            $this->saveOmiseCustomerId($id_prestashop_customer, $id_omise_customer);
         }
 
         try {
             $this->charge = $this->omise_charge->create(
                 Tools::getValue('omise_card_token'),
-                $customer_id
+                $id_omise_customer
             );
         } catch (Exception $e) {
             $this->error_message = $e->getMessage();
@@ -153,6 +153,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
     protected function saveOmiseCustomerId($id_prestashop_customer, $id_omise_customer)
     {
         $omise_customer_model = new OmiseCustomerModel($id_prestashop_customer);
+
 
         if ($this->setting->isSandboxEnabled()) {
             $omise_customer_model->id_omise_test_customer = $id_omise_customer;
