@@ -37,6 +37,7 @@ if (! defined('OMISE_USER_AGENT_SUFFIX')) {
 abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontController
 {
     protected $charge;
+    protected $context;
     protected $customer;
     public $display_column_left = false;
     protected $error_message;
@@ -51,6 +52,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
     {
         parent::__construct();
 
+        $this->context = Context::getContext();
         $this->omise_charge = new OmiseChargeClass();
         $this->omise_customer = new OmiseCustomerClass();
         $this->omise_transaction_model = new OmiseTransactionModel();
@@ -106,7 +108,10 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
                 return;
             }
 
+            $id_prestashop_customer = (int) $this->context->customer->id;
             $customer_id = $customer->getId();
+
+            $this->saveOmiseCustomerId($id_prestashop_customer, $customer_id);
         }
 
         try {
@@ -133,6 +138,31 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
     public function redirect()
     {
         Tools::redirect($this->redirect_after);
+    }
+
+    /**
+     * Bind the PrestaShop customer ID with Omise customer ID and save it to the database table.
+     *
+     * @param int $id_prestashop_customer
+     * @param string $id_omise_customer
+     *
+     * @throws PrestaShopException
+     *
+     * @return bool
+     */
+    protected function saveOmiseCustomerId($id_prestashop_customer, $id_omise_customer)
+    {
+        $omise_customer_model = new OmiseCustomerModel($id_prestashop_customer);
+
+        if ($this->setting->isSandboxEnabled()) {
+            $omise_customer_model->id_omise_test_customer = $id_omise_customer;
+        } else {
+            $omise_customer_model->id_omise_live_customer = $id_omise_customer;
+        }
+
+        $omise_customer_model->id_prestashop_customer = $id_prestashop_customer;
+
+        return $omise_customer_model->save();
     }
 
     /**

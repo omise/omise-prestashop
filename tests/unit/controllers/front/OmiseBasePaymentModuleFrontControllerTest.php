@@ -3,6 +3,8 @@ use \Mockery as m;
 
 class OmiseBasePaymentModuleFrontControllerTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 {
+    private $omise_base_payment_module_front_controller;
+
     public function setup()
     {
         $unit_test_helper = new UnitTestHelper();
@@ -18,11 +20,12 @@ class OmiseBasePaymentModuleFrontControllerTest extends Mockery\Adapter\Phpunit\
             )
             ->getMock();
 
+        m::mock('alias:\Context')->shouldIgnoreMissing();
         m::mock('alias:\OmiseChargeClass');
         m::mock('alias:\OmiseTransactionModel');
         m::mock('alias:\PaymentOrder');
 
-        $this->getMockBuilder('OmiseBasePaymentModuleFrontController')
+        $this->omise_base_payment_module_front_controller = $this->getMockBuilder('OmiseBasePaymentModuleFrontController')
             ->getMockForAbstractClass();
     }
 
