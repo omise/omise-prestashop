@@ -12,6 +12,8 @@ if (! class_exists('OmisePluginHelperCharge')) {
         {
             switch (strtoupper($currency)) {
                 case 'IDR':
+                case 'EUR':
+                case 'USD':
                 case 'SGD':
                 case 'THB':
                     $amount = $amount * 100;
@@ -80,6 +82,8 @@ if (! class_exists('OmisePluginHelperCharge')) {
         {
             switch ($currency) {
                 case 'IDR':
+                case 'EUR':
+                case 'USD':
                 case 'JPY':
                 case 'SGD':
                 case 'THB':
