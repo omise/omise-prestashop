@@ -11,7 +11,7 @@ if (! class_exists('OmisePluginHelperCharge')) {
         public static function amount($currency, $amount)
         {
             switch (strtoupper($currency)) {
-                case 'IDR':
+                case 'GBP':
                 case 'EUR':
                 case 'USD':
                 case 'SGD':
@@ -81,7 +81,7 @@ if (! class_exists('OmisePluginHelperCharge')) {
         public static function isCurrentCurrencyApplicable($currency)
         {
             switch ($currency) {
-                case 'IDR':
+                case 'GBP':
                 case 'EUR':
                 case 'USD':
                 case 'JPY':
