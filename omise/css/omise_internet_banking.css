@@ -27,7 +27,7 @@
   width: 30px;
   height: 30px;
 }
-.omise-internet-banking .omise-bank-text-wrapper { display: inline-block; line-height:38px; }
+.omise-internet-banking .title { line-height:38px; }
 .omise-internet-banking .scb { background: #4e2e7f none repeat scroll 0 0; }
 .omise-internet-banking .ktb { background: #1ba5e1 none repeat scroll 0 0; }
 .omise-internet-banking .bay { background: #fec43b none repeat scroll 0 0; }

@@ -11,9 +11,7 @@
                   <div class="omise-logo-wrapper scb">
                     <img src="/modules/omise/img/scb.svg" class="scb">
                   </div>
-                  <div class="omise-bank-text-wrapper">
-                    <span class="title">{l s='Siam Commercial Bank' mod='omise'}</span>
-                  </div>
+                  <span class="title">{l s='Siam Commercial Bank' mod='omise'}</span>
                 </label>
               </li>
               <li class="item">
@@ -22,9 +20,7 @@
                   <div class="omise-logo-wrapper ktb">
                     <img src="/modules/omise/img/ktb.svg" class="ktb">
                   </div>
-                  <div class="omise-bank-text-wrapper">
-                    <span class="title">{l s='Krungthai Bank' mod='omise'}</span>
-                  </div>
+                  <span class="title">{l s='Krungthai Bank' mod='omise'}</span>
                 </label>
               </li>
               <li class="item">
@@ -33,9 +29,7 @@
                   <div class="omise-logo-wrapper bay">
                     <img src="/modules/omise/img/bay.svg" class="bay">
                   </div>
-                  <div class="omise-bank-text-wrapper">
-                    <span class="title">{l s='Krungsri Bank' mod='omise'}</span>
-                  </div>
+                  <span class="title">{l s='Krungsri Bank' mod='omise'}</span>
                 </label>
               </li>
               <li class="item">
@@ -44,9 +38,7 @@
                   <div class="omise-logo-wrapper bbl">
                     <img src="/modules/omise/img/bbl.svg" class="bbl">
                   </div>
-                  <div class="omise-bank-text-wrapper">
-                    <span class="title">{l s='Bangkok Bank' mod='omise'}</span>
-                  </div>
+                  <span class="title">{l s='Bangkok Bank' mod='omise'}</span>
                 </label>
               </li>
             </ul>
