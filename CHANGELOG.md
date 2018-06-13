@@ -1,7 +1,7 @@
 # Change Log
 
 ## [[1.5] 2018-06-13](https://github.com/omise/omise-prestashop/releases/tag/v1.5)
-- *`Added`* Support for EUR and USD currencies
+- *`Added`* Support for EUR, GBP, and USD currencies
 - *`Changed`* Internet banking fee warnings now generic to prevent them being outdated
 
 ## [[1.4] 2017-11-30](https://github.com/omise/omise-prestashop/releases/tag/v1.4)
