@@ -8,7 +8,7 @@ Our aim is to support as many versions of PrestaShop as we can.
 
 **Here's the list of versions we tested on:**
 
-- PrestaShop 1.7.2.4, PHP 5.6.31
+- PrestaShop 1.7.3.3, PHP 7.0.30
 
 **Can't find the version you're looking for?**  
 Submit your requirement as an issue to [GitHub's issue channel](https://github.com/omise/omise-prestashop/issues).
@@ -19,7 +19,7 @@ Submit your requirement as an issue to [GitHub's issue channel](https://github.c
 
 The instructions below will guide you through all the steps in installing the module.
 
-1. Download the [latest version of Omise PrestaShop](https://github.com/omise/omise-prestashop/releases/download/v1.4/omise-prestashop-v1.4.zip).
+1. Download the [latest version of Omise PrestaShop](https://github.com/omise/omise-prestashop/releases/download/v1.5/omise-prestashop-v1.5.zip).
 
 2. Login to your PrestaShop back office and go to **Modules & Services**.
 
