@@ -1,4 +1,5 @@
 .buildpath
 .project
-.settings/
+/omise/vendor
 vendor/
+.settings/
