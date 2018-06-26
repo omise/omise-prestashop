@@ -7,6 +7,7 @@ class SettingTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 
     public function __construct()
     {
+        parent::__construct();
         $this->setting = new Setting();
     }
 

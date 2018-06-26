@@ -1,5 +1,5 @@
 <?php
-class OmiseEventHandlerTest extends PHPUnit_Framework_TestCase
+class OmiseEventHandlerTest extends PHPUnit\Framework\TestCase
 {
     private $omise_event_handler;
 

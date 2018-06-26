@@ -5,7 +5,7 @@ if (! defined('_PS_VERSION_')) {
     define('_PS_VERSION_', 'TEST_VERSION');
 }
 
-class UnitTestHelper extends PHPUnit_Framework_TestCase
+class UnitTestHelper extends PHPUnit\Framework\TestCase
 {
     public function getMockedCharge()
     {
