@@ -1,5 +1,5 @@
 <?php
-class OmiseWebhooksModuleFrontControllerTest extends PHPUnit_Framework_TestCase
+class OmiseWebhooksModuleFrontControllerTest extends PHPUnit\Framework\TestCase
 {
     private $omise_event;
     private $omise_webhooks;

@@ -4,7 +4,7 @@ if (! defined('_PS_VERSION_')) {
 }
 
 if (defined('_PS_MODULE_DIR_')) {
-    require_once _PS_MODULE_DIR_ . 'omise/libraries/omise-php/lib/Omise.php';
+    require_once _PS_MODULE_DIR_ . 'omise/vendor/omise/omise-php/lib/Omise.php';
     require_once _PS_MODULE_DIR_ . 'omise/libraries/omise-plugin/Omise.php';
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
 }
