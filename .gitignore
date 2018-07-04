@@ -3,3 +3,4 @@
 /omise/vendor
 vendor/
 .settings/
+.DS_Store

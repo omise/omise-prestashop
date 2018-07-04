@@ -3,7 +3,12 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
-use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+if (_PS_VERSION_ >= '1.7') {
+    require_once _PS_MODULE_DIR_ . 'omise/namespace.php';
+    // this include moves the PHP namespace code:
+    //      use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+    // into another file so that parsing of THIS file by PrestaShop 1.6 does not cause an error on older PHP versions
+}
 
 if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
@@ -105,8 +110,11 @@ class Omise extends PaymentModule
         $this->version                = self::MODULE_VERSION;
         $this->author                 = 'Omise';
         $this->need_instance          = 0;
-        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => '1.7');
+        $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.7');
         $this->bootstrap              = true;
+
+        // TODO - for 1.6
+        // $this->currencies_mode = 'checkbox';
 
         parent::__construct();
 
@@ -273,12 +281,22 @@ class Omise extends PaymentModule
         return $payment_options;
     }
 
+    // TODO - for 1.6
+    // public function hookPayment()
+    // {
+    //     $payment_options = "boop";
+
+    //     return $payment_options;
+    // }
+
     public function install()
     {
         if (parent::install() == false
             || $this->registerHook('displayOrderConfirmation') == false
             || $this->registerHook('header') == false
             || $this->registerHook('paymentOptions') == false
+            // TODO - for 1.6
+            // || $this->registerHook('payment') == false
             || $this->omise_transaction_model->createTable() == false
             || $this->setting->saveTitle(self::DEFAULT_CARD_PAYMENT_TITLE) == false
         ) {
@@ -331,6 +349,8 @@ class Omise extends PaymentModule
             && $this->unregisterHook('displayOrderConfirmation')
             && $this->unregisterHook('header')
             && $this->unregisterHook('paymentOptions');
+            // TODO - for 1.6
+            // && $this->unregisterHook('payment');
     }
 
     /**
