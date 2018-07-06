@@ -3,14 +3,10 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
-if (_PS_VERSION_ >= '1.7') {
-    require_once _PS_MODULE_DIR_ . 'omise/namespace.php';
-    // this include moves the PHP namespace code:
-    //      use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
-    // into another file so that parsing of THIS file by PrestaShop 1.6 does not cause an error on older PHP versions
-}
+define('IS_VERSION_17', _PS_VERSION_ >= '1.7');
 
 if (defined('_PS_MODULE_DIR_')) {
+    if (IS_VERSION_17) require_once _PS_MODULE_DIR_ . 'omise/namespace.php';
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
     require_once _PS_MODULE_DIR_ . 'omise/libraries/omise-plugin/Omise.php';
     require_once _PS_MODULE_DIR_ . 'omise/checkout_form.php';
@@ -81,6 +77,16 @@ class Omise extends PaymentModule
     const MODULE_VERSION = '1.5';
 
     /**
+     * The hooks used by the module
+     *
+     * @var array
+     */
+    private static $module_hooks = IS_VERSION_17 ?
+        array('displayOrderConfirmation', 'header', 'paymentOptions') :
+        array('displayOrderConfirmation', 'header', 'payment')
+    ;
+
+    /**
      * The instance of class, CheckoutForm.
      *
      * @var \CheckoutForm
@@ -113,8 +119,7 @@ class Omise extends PaymentModule
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.7');
         $this->bootstrap              = true;
 
-        // TODO - for 1.6
-        // $this->currencies_mode = 'checkbox';
+        $this->currencies_mode        = 'checkbox';
 
         parent::__construct();
 
@@ -292,11 +297,10 @@ class Omise extends PaymentModule
     public function install()
     {
         if (parent::install() == false
-            || $this->registerHook('displayOrderConfirmation') == false
-            || $this->registerHook('header') == false
-            || $this->registerHook('paymentOptions') == false
-            // TODO - for 1.6
-            // || $this->registerHook('payment') == false
+            ////// || $this->registerHook('displayOrderConfirmation') == false
+            ////// || $this->registerHook('header') == false
+            ////// || $this->registerHook('paymentOptions') == false
+            || $this->registerHooks() == false
             || $this->omise_transaction_model->createTable() == false
             || $this->setting->saveTitle(self::DEFAULT_CARD_PAYMENT_TITLE) == false
         ) {
@@ -307,6 +311,21 @@ class Omise extends PaymentModule
 
         return true;
     }
+
+    /**
+     * Register/Unregister all hooks for the module
+     *
+     * @return bool
+     */
+    protected function registerHooks($isRegister = true)
+    {
+        $res = true;
+        foreach (self::$module_hooks as $hook) {
+            $res = $res && $this->{$isRegister ? "registerHook" : "unregisterHook"}($hook);
+            if (!$res) break;
+        }
+        return $res;
+    }    
 
     /**
      * Check whether the current currency is supported by the Omise API.
@@ -346,11 +365,10 @@ class Omise extends PaymentModule
         $this->setting->delete();
 
         return parent::uninstall()
-            && $this->unregisterHook('displayOrderConfirmation')
-            && $this->unregisterHook('header')
-            && $this->unregisterHook('paymentOptions');
-            // TODO - for 1.6
-            // && $this->unregisterHook('payment');
+            ////// && $this->unregisterHook('displayOrderConfirmation')
+            ////// && $this->unregisterHook('header')
+            ////// && $this->unregisterHook('paymentOptions');
+            && $this->registerHooks(false);
     }
 
     /**
