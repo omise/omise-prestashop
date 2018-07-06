@@ -1,9 +1,11 @@
 <?php
+
 if (! defined('_PS_VERSION_')) {
     exit();
 }
 
 define('IS_VERSION_17', _PS_VERSION_ >= '1.7');
+
 
 if (defined('_PS_MODULE_DIR_')) {
     if (IS_VERSION_17) require_once _PS_MODULE_DIR_ . 'omise/namespace.php';
@@ -74,7 +76,7 @@ class Omise extends PaymentModule
      *
      * @var string
      */
-    const MODULE_VERSION = '1.5';
+    const MODULE_VERSION = '1.6';
 
     /**
      * The hooks used by the module
@@ -85,6 +87,18 @@ class Omise extends PaymentModule
         array('displayOrderConfirmation', 'header', 'paymentOptions') :
         array('displayOrderConfirmation', 'header', 'payment')
     ;
+
+    /**
+     * Class to be used for Payment option (had to do it this way to remove higher version of PHP specific code
+     * (namespaces - 'use') that was breaking install on PrestaShop 1.6)
+     *
+     * @var array
+     */
+    private static $PAYMENT_OPTION_CLASS = IS_VERSION_17 ?
+        "PrestaShop\PrestaShop\Core\Payment\PaymentOption" :
+        "PaymentOption"
+    ;
+
 
     /**
      * The instance of class, CheckoutForm.
@@ -124,7 +138,7 @@ class Omise extends PaymentModule
         parent::__construct();
 
         $this->displayName            = self::MODULE_DISPLAY_NAME;
-        $this->confirmUninstall       = $this->l('Are you sure you want to uninstall ' . self::MODULE_DISPLAY_NAME . ' module?');
+        $this->confirmUninstall       = $this->l('Are you sure you want to uninstall the ' . self::MODULE_DISPLAY_NAME . ' module?');
 
         $this->setCheckoutForm(new CheckoutForm());
         $this->setOmiseTransactionModel(new OmiseTransactionModel());
@@ -172,7 +186,7 @@ class Omise extends PaymentModule
      */
     protected function generateCardPaymentOption()
     {
-        $payment_option = new PaymentOption();
+        $payment_option = new self::$PAYMENT_OPTION_CLASS();
 
         $payment_option->setCallToActionText($this->setting->getTitle());
         $payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
@@ -191,7 +205,7 @@ class Omise extends PaymentModule
      */
     protected function generateInternetBankingPaymentOption()
     {
-        $payment_option = new PaymentOption();
+        $payment_option = new self::$PAYMENT_OPTION_CLASS();
 
         $payment_option->setCallToActionText(self::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE);
         $payment_option->setModuleName(self::INTERNET_BANKING_PAYMENT_OPTION_NAME);
@@ -297,9 +311,6 @@ class Omise extends PaymentModule
     public function install()
     {
         if (parent::install() == false
-            ////// || $this->registerHook('displayOrderConfirmation') == false
-            ////// || $this->registerHook('header') == false
-            ////// || $this->registerHook('paymentOptions') == false
             || $this->registerHooks() == false
             || $this->omise_transaction_model->createTable() == false
             || $this->setting->saveTitle(self::DEFAULT_CARD_PAYMENT_TITLE) == false
@@ -365,9 +376,6 @@ class Omise extends PaymentModule
         $this->setting->delete();
 
         return parent::uninstall()
-            ////// && $this->unregisterHook('displayOrderConfirmation')
-            ////// && $this->unregisterHook('header')
-            ////// && $this->unregisterHook('paymentOptions');
             && $this->registerHooks(false);
     }
 
