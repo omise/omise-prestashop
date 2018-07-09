@@ -1,5 +1,9 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
 if (! defined('_PS_VERSION_')) {
     exit();
 }
@@ -8,7 +12,6 @@ define('IS_VERSION_17', _PS_VERSION_ >= '1.7');
 
 
 if (defined('_PS_MODULE_DIR_')) {
-    if (IS_VERSION_17) require_once _PS_MODULE_DIR_ . 'omise/namespace.php';
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
     require_once _PS_MODULE_DIR_ . 'omise/libraries/omise-plugin/Omise.php';
     require_once _PS_MODULE_DIR_ . 'omise/checkout_form.php';
@@ -164,7 +167,7 @@ class Omise extends PaymentModule
      */
     protected function displayInternetBankingPayment()
     {
-        return $this->display(__FILE__, 'internet_banking_payment.tpl');
+        return $this->versionSpecificDisplay(__FILE__, 'internet_banking_payment.tpl');
     }
 
     /**
@@ -178,7 +181,7 @@ class Omise extends PaymentModule
         $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
         $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
 
-        return $this->display(__FILE__, 'card_payment.tpl');
+        return $this->versionSpecificDisplay(__FILE__, 'card_payment.tpl');
     }
 
     /**
@@ -270,14 +273,14 @@ class Omise extends PaymentModule
 
         $this->smarty->assign('order_reference', $params['order']->reference);
 
-        return $this->display(__FILE__, 'confirmation.tpl');
+        return $this->versionSpecificDisplay(__FILE__, 'confirmation.tpl');
     }
 
     public function hookHeader()
     {
         if ($this->setting->isInternetBankingEnabled()) {
             $this->context->controller->addCSS($this->_path . 'css/omise_internet_banking.css', 'all');
-            $this->context->controller->addJqueryPlugin('fancybox');
+            if (IS_VERSION_17) $this->context->controller->addJqueryPlugin('fancybox');
         }
     }
 
@@ -322,6 +325,17 @@ class Omise extends PaymentModule
 
         return true;
     }
+
+    /**
+     * A PrestaShop version specific version of 'display'
+     *
+     * @return see parent 'display' method
+     */
+    protected function versionSpecificDisplay($file, $template)
+    {
+        $versionedTemplate = (IS_VERSION_17 ? "1.7" : "1.6") . "/" . $template;
+        return $this->display($file, $versionedTemplate);
+    }    
 
     /**
      * Register/Unregister all hooks for the module
