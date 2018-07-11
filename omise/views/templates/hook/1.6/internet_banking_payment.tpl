@@ -6,7 +6,7 @@
           <div class="col-sm-12">
             <h3>{l s='Internet Banking' mod='omise'}</h3>
           </div>
-          <div class="col-sm-8 col-md-5 col-lg-4">
+          <div class="col-sm-12">
             <form id="omiseInternetBankingCheckoutForm" method="post" action="{$link->getModuleLink('omise', 'internetbankingpayment', [], true)|escape:'html'}">
               <ul class="omise-internet-banking">
                 <li class="item">
@@ -15,10 +15,7 @@
                     <div class="omise-logo-wrapper scb">
                       <img src="modules/omise/img/scb.svg" class="scb">
                     </div>
-                    <div class="omise-bank-text-wrapper">
-                      <span class="title">{l s='Siam Commercial Bank' mod='omise'}</span><br>
-                      <span class="secondary-text">{l s='Fee: 15 THB (same zone), 30 THB (out zone)' mod='omise'}</span>
-                    </div>
+                    <span class="title">{l s='Siam Commercial Bank' mod='omise'}</span><br>
                   </label>
                 </li>
                 <li class="item">
@@ -27,10 +24,7 @@
                     <div class="omise-logo-wrapper ktb">
                       <img src="modules/omise/img/ktb.svg" class="ktb">
                     </div>
-                    <div class="omise-bank-text-wrapper">
-                      <span class="title">{l s='Krungthai Bank' mod='omise'}</span><br>
-                      <span class="secondary-text">{l s='Fee: 15 THB (same zone), 15 THB (out zone)' mod='omise'}</span>
-                    </div>
+                    <span class="title">{l s='Krungthai Bank' mod='omise'}</span><br>
                   </label>
                 </li>
                 <li class="item">
@@ -39,10 +33,7 @@
                     <div class="omise-logo-wrapper bay">
                       <img src="modules/omise/img/bay.svg" class="bay">
                     </div>
-                    <div class="omise-bank-text-wrapper">
-                      <span class="title">{l s='Krungsri Bank' mod='omise'}</span><br>
-                      <span class="secondary-text">{l s='Fee: 15 THB (same zone), 15 THB (out zone)' mod='omise'}</span>
-                    </div>
+                    <span class="title">{l s='Krungsri Bank' mod='omise'}</span><br>
                   </label>
                 </li>
                 <li class="item">
@@ -51,13 +42,11 @@
                     <div class="omise-logo-wrapper bbl">
                       <img src="modules/omise/img/bbl.svg" class="bbl">
                     </div>
-                    <div class="omise-bank-text-wrapper">
-                      <span class="title">{l s='Bangkok Bank' mod='omise'}</span><br>
-                      <span class="secondary-text">{l s='Fee: 15 THB (same zone), 20 THB (out zone)' mod='omise'}</span>
-                    </div>
+                    <span class="title">{l s='Bangkok Bank' mod='omise'}</span><br>
                   </label>
                 </li>
               </ul>
+              <div class="fee-warning"><label>{l s='Your bank may charge a small fee for internet banking payments.' mod='omise'}</label></div>
               <button class="button btn btn-default standard-checkout button-medium" id="omiseInternetBankingCheckoutButton">
                 <span>{l s='Submit Payment' mod='omise'}</span>
               </button>
