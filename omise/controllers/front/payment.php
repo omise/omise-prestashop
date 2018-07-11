@@ -20,7 +20,8 @@ class OmisePaymentModuleFrontController extends OmiseBasePaymentModuleFrontContr
 
         parent::postProcess();
 
-        $id_order = Order::getIdByCartId($this->context->cart->id);
+        $ORDER_ID_METHOD = IS_VERSION_17 ? "getIdByCartId" : "getOrderByCartId";
+        $id_order = Order::{$ORDER_ID_METHOD}($this->context->cart->id);
 
         if (! empty($this->charge)) {
             $this->payment_order->updatePaymentTransactionId($id_order, $this->charge->getId());

@@ -153,9 +153,9 @@ class Omise extends PaymentModule
      *
      * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
      */
-    protected function displayInapplicablePayment()
+    protected function displayInapplicablePayment($title = null)
     {
-        $this->smarty->assign('omise_title', $this->setting->getTitle());
+        if ($title) $this->smarty->assign('title', $title);
 
         return $this->display(__FILE__, 'inapplicable_payment.tpl');
     }
@@ -180,6 +180,8 @@ class Omise extends PaymentModule
         $this->smarty->assign('action', $this->getAction());
         $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
         $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
+
+        if (!IS_VERSION_17) $this->smarty->assign('omise_title', $this->setting->getTitle());
 
         return $this->versionSpecificDisplay(__FILE__, 'card_payment.tpl');
     }
@@ -263,15 +265,18 @@ class Omise extends PaymentModule
 
     public function hookDisplayOrderConfirmation($params)
     {
+
         if ($this->active == false) {
             return;
         }
 
-        if ($params['order']->module != $this->name) {
+        $orderField = IS_VERSION_17 ? "order" : "objOrder";
+
+        if ($params[$orderField]->module != $this->name) {
             return;
         }
 
-        $this->smarty->assign('order_reference', $params['order']->reference);
+        $this->smarty->assign('order_reference', $params[$orderField]->reference);
 
         return $this->versionSpecificDisplay(__FILE__, 'confirmation.tpl');
     }
@@ -303,13 +308,28 @@ class Omise extends PaymentModule
         return $payment_options;
     }
 
-    // TODO - for 1.6
-    // public function hookPayment()
-    // {
-    //     $payment_options = "boop";
+    // For PrestaShop 1.6
+    public function hookPayment()
+    {
+        if (!$this->active) return;
 
-    //     return $payment_options;
-    // }
+        $payment = '';
+
+        if ($this->setting->isModuleEnabled()) {
+            $payment .= $this->isCurrentCurrencyApplicable() ? 
+                $this->displayCardPayment() :
+                $this->displayInapplicablePayment($this->setting->getTitle());
+        }
+
+        if ($this->setting->isInternetBankingEnabled()) {
+            $payment .= $this->isCurrentCurrencyApplicable() ? 
+                $this->displayInternetBankingPayment() :
+                $this->displayInapplicablePayment($this->l("Internet Banking"));
+        }
+
+        return $payment;
+    }
+
 
     public function install()
     {

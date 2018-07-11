@@ -9,6 +9,7 @@ if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
 }
 
+
 class OmiseChargeClass
 {
     const STATUS_FAILED = 'failed';
@@ -17,6 +18,11 @@ class OmiseChargeClass
     protected $context;
     protected $charge_response;
     protected $setting;
+
+    private static $ORDER_ID_METHOD = IS_VERSION_17 ?
+        "getIdByCartId" :
+        "getOrderByCartId"
+    ;
 
     public function __construct()
     {
@@ -127,7 +133,7 @@ class OmiseChargeClass
      */
     protected function getMetadata()
     {
-        return array('order_id' => Order::getIdByCartId($this->context->cart->id));
+        return array('order_id' => Order::{self::$ORDER_ID_METHOD}($this->context->cart->id));
     }
 
     /**
@@ -137,7 +143,7 @@ class OmiseChargeClass
      */
     protected function getReturnUri()
     {
-        $id_order = Order::getIdByCartId($this->context->cart->id);
+        $id_order = Order::{self::$ORDER_ID_METHOD}($this->context->cart->id);
         $module = Module::getInstanceByName(Omise::MODULE_NAME);
 
         return $this->context->link->getModuleLink(Omise::MODULE_NAME, 'return', [], true) .
