@@ -1,15 +1,23 @@
 <?php
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-
-if (! defined('_PS_VERSION_')) {
+if (!defined('_PS_VERSION_')) {
     exit();
 }
 
 define('IS_VERSION_17', _PS_VERSION_ >= '1.7');
 
+if (IS_VERSION_17) {
+    define('PRESTASHOP_PAYMENTMODULE_HOOKS', "displayOrderConfirmation,header,paymentOptions");
+    define('PRESTASHOP_GET_ORDER_ID_METHOD', "getIdByCartId");
+    define('PRESTASHOP_PAYMENT_OPTION_CLASS', "PrestaShop\PrestaShop\Core\Payment\PaymentOption");
+    define('PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM', "order");
+    define('PRESTASHOP_VERSION_VIEW_PATH', '1.7/');
+} else {
+    define('PRESTASHOP_PAYMENTMODULE_HOOKS', "displayOrderConfirmation,header,payment");
+    define('PRESTASHOP_GET_ORDER_ID_METHOD', "getOrderByCartId");
+    define('PRESTASHOP_PAYMENT_OPTION_CLASS', "PaymentOption");
+    define('PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM', "objOrder");
+    define('PRESTASHOP_VERSION_VIEW_PATH', '1.6/');
+}
 
 if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
@@ -80,28 +88,6 @@ class Omise extends PaymentModule
      * @var string
      */
     const MODULE_VERSION = '1.6';
-
-    /**
-     * The hooks used by the module
-     *
-     * @var array
-     */
-    private static $module_hooks = IS_VERSION_17 ?
-        array('displayOrderConfirmation', 'header', 'paymentOptions') :
-        array('displayOrderConfirmation', 'header', 'payment')
-    ;
-
-    /**
-     * Class to be used for Payment option (had to do it this way to remove higher version of PHP specific code
-     * (namespaces - 'use') that was breaking install on PrestaShop 1.6)
-     *
-     * @var array
-     */
-    private static $PAYMENT_OPTION_CLASS = IS_VERSION_17 ?
-        "PrestaShop\PrestaShop\Core\Payment\PaymentOption" :
-        "PaymentOption"
-    ;
-
 
     /**
      * The instance of class, CheckoutForm.
@@ -180,8 +166,7 @@ class Omise extends PaymentModule
         $this->smarty->assign('action', $this->getAction());
         $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
         $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
-
-        if (!IS_VERSION_17) $this->smarty->assign('omise_title', $this->setting->getTitle());
+        $this->smarty->assign('omise_title', $this->setting->getTitle());
 
         return $this->versionSpecificDisplay(__FILE__, 'card_payment.tpl');
     }
@@ -191,7 +176,8 @@ class Omise extends PaymentModule
      */
     protected function generateCardPaymentOption()
     {
-        $payment_option = new self::$PAYMENT_OPTION_CLASS();
+        $payment_option_class = PRESTASHOP_PAYMENT_OPTION_CLASS;
+        $payment_option = new $payment_option_class();
 
         $payment_option->setCallToActionText($this->setting->getTitle());
         $payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
@@ -210,7 +196,8 @@ class Omise extends PaymentModule
      */
     protected function generateInternetBankingPaymentOption()
     {
-        $payment_option = new self::$PAYMENT_OPTION_CLASS();
+        $payment_option_class = PRESTASHOP_PAYMENT_OPTION_CLASS;
+        $payment_option = new $payment_option_class();
 
         $payment_option->setCallToActionText(self::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE);
         $payment_option->setModuleName(self::INTERNET_BANKING_PAYMENT_OPTION_NAME);
@@ -270,13 +257,11 @@ class Omise extends PaymentModule
             return;
         }
 
-        $orderField = IS_VERSION_17 ? "order" : "objOrder";
-
-        if ($params[$orderField]->module != $this->name) {
+        if ($params[PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM]->module != $this->name) {
             return;
         }
 
-        $this->smarty->assign('order_reference', $params[$orderField]->reference);
+        $this->smarty->assign('order_reference', $params[PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM]->reference);
 
         return $this->versionSpecificDisplay(__FILE__, 'confirmation.tpl');
     }
@@ -285,7 +270,7 @@ class Omise extends PaymentModule
     {
         if ($this->setting->isInternetBankingEnabled()) {
             $this->context->controller->addCSS($this->_path . 'css/omise_internet_banking.css', 'all');
-            if (IS_VERSION_17) $this->context->controller->addJqueryPlugin('fancybox');
+            $this->context->controller->addJqueryPlugin('fancybox');
         }
     }
 
@@ -353,7 +338,7 @@ class Omise extends PaymentModule
      */
     protected function versionSpecificDisplay($file, $template)
     {
-        $versionedTemplate = (IS_VERSION_17 ? "1.7" : "1.6") . "/" . $template;
+        $versionedTemplate = PRESTASHOP_VERSION_VIEW_PATH . $template;
         return $this->display($file, $versionedTemplate);
     }    
 
@@ -365,7 +350,7 @@ class Omise extends PaymentModule
     protected function registerHooks($isRegister = true)
     {
         $res = true;
-        foreach (self::$module_hooks as $hook) {
+        foreach (explode(',', PRESTASHOP_PAYMENTMODULE_HOOKS) as $hook) {
             $res = $res && $this->{$isRegister ? "registerHook" : "unregisterHook"}($hook);
             if (!$res) break;
         }
