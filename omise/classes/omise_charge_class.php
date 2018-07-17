@@ -127,7 +127,7 @@ class OmiseChargeClass
      */
     protected function getMetadata()
     {
-        return array('order_id' => Order::getIdByCartId($this->context->cart->id));
+        return array('order_id' => Order::{PRESTASHOP_GET_ORDER_ID_METHOD}($this->context->cart->id));
     }
 
     /**
@@ -137,7 +137,7 @@ class OmiseChargeClass
      */
     protected function getReturnUri()
     {
-        $id_order = Order::getIdByCartId($this->context->cart->id);
+        $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}($this->context->cart->id);
         $module = Module::getInstanceByName(Omise::MODULE_NAME);
 
         return $this->context->link->getModuleLink(Omise::MODULE_NAME, 'return', [], true) .

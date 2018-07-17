@@ -20,7 +20,7 @@ class OmisePaymentModuleFrontController extends OmiseBasePaymentModuleFrontContr
 
         parent::postProcess();
 
-        $id_order = Order::getIdByCartId($this->context->cart->id);
+        $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}($this->context->cart->id);
 
         if (! empty($this->charge)) {
             $this->payment_order->updatePaymentTransactionId($id_order, $this->charge->getId());

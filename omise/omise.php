@@ -3,7 +3,21 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
-use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+define('IS_VERSION_17', _PS_VERSION_ >= '1.7');
+
+if (IS_VERSION_17) {
+    define('PRESTASHOP_PAYMENTMODULE_HOOKS', "displayOrderConfirmation,header,paymentOptions");
+    define('PRESTASHOP_GET_ORDER_ID_METHOD', "getIdByCartId");
+    define('PRESTASHOP_PAYMENT_OPTION_CLASS', "PrestaShop\PrestaShop\Core\Payment\PaymentOption");
+    define('PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM', "order");
+    define('PRESTASHOP_VERSION_VIEW_PATH', '1.7/');
+} else {
+    define('PRESTASHOP_PAYMENTMODULE_HOOKS', "displayOrderConfirmation,header,payment");
+    define('PRESTASHOP_GET_ORDER_ID_METHOD', "getOrderByCartId");
+    define('PRESTASHOP_PAYMENT_OPTION_CLASS', "PaymentOption");
+    define('PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM', "objOrder");
+    define('PRESTASHOP_VERSION_VIEW_PATH', '1.6/');
+}
 
 if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
@@ -73,7 +87,7 @@ class Omise extends PaymentModule
      *
      * @var string
      */
-    const MODULE_VERSION = '1.5';
+    const MODULE_VERSION = '1.6';
 
     /**
      * The instance of class, CheckoutForm.
@@ -105,13 +119,15 @@ class Omise extends PaymentModule
         $this->version                = self::MODULE_VERSION;
         $this->author                 = 'Omise';
         $this->need_instance          = 0;
-        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => '1.7');
+        $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.7');
         $this->bootstrap              = true;
+
+        $this->currencies_mode        = 'checkbox';
 
         parent::__construct();
 
         $this->displayName            = self::MODULE_DISPLAY_NAME;
-        $this->confirmUninstall       = $this->l('Are you sure you want to uninstall ' . self::MODULE_DISPLAY_NAME . ' module?');
+        $this->confirmUninstall       = $this->l('Are you sure you want to uninstall the ' . self::MODULE_DISPLAY_NAME . ' module?');
 
         $this->setCheckoutForm(new CheckoutForm());
         $this->setOmiseTransactionModel(new OmiseTransactionModel());
@@ -123,9 +139,9 @@ class Omise extends PaymentModule
      *
      * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
      */
-    protected function displayInapplicablePayment()
+    protected function displayInapplicablePayment($title = null)
     {
-        $this->smarty->assign('omise_title', $this->setting->getTitle());
+        if ($title) $this->smarty->assign('title', $title);
 
         return $this->display(__FILE__, 'inapplicable_payment.tpl');
     }
@@ -137,7 +153,7 @@ class Omise extends PaymentModule
      */
     protected function displayInternetBankingPayment()
     {
-        return $this->display(__FILE__, 'internet_banking_payment.tpl');
+        return $this->versionSpecificDisplay(__FILE__, 'internet_banking_payment.tpl');
     }
 
     /**
@@ -150,8 +166,9 @@ class Omise extends PaymentModule
         $this->smarty->assign('action', $this->getAction());
         $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
         $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
+        $this->smarty->assign('omise_title', $this->setting->getTitle());
 
-        return $this->display(__FILE__, 'card_payment.tpl');
+        return $this->versionSpecificDisplay(__FILE__, 'card_payment.tpl');
     }
 
     /**
@@ -159,7 +176,8 @@ class Omise extends PaymentModule
      */
     protected function generateCardPaymentOption()
     {
-        $payment_option = new PaymentOption();
+        $payment_option_class = PRESTASHOP_PAYMENT_OPTION_CLASS;
+        $payment_option = new $payment_option_class();
 
         $payment_option->setCallToActionText($this->setting->getTitle());
         $payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
@@ -178,7 +196,8 @@ class Omise extends PaymentModule
      */
     protected function generateInternetBankingPaymentOption()
     {
-        $payment_option = new PaymentOption();
+        $payment_option_class = PRESTASHOP_PAYMENT_OPTION_CLASS;
+        $payment_option = new $payment_option_class();
 
         $payment_option->setCallToActionText(self::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE);
         $payment_option->setModuleName(self::INTERNET_BANKING_PAYMENT_OPTION_NAME);
@@ -237,13 +256,13 @@ class Omise extends PaymentModule
             return;
         }
 
-        if ($params['order']->module != $this->name) {
+        if ($params[PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM]->module != $this->name) {
             return;
         }
 
-        $this->smarty->assign('order_reference', $params['order']->reference);
+        $this->smarty->assign('order_reference', $params[PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM]->reference);
 
-        return $this->display(__FILE__, 'confirmation.tpl');
+        return $this->versionSpecificDisplay(__FILE__, 'confirmation.tpl');
     }
 
     public function hookHeader()
@@ -273,12 +292,33 @@ class Omise extends PaymentModule
         return $payment_options;
     }
 
+    // For PrestaShop 1.6
+    public function hookPayment()
+    {
+        if (!$this->active) return;
+
+        $payment = '';
+
+        if ($this->setting->isModuleEnabled()) {
+            $payment .= $this->isCurrentCurrencyApplicable() ? 
+                $this->displayCardPayment() :
+                $this->displayInapplicablePayment($this->setting->getTitle());
+        }
+
+        if ($this->setting->isInternetBankingEnabled()) {
+            $payment .= $this->isCurrentCurrencyApplicable() ? 
+                $this->displayInternetBankingPayment() :
+                $this->displayInapplicablePayment($this->l("Internet Banking"));
+        }
+
+        return $payment;
+    }
+
+
     public function install()
     {
         if (parent::install() == false
-            || $this->registerHook('displayOrderConfirmation') == false
-            || $this->registerHook('header') == false
-            || $this->registerHook('paymentOptions') == false
+            || $this->applyToHooks(array($this, 'registerHook')) == false
             || $this->omise_transaction_model->createTable() == false
             || $this->setting->saveTitle(self::DEFAULT_CARD_PAYMENT_TITLE) == false
         ) {
@@ -289,6 +329,30 @@ class Omise extends PaymentModule
 
         return true;
     }
+
+    /**
+     * A PrestaShop version specific version of 'display'
+     *
+     * @return see parent 'display' method
+     */
+    protected function versionSpecificDisplay($file, $template)
+    {
+        return $this->display($file, PRESTASHOP_VERSION_VIEW_PATH . $template);
+    }    
+
+    /**
+     * Register/Unregister all hooks for the module
+     *
+     * @return bool
+     */
+    protected function applyToHooks($callable)
+    {
+        $res = true;
+        foreach (explode(',', PRESTASHOP_PAYMENTMODULE_HOOKS) as $hook) {
+            if (!$res &= call_user_func($callable, $hook)) break;
+        }
+        return !!$res;
+    }    
 
     /**
      * Check whether the current currency is supported by the Omise API.
@@ -328,9 +392,7 @@ class Omise extends PaymentModule
         $this->setting->delete();
 
         return parent::uninstall()
-            && $this->unregisterHook('displayOrderConfirmation')
-            && $this->unregisterHook('header')
-            && $this->unregisterHook('paymentOptions');
+            && $this->applyToHooks(array($this, 'unregisterHook'));
     }
 
     /**
