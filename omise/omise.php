@@ -356,7 +356,7 @@ class Omise extends PaymentModule
         foreach (explode(',', PRESTASHOP_PAYMENTMODULE_HOOKS) as $hook) {
             if (!$res &= call_user_func($callable, $hook)) break;
         }
-        return $res;
+        return !!$res;
     }    
 
     /**
