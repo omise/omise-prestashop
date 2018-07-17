@@ -9,7 +9,6 @@ if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
 }
 
-
 class OmiseChargeClass
 {
     const STATUS_FAILED = 'failed';

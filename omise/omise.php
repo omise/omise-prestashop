@@ -1,5 +1,10 @@
 <?php
-if (!defined('_PS_VERSION_')) {
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
+if (! defined('_PS_VERSION_')) {
     exit();
 }
 
@@ -252,7 +257,6 @@ class Omise extends PaymentModule
 
     public function hookDisplayOrderConfirmation($params)
     {
-
         if ($this->active == false) {
             return;
         }
@@ -319,7 +323,7 @@ class Omise extends PaymentModule
     public function install()
     {
         if (parent::install() == false
-            || $this->registerHooks() == false
+            || $this->applyToHooks(array($this, 'registerHook')) == false
             || $this->omise_transaction_model->createTable() == false
             || $this->setting->saveTitle(self::DEFAULT_CARD_PAYMENT_TITLE) == false
         ) {
@@ -338,8 +342,7 @@ class Omise extends PaymentModule
      */
     protected function versionSpecificDisplay($file, $template)
     {
-        $versionedTemplate = PRESTASHOP_VERSION_VIEW_PATH . $template;
-        return $this->display($file, $versionedTemplate);
+        return $this->display($file, PRESTASHOP_VERSION_VIEW_PATH . $template);
     }    
 
     /**
@@ -347,12 +350,11 @@ class Omise extends PaymentModule
      *
      * @return bool
      */
-    protected function registerHooks($isRegister = true)
+    protected function applyToHooks($callable)
     {
         $res = true;
         foreach (explode(',', PRESTASHOP_PAYMENTMODULE_HOOKS) as $hook) {
-            $res = $res && $this->{$isRegister ? "registerHook" : "unregisterHook"}($hook);
-            if (!$res) break;
+            if (!$res &= call_user_func($callable, $hook)) break;
         }
         return $res;
     }    
@@ -395,7 +397,7 @@ class Omise extends PaymentModule
         $this->setting->delete();
 
         return parent::uninstall()
-            && $this->registerHooks(false);
+            && $this->applyToHooks(array($this, 'unregisterHook'));
     }
 
     /**
