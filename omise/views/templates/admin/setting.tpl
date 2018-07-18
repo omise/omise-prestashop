@@ -102,6 +102,19 @@
           <p class="help-block">{l s='Enables customers of a bank to easily conduct financial transactions through a bank-operated website (only available in Thailand).' mode='omise'}</p>
         </div>
       </div>
+      <div class="form-group">
+        <label class="control-label col-lg-3">{l s='Alipay' mode='omise'}</label>
+        <div class="col-lg-9">
+          <span class="switch prestashop-switch fixed-width-lg">
+            <input id="alipay_status_enabled" name="alipay_status" type="radio" value="1" {if $alipay_status == 1}checked="checked"{/if}>
+            <label for="alipay_status_enabled">{l s='Yes' mode='omise'}</label>
+            <input id="alipay_status_disabled" name="alipay_status" type="radio" value="0" {if $alipay_status == 0}checked="checked"{/if}>
+            <label for="alipay_status_disabled">{l s='No' mode='omise'}</label>
+            <a class="slide-button btn"></a>
+          </span>
+          <p class="help-block">{l s='Enables payments by Alipay (currently only available in Thailand).' mode='omise'}</p>
+        </div>
+      </div>
     </div>
     <div class="panel-footer">
       <button class="btn btn-default pull-right" name="{$submit_action}" type="submit" value="1">

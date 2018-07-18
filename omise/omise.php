@@ -3,6 +3,10 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 define('IS_VERSION_17', _PS_VERSION_ >= '1.7');
 
 if (IS_VERSION_17) {
@@ -219,6 +223,7 @@ class Omise extends PaymentModule
         }
 
         $this->smarty->assign(array(
+            'alipay_status' => $this->setting->isAlipayEnabled(),
             'internet_banking_status' => $this->setting->isInternetBankingEnabled(),
             'live_public_key' => $this->setting->getLivePublicKey(),
             'live_secret_key' => $this->setting->getLiveSecretKey(),
