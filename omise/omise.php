@@ -341,17 +341,16 @@ class Omise extends PaymentModule
     }    
 
     /**
-     * Register/Unregister all hooks for the module
+     * Apply passed callable function to all hooks for the module, bailing if any function fails
      *
      * @return bool
      */
     protected function applyToHooks($callable)
     {
-        $res = true;
         foreach (explode(',', PRESTASHOP_PAYMENTMODULE_HOOKS) as $hook) {
-            if (!$res &= call_user_func($callable, $hook)) break;
+            if (!$res = call_user_func($callable, $hook)) break;
         }
-        return !!$res;
+        return $res;
     }    
 
     /**
