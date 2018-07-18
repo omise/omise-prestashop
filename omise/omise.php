@@ -61,6 +61,13 @@ class Omise extends PaymentModule
     const DEFAULT_INTERNET_BANKING_PAYMENT_TITLE = 'Internet Banking';
 
     /**
+     * The default title of alipay payment.
+     *
+     * @var string
+     */
+    const DEFAULT_ALIPAY_PAYMENT_TITLE = 'Alipay';
+
+    /**
      * The name that used as the identifier of internet banking payment option.
      *
      * A payment module can has more than one payment option. At the front office, each payment options can be
@@ -71,6 +78,18 @@ class Omise extends PaymentModule
      * @var string
      */
     const INTERNET_BANKING_PAYMENT_OPTION_NAME = 'omise-internet-banking-payment';
+
+    /**
+     * The name that used as the identifier of alipay payment option.
+     *
+     * A payment module can has more than one payment option. At the front office, each payment options can be
+     * identified by using module name (@see PaymentOption::setModuleName()).
+     *
+     * The module name is displayed at front office as an attribute of the payment option.
+     *
+     * @var string
+     */
+    const ALIPAY_PAYMENT_OPTION_NAME = 'omise-alipay-payment';
 
     /**
      * The name that will be display to the user at the back-end.
@@ -161,6 +180,16 @@ class Omise extends PaymentModule
     }
 
     /**
+     * Display the alipay checkout form.
+     *
+     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
+     */
+    protected function displayAlipayPayment()
+    {
+        return $this->versionSpecificDisplay(__FILE__, 'alipay.tpl');
+    }
+
+    /**
      * Display the checkout form.
      *
      * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
@@ -208,6 +237,26 @@ class Omise extends PaymentModule
 
         if ($this->isCurrentCurrencyApplicable()) {
             $payment_option->setForm($this->displayInternetBankingPayment());
+        } else {
+            $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
+        }
+
+        return $payment_option;
+    }
+
+    /**
+     * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     */
+    protected function generateAlipayPaymentOption()
+    {
+        $payment_option_class = PRESTASHOP_PAYMENT_OPTION_CLASS;
+        $payment_option = new $payment_option_class();
+
+        $payment_option->setCallToActionText(self::DEFAULT_ALIPAY_PAYMENT_TITLE);
+        $payment_option->setModuleName(self::ALIPAY_PAYMENT_OPTION_NAME);
+
+        if ($this->isCurrentCurrencyApplicable()) {
+            $payment_option->setForm($this->displayAlipayPayment());
         } else {
             $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
         }
@@ -290,6 +339,10 @@ class Omise extends PaymentModule
             $payment_options[] = $this->generateInternetBankingPaymentOption();
         }
 
+        if ($this->setting->isAlipayEnabled()) {
+            $payment_options[] = $this->generateAlipayPaymentOption();
+        }
+
         if (count($payment_options) == 0) {
             return null;
         }
@@ -314,6 +367,12 @@ class Omise extends PaymentModule
             $payment .= $this->isCurrentCurrencyApplicable() ? 
                 $this->displayInternetBankingPayment() :
                 $this->displayInapplicablePayment($this->l("Internet Banking"));
+        }
+
+        if ($this->setting->isAlipayEnabled()) {
+            $payment .= $this->isCurrentCurrencyApplicable() ? 
+                $this->displayAlipayPayment() :
+                $this->displayInapplicablePayment($this->l("Alipay"));
         }
 
         return $payment;
