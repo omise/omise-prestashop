@@ -20,7 +20,7 @@ class OmiseInternetBankingPaymentModuleFrontController extends OmiseBasePaymentM
         );
 
         try {
-            $this->charge = $this->omise_charge->createInternetBanking(Tools::getValue('offsite'));
+            $this->charge = $this->omise_charge->createOffsite(Tools::getValue('offsite'));
         } catch (Exception $e) {
             $this->error_message = $e->getMessage();
             return;

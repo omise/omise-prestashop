@@ -12,8 +12,6 @@ class OmiseAlipayPaymentModuleFrontController extends OmiseBasePaymentModuleFron
 {
     public function postProcess()
     {
-        die('ALIPAY!');
-
         $this->validateCart();
 
         $this->payment_order->save(
@@ -22,7 +20,7 @@ class OmiseAlipayPaymentModuleFrontController extends OmiseBasePaymentModuleFron
         );
 
         try {
-            $this->charge = $this->omise_charge->createInternetBanking(Tools::getValue('offsite'));
+            $this->charge = $this->omise_charge->createOffsite('alipay');
         } catch (Exception $e) {
             $this->error_message = $e->getMessage();
             return;
