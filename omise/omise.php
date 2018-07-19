@@ -3,10 +3,6 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 define('IS_VERSION_17', _PS_VERSION_ >= '1.7');
 
 if (IS_VERSION_17) {
