@@ -192,10 +192,12 @@ class Omise extends PaymentModule
      */
     protected function displayCardPayment()
     {
-        $this->smarty->assign('action', $this->getAction());
-        $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
-        $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
-        $this->smarty->assign('omise_title', $this->setting->getTitle());
+        $this->smarty->assign(array(
+            'action' => $this->getAction(),
+            'list_of_expiration_year' => $this->checkout_form->getListOfExpirationYear(),
+            'omise_public_key' => $this->setting->getPublicKey(),
+            'omise_title' => $this->setting->getTitle()
+        ));
 
         return $this->versionSpecificDisplay(__FILE__, 'card_payment.tpl');
     }
@@ -302,13 +304,9 @@ class Omise extends PaymentModule
 
     public function hookDisplayOrderConfirmation($params)
     {
-        if ($this->active == false) {
-            return;
-        }
+        if (!$this->active) return;
 
-        if ($params[PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM]->module != $this->name) {
-            return;
-        }
+        if ($params[PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM]->module != $this->name) return;
 
         $this->smarty->assign('order_reference', $params[PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM]->reference);
 
