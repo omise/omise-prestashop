@@ -337,11 +337,7 @@ class Omise extends PaymentModule
             $payment_options[] = $this->generateAlipayPaymentOption();
         }
 
-        if (count($payment_options) == 0) {
-            return null;
-        }
-
-        return $payment_options;
+        return count($payment_options) ? $payment_options : null;
     }
 
     // For PrestaShop 1.6
@@ -432,11 +428,7 @@ class Omise extends PaymentModule
      */
     protected function getAction()
     {
-        $controller = 'payment';
-
-        if ($this->setting->isThreeDomainSecureEnabled()) {
-            $controller = 'threedomainsecurepayment';
-        }
+        $controller = $this->setting->isThreeDomainSecureEnabled() ? 'threedomainsecurepayment' :'payment';
 
         return $this->context->link->getModuleLink(self::MODULE_NAME, $controller, [], true);
     }
