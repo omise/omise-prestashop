@@ -54,14 +54,14 @@ class OmiseChargeClass
      *
      * @return $this
      */
-    public function createInternetBanking($offsite)
+    public function createOffsite($offsiteType)
     {
         $charge_request = array(
             'amount' => $this->getAmount(),
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),
             'metadata' => $this->getMetadata(),
-            'offsite' => $offsite,
+            'offsite' => $offsiteType,
             'return_uri' => $this->getReturnUri(),
         );
 

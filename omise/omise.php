@@ -57,6 +57,13 @@ class Omise extends PaymentModule
     const DEFAULT_INTERNET_BANKING_PAYMENT_TITLE = 'Internet Banking';
 
     /**
+     * The default title of alipay payment.
+     *
+     * @var string
+     */
+    const DEFAULT_ALIPAY_PAYMENT_TITLE = 'Alipay';
+
+    /**
      * The name that used as the identifier of internet banking payment option.
      *
      * A payment module can has more than one payment option. At the front office, each payment options can be
@@ -67,6 +74,18 @@ class Omise extends PaymentModule
      * @var string
      */
     const INTERNET_BANKING_PAYMENT_OPTION_NAME = 'omise-internet-banking-payment';
+
+    /**
+     * The name that used as the identifier of alipay payment option.
+     *
+     * A payment module can has more than one payment option. At the front office, each payment options can be
+     * identified by using module name (@see PaymentOption::setModuleName()).
+     *
+     * The module name is displayed at front office as an attribute of the payment option.
+     *
+     * @var string
+     */
+    const ALIPAY_PAYMENT_OPTION_NAME = 'omise-alipay-payment';
 
     /**
      * The name that will be display to the user at the back-end.
@@ -157,16 +176,28 @@ class Omise extends PaymentModule
     }
 
     /**
+     * Display the alipay checkout form.
+     *
+     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
+     */
+    protected function displayAlipayPayment()
+    {
+        return $this->versionSpecificDisplay(__FILE__, 'alipay.tpl');
+    }
+
+    /**
      * Display the checkout form.
      *
      * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
      */
     protected function displayCardPayment()
     {
-        $this->smarty->assign('action', $this->getAction());
-        $this->smarty->assign('list_of_expiration_year', $this->checkout_form->getListOfExpirationYear());
-        $this->smarty->assign('omise_public_key', $this->setting->getPublicKey());
-        $this->smarty->assign('omise_title', $this->setting->getTitle());
+        $this->smarty->assign(array(
+            'action' => $this->getAction(),
+            'list_of_expiration_year' => $this->checkout_form->getListOfExpirationYear(),
+            'omise_public_key' => $this->setting->getPublicKey(),
+            'omise_title' => $this->setting->getTitle()
+        ));
 
         return $this->versionSpecificDisplay(__FILE__, 'card_payment.tpl');
     }
@@ -211,6 +242,26 @@ class Omise extends PaymentModule
         return $payment_option;
     }
 
+    /**
+     * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     */
+    protected function generateAlipayPaymentOption()
+    {
+        $payment_option_class = PRESTASHOP_PAYMENT_OPTION_CLASS;
+        $payment_option = new $payment_option_class();
+
+        $payment_option->setCallToActionText(self::DEFAULT_ALIPAY_PAYMENT_TITLE);
+        $payment_option->setModuleName(self::ALIPAY_PAYMENT_OPTION_NAME);
+
+        if ($this->isCurrentCurrencyApplicable()) {
+            $payment_option->setForm($this->displayAlipayPayment());
+        } else {
+            $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
+        }
+
+        return $payment_option;
+    }
+
     public function getContent()
     {
         if ($this->setting->isSubmit()) {
@@ -219,6 +270,7 @@ class Omise extends PaymentModule
         }
 
         $this->smarty->assign(array(
+            'alipay_status' => $this->setting->isAlipayEnabled(),
             'internet_banking_status' => $this->setting->isInternetBankingEnabled(),
             'live_public_key' => $this->setting->getLivePublicKey(),
             'live_secret_key' => $this->setting->getLiveSecretKey(),
@@ -252,13 +304,9 @@ class Omise extends PaymentModule
 
     public function hookDisplayOrderConfirmation($params)
     {
-        if ($this->active == false) {
-            return;
-        }
+        if (!$this->active) return;
 
-        if ($params[PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM]->module != $this->name) {
-            return;
-        }
+        if ($params[PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM]->module != $this->name) return;
 
         $this->smarty->assign('order_reference', $params[PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM]->reference);
 
@@ -285,11 +333,11 @@ class Omise extends PaymentModule
             $payment_options[] = $this->generateInternetBankingPaymentOption();
         }
 
-        if (count($payment_options) == 0) {
-            return null;
+        if ($this->setting->isAlipayEnabled()) {
+            $payment_options[] = $this->generateAlipayPaymentOption();
         }
 
-        return $payment_options;
+        return count($payment_options) ? $payment_options : null;
     }
 
     // For PrestaShop 1.6
@@ -309,6 +357,12 @@ class Omise extends PaymentModule
             $payment .= $this->isCurrentCurrencyApplicable() ? 
                 $this->displayInternetBankingPayment() :
                 $this->displayInapplicablePayment($this->l("Internet Banking"));
+        }
+
+        if ($this->setting->isAlipayEnabled()) {
+            $payment .= $this->isCurrentCurrencyApplicable() ? 
+                $this->displayAlipayPayment() :
+                $this->displayInapplicablePayment($this->l("Alipay"));
         }
 
         return $payment;
@@ -341,17 +395,16 @@ class Omise extends PaymentModule
     }    
 
     /**
-     * Register/Unregister all hooks for the module
+     * Apply passed callable function to all hooks for the module, bailing if any function fails
      *
      * @return bool
      */
     protected function applyToHooks($callable)
     {
-        $res = true;
         foreach (explode(',', PRESTASHOP_PAYMENTMODULE_HOOKS) as $hook) {
-            if (!$res &= call_user_func($callable, $hook)) break;
+            if (!$res = call_user_func($callable, $hook)) break;
         }
-        return !!$res;
+        return $res;
     }    
 
     /**
@@ -375,11 +428,7 @@ class Omise extends PaymentModule
      */
     protected function getAction()
     {
-        $controller = 'payment';
-
-        if ($this->setting->isThreeDomainSecureEnabled()) {
-            $controller = 'threedomainsecurepayment';
-        }
+        $controller = $this->setting->isThreeDomainSecureEnabled() ? 'threedomainsecurepayment' :'payment';
 
         return $this->context->link->getModuleLink(self::MODULE_NAME, $controller, [], true);
     }

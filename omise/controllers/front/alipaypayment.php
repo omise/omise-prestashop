@@ -8,7 +8,7 @@ if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/controllers/front/base.php';
 }
 
-class OmiseInternetBankingPaymentModuleFrontController extends OmiseBasePaymentModuleFrontController
+class OmiseAlipayPaymentModuleFrontController extends OmiseBasePaymentModuleFrontController
 {
     public function postProcess()
     {
@@ -16,11 +16,11 @@ class OmiseInternetBankingPaymentModuleFrontController extends OmiseBasePaymentM
 
         $this->payment_order->save(
             $this->payment_order->getOrderStateProcessingInProgress(),
-            Omise::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE
+            Omise::DEFAULT_ALIPAY_PAYMENT_TITLE
         );
 
         try {
-            $this->charge = $this->omise_charge->createOffsite(Tools::getValue('offsite'));
+            $this->charge = $this->omise_charge->createOffsite('alipay');
         } catch (Exception $e) {
             $this->error_message = $e->getMessage();
             return;

@@ -5,22 +5,39 @@ if (! defined('_PS_VERSION_')) {
 
 class Setting
 {
-    protected $submit_action = 'omise_save_setting';
+    
+    const PREFIX = 'omise_';
+
+    protected
+        $submit_action = 'omise_save_setting',
+        $all_settings = array(
+            'module_status',
+            'sandbox_status',
+            'test_public_key',
+            'test_secret_key',
+            'live_public_key',
+            'live_secret_key',
+            'title',
+            'three_domain_secure_status',
+            'internet_banking_status',
+            'alipay_status'
+        )
+    ;
+
+    /**
+     * Get an Omise setting value from config
+     */
+    protected function getConfig($settingName)
+    {
+        return Configuration::get(Setting::PREFIX.$settingName);
+    }
 
     /**
      * Delete all setting values.
      */
     public function delete()
     {
-        Configuration::deleteByName('omise_module_status');
-        Configuration::deleteByName('omise_sandbox_status');
-        Configuration::deleteByName('omise_test_public_key');
-        Configuration::deleteByName('omise_test_secret_key');
-        Configuration::deleteByName('omise_live_public_key');
-        Configuration::deleteByName('omise_live_secret_key');
-        Configuration::deleteByName('omise_title');
-        Configuration::deleteByName('omise_three_domain_secure_status');
-        Configuration::deleteByName('omise_internet_banking_status');
+        foreach($this->all_settings as $setting) Configuration::deleteByName(Setting::PREFIX.$setting);
     }
 
     /**
@@ -28,7 +45,7 @@ class Setting
      */
     public function getLivePublicKey()
     {
-        return Configuration::get('omise_live_public_key');
+        return $this->getConfig('live_public_key');
     }
 
     /**
@@ -36,7 +53,7 @@ class Setting
      */
     public function getLiveSecretKey()
     {
-        return Configuration::get('omise_live_secret_key');
+        return $this->getConfig('live_secret_key');
     }
 
     /**
@@ -50,11 +67,7 @@ class Setting
      */
     public function getPublicKey()
     {
-        if ($this->isSandboxEnabled()) {
-            return $this->getTestPublicKey();
-        }
-
-        return $this->getLivePublicKey();
+        return $this->{$this->isSandboxEnabled() ? 'getTestPublicKey' : 'getLivePublicKey'}();
     }
 
     /**
@@ -68,11 +81,7 @@ class Setting
      */
     public function getSecretKey()
     {
-        if ($this->isSandboxEnabled()) {
-            return $this->getTestSecretKey();
-        }
-
-        return $this->getLiveSecretKey();
+        return $this->{$this->isSandboxEnabled() ? 'getTestSecretKey' : 'getLiveSecretKey'}();
     }
 
     /**
@@ -88,7 +97,7 @@ class Setting
      */
     public function getTestPublicKey()
     {
-        return Configuration::get('omise_test_public_key');
+        return $this->getConfig('test_public_key');
     }
 
     /**
@@ -96,7 +105,7 @@ class Setting
      */
     public function getTestSecretKey()
     {
-        return Configuration::get('omise_test_secret_key');
+        return $this->getConfig('test_secret_key');
     }
 
     /**
@@ -104,7 +113,7 @@ class Setting
      */
     public function getTitle()
     {
-        return Configuration::get('omise_title');
+        return $this->getConfig('title');
     }
 
     /**
@@ -112,11 +121,15 @@ class Setting
      */
     public function isInternetBankingEnabled()
     {
-        if (Configuration::get('omise_internet_banking_status')) {
-            return true;
-        }
+        return !!$this->getConfig('internet_banking_status');
+    }
 
-        return false;
+    /**
+     * @return bool
+     */
+    public function isAlipayEnabled()
+    {
+        return !!$this->getConfig('alipay_status');
     }
 
     /**
@@ -124,11 +137,7 @@ class Setting
      */
     public function isModuleEnabled()
     {
-        if (Configuration::get('omise_module_status')) {
-            return true;
-        }
-
-        return false;
+        return !!$this->getConfig('module_status');
     }
 
     /**
@@ -136,11 +145,7 @@ class Setting
      */
     public function isSandboxEnabled()
     {
-        if (Configuration::get('omise_sandbox_status')) {
-            return true;
-        }
-
-        return false;
+        return !!$this->getConfig('sandbox_status');
     }
 
     /**
@@ -148,11 +153,7 @@ class Setting
      */
     public function isThreeDomainSecureEnabled()
     {
-        if (Configuration::get('omise_three_domain_secure_status')) {
-            return true;
-        }
-
-        return false;
+        return !!$this->getConfig('three_domain_secure_status');
     }
 
     /**
@@ -160,24 +161,12 @@ class Setting
      */
     public function isSubmit()
     {
-        if (Tools::isSubmit($this->getSubmitAction())) {
-            return true;
-        }
-
-        return false;
+        return !!Tools::isSubmit($this->getSubmitAction());
     }
 
     public function save()
     {
-        Configuration::updateValue('omise_module_status', strval(Tools::getValue('module_status')));
-        Configuration::updateValue('omise_sandbox_status', strval(Tools::getValue('sandbox_status')));
-        Configuration::updateValue('omise_test_public_key', strval(Tools::getValue('test_public_key')));
-        Configuration::updateValue('omise_test_secret_key', strval(Tools::getValue('test_secret_key')));
-        Configuration::updateValue('omise_live_public_key', strval(Tools::getValue('live_public_key')));
-        Configuration::updateValue('omise_live_secret_key', strval(Tools::getValue('live_secret_key')));
-        Configuration::updateValue('omise_title', strval(Tools::getValue('title')));
-        Configuration::updateValue('omise_three_domain_secure_status', strval(Tools::getValue('three_domain_secure_status')));
-        Configuration::updateValue('omise_internet_banking_status', strval(Tools::getValue('internet_banking_status')));
+        foreach($this->all_settings as $setting) Configuration::updateValue(Setting::PREFIX.$setting, strval(Tools::getValue($setting)));
     }
 
     /**
@@ -187,6 +176,6 @@ class Setting
      */
     public function saveTitle($title)
     {
-        return Configuration::updateValue('omise_title', strval($title));
+        return Configuration::updateValue(Setting::PREFIX.'title', strval($title));
     }
 }
