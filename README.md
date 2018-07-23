@@ -20,7 +20,7 @@ Submit your requirement as an issue to [GitHub's issue channel](https://github.c
 
 The instructions below will guide you through all the steps in installing the module.
 
-1. Download the [latest version of Omise PrestaShop](https://github.com/omise/omise-prestashop/releases/download/v1.6/omise-prestashop-v1.6.zip).
+1. Download the [latest version of Omise PrestaShop](https://github.com/omise/omise-prestashop/releases/download/v1.7/omise-prestashop-v1.7.zip).
 
 2. Login to your PrestaShop back office and go to **Modules & Services**.
 
@@ -68,6 +68,7 @@ The table below is the settings for the module and the description for each sett
 | Title               | Title of Omise card payment shown at checkout.                                           |
 | 3-D Secure support  | Enables or disables 3-D Secure payment.                                                  |
 | Internet Banking    | Enables or disables internet banking payment.                                            |
+| Alipay              | Enables or disables Alipay payments.                                                     |
 
 - To enable the module, select the setting for `Enable/Disable` to `Yes`.
 - To enable `sandbox` mode, select the setting for `Sandbox` to `Yes`.
