@@ -72,7 +72,12 @@
 <script src="https://cdn.omise.co/omise.js.gz"></script>
 
 <script>
-  const omiseCheckout = function omiseCheckout() {
+  
+  // IMPORTANT - this window.xxx stuff looks weird and unnecessary, but it's necessary to make
+  // the JS work correctly when the checkout is in one-page mode. It would appear that
+  // dynamically created script blocks do not run in the global context
+
+  window.omiseCheckout = function omiseCheckout() {
     if (typeof Omise === 'undefined') {
       alert('{l s='Unable to process the payment, loading the external card processing library is failed. Please contact the merchant.' mod='omise'}');
       return false;
@@ -92,7 +97,7 @@
     Omise.createToken('card', card, omiseCreateTokenCallback);
   }
 
-  const omiseCreateTokenCallback = function omiseCreateTokenCallback(statusCode, response) {
+  window.omiseCreateTokenCallback = function omiseCreateTokenCallback(statusCode, response) {
     if (statusCode === 200) {
       document.getElementById('omise_card_token').value = response.id;
       document.getElementById('omise_checkout_form').submit();
@@ -102,7 +107,7 @@
     }
   };
 
-  const omiseCheckoutForm = {
+  window.omiseCheckoutForm = {
     name: document.getElementById('omise_card_holder_name'),
     number: document.getElementById('omise_card_number'),
     expiration_month: document.getElementById('omise_card_expiration_month'),
@@ -112,7 +117,7 @@
     checkout_text: document.getElementById('omise_checkout_text'),
   };
 
-  const omiseLockCheckoutForm = function omiseLockCheckoutForm(form) {
+  window.omiseLockCheckoutForm = function omiseLockCheckoutForm(form) {
     form.name.disabled = true;
     form.number.disabled = true;
     form.expiration_month.disabled = true;
@@ -122,7 +127,7 @@
     form.checkout_text.innerHTML = '{l s='Processing' mod='omise'}';
   };
 
-  const omiseUnlockCheckoutForm = function omiseUnlockCheckoutForm(form) {
+  window.omiseUnlockCheckoutForm = function omiseUnlockCheckoutForm(form) {
     form.name.disabled = false;
     form.number.disabled = false;
     form.expiration_month.disabled = false;
