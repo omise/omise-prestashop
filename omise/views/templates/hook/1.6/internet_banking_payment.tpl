@@ -58,14 +58,15 @@
   </div>
 </div>
 
-{strip}
-  {if $conditions}
-    {addJsDefL name=omise_msg_select_bank}{l s='Please select a bank before continuing.' js=1 mod='omise'}{/addJsDefL}
-  {/if}
-{/strip}
 
 <script>
-  const omiseDisplayMessage = function omiseDisplayMessage(message) {
+
+  // IMPORTANT - this window.xxx stuff looks weird and unnecessary, but it's necessary to make
+  // the JS work correctly when the checkout is in one-page mode. It would appear that
+  // dynamically created script blocks do not run in the global context
+  
+  window.omise_msg_select_bank = "{l s='Please select a bank before continuing.' js=1 mod='omise'}";
+  window.omiseDisplayMessage = function omiseDisplayMessage(message) {
     if ($.prototype.fancybox) {
       $.fancybox.open([
           {
@@ -82,7 +83,7 @@
     }
   }
 
-  const omiseHasAnyBankSelected = function omiseHasAnyBankSelected() {
+  window.omiseHasAnyBankSelected = function omiseHasAnyBankSelected() {
     var selectedBank = document.getElementsByName('offsite');
 
     for (var i = 0; i < selectedBank.length; i++) {
@@ -94,7 +95,7 @@
     return false;
   }
 
-  const omiseInternetBankingCheckout = function omiseInternetBankingCheckout(event) {
+  window.omiseInternetBankingCheckout = function omiseInternetBankingCheckout(event) {
     event.preventDefault();
 
     if (omiseHasAnyBankSelected() == false) {
@@ -122,19 +123,21 @@
    *
    * Reference about Uniform, jQuery plugin, on GitHub: https://github.com/square/uniform
    */
-  const omiseRestoreUniformStyle = function omiseRestoreUniformStyle() {
+  window.omiseRestoreUniformStyle = function omiseRestoreUniformStyle() {
     $.uniform.restore('.no-uniform');
   }
 
   document.getElementById('omiseInternetBankingCheckoutButton').addEventListener('click', function(event) {
-    omiseInternetBankingCheckout(event);
+    window.omiseInternetBankingCheckout(event);
   });
 
   window.addEventListener('load', function() {
-    omiseRestoreUniformStyle();
+    window.omiseRestoreUniformStyle();
   });
 
   window.addEventListener('resize', function() {
-    omiseRestoreUniformStyle();
+    window.omiseRestoreUniformStyle();
   });
+
+  window.setTimeout(window.omiseRestoreUniformStyle, 100);
 </script>
