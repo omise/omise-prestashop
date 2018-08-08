@@ -1,5 +1,14 @@
 # Change Log
 
+## [[1.7.1] 2018-06-13](https://github.com/omise/omise-prestashop/releases/tag/v1.7.1)
+- *`Fixed`* Credit card and internet banking payments will now work in 'one page checkout' mode on PrestaShop 1.6
+
+## [[1.7] 2018-06-13](https://github.com/omise/omise-prestashop/releases/tag/v1.7)
+- *`Added`* Support for Alipay payments (Thailand only)
+
+## [[1.6] 2018-06-13](https://github.com/omise/omise-prestashop/releases/tag/v1.6)
+- *`Updated`* Renewed support for PrestaShop 1.6
+
 ## [[1.5] 2018-06-13](https://github.com/omise/omise-prestashop/releases/tag/v1.5)
 - *`Added`* Support for EUR, GBP, and USD currencies
 - *`Changed`* Internet banking fee warnings now generic to prevent them being outdated
