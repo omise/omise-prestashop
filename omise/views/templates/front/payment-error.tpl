@@ -20,7 +20,7 @@
             {if ! empty($order_reference)}
               <p>{l s='Your order reference is ' mod='omise'}<strong>{$order_reference}</strong>.</p>
             {/if}
-            <p>{l s='The error occurred during process payment. Please contact our' mod='omise'} <a href="{$link->getPageLink('contact', true)|escape:'html':'UTF-8'}">{l s='customer support.' mod='omise'}</a></p>
+            <p>{l s='An error occurred during the payment process. Please contact our' mod='omise'} <a href="{$link->getPageLink('contact', true)|escape:'html':'UTF-8'}">{l s='customer support.' mod='omise'}</a></p>
           </div>
 
         </div>
