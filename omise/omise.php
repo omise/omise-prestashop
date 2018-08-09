@@ -137,7 +137,7 @@ class Omise extends PaymentModule
         $this->tab                    = 'payments_gateways';
         $this->version                = self::MODULE_VERSION;
         $this->author                 = 'Omise';
-        $this->need_instance          = 0;
+        $this->need_instance          = 1;
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.7');
         $this->bootstrap              = true;
 
