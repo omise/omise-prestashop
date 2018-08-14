@@ -53,6 +53,7 @@ class OmiseWebhooksModuleFrontController extends ModuleFrontController
     public function postProcess()
     {
         $this->setTemplate('module:omise/views/templates/front/webhooks.tpl');
+        $this->setTemplate(IS_VERSION_17 ? 'module:omise/views/templates/front/webhooks.tpl' : 'webhooks.tpl');
 
         $request_body = $this->omise_webhooks->getRequestBody();
 
