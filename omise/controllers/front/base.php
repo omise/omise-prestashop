@@ -3,6 +3,8 @@ if (! defined('_PS_VERSION_')) {
     exit();
 }
 
+if (!defined('IS_VERSION_17')) define('IS_VERSION_17', _PS_VERSION_ >= '1.7');
+
 if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_charge_class.php';
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
@@ -82,7 +84,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         $this->context->smarty->assign('error_message', $this->error_message);
         $this->context->smarty->assign('order_reference', $this->order_reference);
 
-        $this->setTemplate('module:omise/views/templates/front/payment-error.tpl');
+        $this->setTemplate(IS_VERSION_17 ? 'module:omise/views/templates/front/1.7/payment-error.tpl' : '1.6/payment-error.tpl');
     }
 
     /**
