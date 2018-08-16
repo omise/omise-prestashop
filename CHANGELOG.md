@@ -1,5 +1,11 @@
 # Change Log
 
+## [[1.7.2] 2018-06-16](https://github.com/omise/omise-prestashop/releases/tag/v1.7.2)
+- *`Fixed`* 500 error occurring when payments fail on Prestashop 1.6
+- *`Fixed`* English on the 'payment error' page
+- *`Fixed`* Longstanding issue with checkboxes sometimes not appearing to specifiy what currencies to allow for the Omise payment plugin
+- *`Fixed`* Error thrown by the Webhooks controller
+
 ## [[1.7.1] 2018-06-13](https://github.com/omise/omise-prestashop/releases/tag/v1.7.1)
 - *`Fixed`* Credit card and internet banking payments will now work in 'one page checkout' mode on PrestaShop 1.6
 
