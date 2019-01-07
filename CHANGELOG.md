@@ -1,5 +1,8 @@
 # Change Log
 
+## [[1.7.3] 2019-01-07](https://github.com/omise/omise-prestashop/releases/tag/v1.7.3)
+- *`Fixed`* Problem with URLs of internet banking images
+
 ## [[1.7.2] 2018-06-16](https://github.com/omise/omise-prestashop/releases/tag/v1.7.2)
 - *`Fixed`* 500 error occurring when payments fail on Prestashop 1.6
 - *`Fixed`* English on the 'payment error' page
