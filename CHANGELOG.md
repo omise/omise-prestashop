@@ -1,5 +1,8 @@
 # Change Log
 
+## [[1.7.4] 2019-05-31](https://github.com/omise/omise-prestashop/releases/tag/v1.7.4)
+- *`Added`* Highly visible warning message on checkout when Omise plugin has been left in sandbox mode
+
 ## [[1.7.3] 2019-01-07](https://github.com/omise/omise-prestashop/releases/tag/v1.7.3)
 - *`Fixed`* Problem with URLs of internet banking images
 
