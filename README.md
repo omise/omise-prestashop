@@ -9,7 +9,7 @@ Our aim is to support as many versions of PrestaShop as we can.
 **Here's the list of versions we tested on:**
 
 - PrestaShop 1.7.4, PHP 7.0.30
-- PrestaShop 1.6.19, PHP 5.6.30
+- PrestaShop 1.6.0.9, PHP 5.6.30
 
 **Can't find the version you're looking for?**  
 Submit your requirement as an issue to [GitHub's issue channel](https://github.com/omise/omise-prestashop/issues).
