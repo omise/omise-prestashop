@@ -319,6 +319,13 @@ class Omise extends PaymentModule
             $this->context->controller->addCSS($this->_path . 'css/omise_internet_banking.css', 'all');
             $this->context->controller->addJqueryPlugin('fancybox');
         }
+
+        // Test mode warning
+        if ($this->context->controller->php_self == 'order' && $this->setting->isModuleEnabled() && $this->setting->isSandboxEnabled()) {
+            $this->context->controller->addJS($this->_path . 'js/test_warn.js', true);
+            $this->context->controller->addCSS($this->_path . 'css/omise_test_mode.css', 'all');
+            return $this->display(__FILE__, 'omise_warning_message.tpl');
+        }
     }
 
     public function hookPaymentOptions()
