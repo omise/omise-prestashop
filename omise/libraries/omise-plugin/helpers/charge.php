@@ -63,7 +63,7 @@ if (! class_exists('OmisePluginHelperCharge')) {
         /**
          *
          * @param string $currency
-         * @param $amount
+         * @param numeric $amount
          * @return string
          */
         public static function amount($currency, $amount)
