@@ -130,7 +130,7 @@ if (! class_exists('OmisePluginHelperCharge')) {
         public static function isCurrentCurrencyApplicable($currency)
         {
             $curr = strtoupper($currency);
-            return array_key_exists($curr, self::$supportedCurrencies);
+            return in_array($curr, self::$supportedCurrencies);
         }
 
         /**
