@@ -1,5 +1,8 @@
 # Change Log
 
+## [[1.7.5] 2019-09-09](https://github.com/omise/omise-prestashop/releases/tag/v1.7.5)
+- *`Added`* Support for more currencies - PR [#74](https://github.com/omise/omise-prestashop/pull/74)
+
 ## [[1.7.4] 2019-05-31](https://github.com/omise/omise-prestashop/releases/tag/v1.7.4)
 - *`Added`* Highly visible warning message on checkout when Omise plugin has been left in sandbox mode
 
