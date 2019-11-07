@@ -1,5 +1,8 @@
 # Change Log
 
+## [[1.7.6] 2019-11-07](https://github.com/omise/omise-prestashop/releases/tag/v1.7.6)
+- *`Fixed`* A small typo in the previous update was causing big issues. Fixed
+
 ## [[1.7.5] 2019-09-09](https://github.com/omise/omise-prestashop/releases/tag/v1.7.5)
 - *`Added`* Support for more currencies - PR [#74](https://github.com/omise/omise-prestashop/pull/74)
 
