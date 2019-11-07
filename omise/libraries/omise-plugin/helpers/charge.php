@@ -31,7 +31,7 @@ if (! class_exists('OmisePluginHelperCharge')) {
                 "TND" => 3,
             ],
             $defaultCurrencyDecimals = 2,
-            $upportedCurrencies = [
+            $supportedCurrencies = [
                 'AUD',
                 'CAD',
                 'CHF',
