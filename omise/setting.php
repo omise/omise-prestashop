@@ -21,6 +21,12 @@ class Setting
             'three_domain_secure_status',
             'internet_banking_status',
             'alipay_status'
+        ),
+        $callToCFG = array(
+            // retrieve normal xxx_yyy_zzz config values by calling getXxxYyyZzz
+            array( 'match'=>'%^get[A-Z].*$%', 'find'=>array('%([A-Z])([a-z])%', '%get-%'), 'repl'=>array('_\1\2', '') ),
+            // retrieve status xxx_yyy_zzz config values by calling isXxxYyyZzzEnabled
+            array( 'match'=>'%^is[A-Z].*Enabled$%', 'find'=>array('%([A-Z])([a-z])%', '%^is_(.*)%', '%_Enabled$%'), 'repl'=>array('_\1\2', '\1', '_status'))
         )
     ;
 
@@ -40,21 +46,21 @@ class Setting
         foreach($this->all_settings as $setting) Configuration::deleteByName(Setting::PREFIX.$setting);
     }
 
-    /**
-     * @return string
-     */
-    public function getLivePublicKey()
-    {
-        return $this->getConfig('live_public_key');
-    }
+    // /**
+    //  * @return string
+    //  */
+    // public function getLivePublicKey()
+    // {
+    //     return $this->getConfig('live_public_key');
+    // }
 
-    /**
-     * @return string
-     */
-    public function getLiveSecretKey()
-    {
-        return $this->getConfig('live_secret_key');
-    }
+    // /**
+    //  * @return string
+    //  */
+    // public function getLiveSecretKey()
+    // {
+    //     return $this->getConfig('live_secret_key');
+    // }
 
     /**
      * Return the public key by checking whether
@@ -92,69 +98,69 @@ class Setting
         return $this->submit_action;
     }
 
-    /**
-     * @return string
-     */
-    public function getTestPublicKey()
-    {
-        return $this->getConfig('test_public_key');
-    }
+    // /**
+    //  * @return string
+    //  */
+    // public function getTestPublicKey()
+    // {
+    //     return $this->getConfig('test_public_key');
+    // }
 
-    /**
-     * @return string
-     */
-    public function getTestSecretKey()
-    {
-        return $this->getConfig('test_secret_key');
-    }
+    // /**
+    //  * @return string
+    //  */
+    // public function getTestSecretKey()
+    // {
+    //     return $this->getConfig('test_secret_key');
+    // }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->getConfig('title');
-    }
+    // /**
+    //  * @return string
+    //  */
+    // public function getTitle()
+    // {
+    //     return $this->getConfig('title');
+    // }
 
-    /**
-     * @return bool
-     */
-    public function isInternetBankingEnabled()
-    {
-        return !!$this->getConfig('internet_banking_status');
-    }
+    // /**
+    //  * @return bool
+    //  */
+    // public function isInternetBankingEnabled()
+    // {
+    //     return !!$this->getConfig('internet_banking_status');
+    // }
 
-    /**
-     * @return bool
-     */
-    public function isAlipayEnabled()
-    {
-        return !!$this->getConfig('alipay_status');
-    }
+    // /**
+    //  * @return bool
+    //  */
+    // public function isAlipayEnabled()
+    // {
+    //     return !!$this->getConfig('alipay_status');
+    // }
 
-    /**
-     * @return bool
-     */
-    public function isModuleEnabled()
-    {
-        return !!$this->getConfig('module_status');
-    }
+    // /**
+    //  * @return bool
+    //  */
+    // public function isModuleEnabled()
+    // {
+    //     return !!$this->getConfig('module_status');
+    // }
 
-    /**
-     * @return bool
-     */
-    public function isSandboxEnabled()
-    {
-        return !!$this->getConfig('sandbox_status');
-    }
+    // /**
+    //  * @return bool
+    //  */
+    // public function isSandboxEnabled()
+    // {
+    //     return !!$this->getConfig('sandbox_status');
+    // }
 
-    /**
-     * @return bool
-     */
-    public function isThreeDomainSecureEnabled()
-    {
-        return !!$this->getConfig('three_domain_secure_status');
-    }
+    // /**
+    //  * @return bool
+    //  */
+    // public function isThreeDomainSecureEnabled()
+    // {
+    //     return !!$this->getConfig('three_domain_secure_status');
+    // }
 
     /**
      * @return bool
