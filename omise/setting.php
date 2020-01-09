@@ -6,10 +6,12 @@ if (! defined('_PS_VERSION_')) {
 class Setting
 {
     
-    const PREFIX = 'omise_';
+    const
+        PREFIX = 'omise_',
+        SUBMIT_ACTION = 'omise_save_setting'
+    ;
 
     protected
-        $submit_action = 'omise_save_setting',
         $all_settings = array(
             'module_status',
             'sandbox_status',
@@ -63,11 +65,7 @@ class Setting
     // }
 
     /**
-     * Return the public key by checking whether
-     * the current setting for sandbox status is enabled or disabled.
-     *
-     * Return the TEST public key, if the sandbox status is enabled (testing mode).
-     * Return the LIVE public key, if the sandbox status is disabled (live mode).
+     * Return appropriate test/live public key based on sandbox setting
      *
      * @return string
      */
@@ -77,11 +75,7 @@ class Setting
     }
 
     /**
-     * Return the secret key by checking whether
-     * the current setting for sandbox status is enabled or disabled.
-     *
-     * Return the TEST secret key, if the sandbox status is enabled (testing mode).
-     * Return the LIVE secret key, if the sandbox status is disabled (live mode).
+     * Return appropriate test/live secret key based on sandbox setting
      *
      * @return string
      */
@@ -95,7 +89,7 @@ class Setting
      */
     public function getSubmitAction()
     {
-        return $this->submit_action;
+        return Setting::SUBMIT_ACTION;
     }
 
     // /**
