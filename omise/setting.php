@@ -25,12 +25,28 @@ class Setting
             'alipay_status'
         ),
         $callToCFG = array(
+
             // retrieve normal xxx_yyy_zzz config values by calling getXxxYyyZzz
-            array( 'match'=>'%^get[A-Z].*$%', 'find'=>array('%([A-Z])([a-z])%', '%get-%'), 'repl'=>array('_\1\2', '') ),
+            array( 'match'=>'%^get[A-Z].*$%', 'find'=>array('%([A-Z])([a-z])%', '%get_%'), 'repl'=>array('_\1\2', '') ),
+
             // retrieve status xxx_yyy_zzz config values by calling isXxxYyyZzzEnabled
             array( 'match'=>'%^is[A-Z].*Enabled$%', 'find'=>array('%([A-Z])([a-z])%', '%^is_(.*)%', '%_Enabled$%'), 'repl'=>array('_\1\2', '\1', '_status'))
         )
     ;
+
+    /**
+     * Get a setting based on the name of the method called if there is no explicitly declared method
+     */
+    public function __call($method, $args)
+    {
+        foreach ($this->callToCFG as $d) {
+            if (preg_match($d['match'], $method))  {
+                $settingName = strToLower(preg_replace($d['find'], $d['repl'], $method));
+                if (in_array($settingName, $this->all_settings)) return $this->getConfig($settingName);
+            }
+        }
+        trigger_error('Call to undefined method '.__CLASS__.'::'.$method.'()', E_USER_ERROR);
+    }
 
     /**
      * Get an Omise setting value from config
@@ -47,22 +63,6 @@ class Setting
     {
         foreach($this->all_settings as $setting) Configuration::deleteByName(Setting::PREFIX.$setting);
     }
-
-    // /**
-    //  * @return string
-    //  */
-    // public function getLivePublicKey()
-    // {
-    //     return $this->getConfig('live_public_key');
-    // }
-
-    // /**
-    //  * @return string
-    //  */
-    // public function getLiveSecretKey()
-    // {
-    //     return $this->getConfig('live_secret_key');
-    // }
 
     /**
      * Return appropriate test/live public key based on sandbox setting
@@ -91,70 +91,6 @@ class Setting
     {
         return Setting::SUBMIT_ACTION;
     }
-
-    // /**
-    //  * @return string
-    //  */
-    // public function getTestPublicKey()
-    // {
-    //     return $this->getConfig('test_public_key');
-    // }
-
-    // /**
-    //  * @return string
-    //  */
-    // public function getTestSecretKey()
-    // {
-    //     return $this->getConfig('test_secret_key');
-    // }
-
-    // /**
-    //  * @return string
-    //  */
-    // public function getTitle()
-    // {
-    //     return $this->getConfig('title');
-    // }
-
-    // /**
-    //  * @return bool
-    //  */
-    // public function isInternetBankingEnabled()
-    // {
-    //     return !!$this->getConfig('internet_banking_status');
-    // }
-
-    // /**
-    //  * @return bool
-    //  */
-    // public function isAlipayEnabled()
-    // {
-    //     return !!$this->getConfig('alipay_status');
-    // }
-
-    // /**
-    //  * @return bool
-    //  */
-    // public function isModuleEnabled()
-    // {
-    //     return !!$this->getConfig('module_status');
-    // }
-
-    // /**
-    //  * @return bool
-    //  */
-    // public function isSandboxEnabled()
-    // {
-    //     return !!$this->getConfig('sandbox_status');
-    // }
-
-    // /**
-    //  * @return bool
-    //  */
-    // public function isThreeDomainSecureEnabled()
-    // {
-    //     return !!$this->getConfig('three_domain_secure_status');
-    // }
 
     /**
      * @return bool
