@@ -269,20 +269,14 @@ class Omise extends PaymentModule
             $this->smarty->assign('confirmation', $this->displayConfirmation($this->l('Settings updated')));
         }
 
-        $this->smarty->assign(array(
-            'alipay_status' => $this->setting->isAlipayEnabled(),
-            'internet_banking_status' => $this->setting->isInternetBankingEnabled(),
-            'live_public_key' => $this->setting->getLivePublicKey(),
-            'live_secret_key' => $this->setting->getLiveSecretKey(),
-            'module_status' => $this->setting->isModuleEnabled(),
-            'sandbox_status' => $this->setting->isSandboxEnabled(),
+        $smartyVars = array(
             'submit_action' => $this->setting->getSubmitAction(),
-            'test_public_key' => $this->setting->getTestPublicKey(),
-            'test_secret_key' => $this->setting->getTestSecretKey(),
-            'title' => $this->setting->getTitle(),
-            'three_domain_secure_status' => $this->setting->isThreeDomainSecureEnabled(),
-            'webhooks_endpoint' => $this->getWebhooksEndpoint(),
-        ));
+            'webhooks_endpoint' => $this->getWebhooksEndpoint()
+        );
+
+        foreach ($this->setting->all_settings as $settingName) $smartyVars[$settingName] = $this->setting->{$settingName}();
+
+        $this->smarty->assign($smartyVars);
 
         return $this->display(__FILE__, 'views/templates/admin/setting.tpl');
     }
