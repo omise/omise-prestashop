@@ -357,13 +357,13 @@ class Omise extends PaymentModule
         if ($this->setting->isInternetBankingEnabled()) {
             $payment .= $this->isCurrentCurrencyApplicable() ? 
                 $this->displayInternetBankingPayment() :
-                $this->displayInapplicablePayment($this->l("Internet Banking"));
+                $this->displayInapplicablePayment($this->l(self::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE));
         }
 
         if ($this->setting->isAlipayEnabled()) {
             $payment .= $this->isCurrentCurrencyApplicable() ? 
                 $this->displayAlipayPayment() :
-                $this->displayInapplicablePayment($this->l("Alipay"));
+                $this->displayInapplicablePayment($this->l(self::DEFAULT_ALIPAY_PAYMENT_TITLE));
         }
 
         return $payment;
