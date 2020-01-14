@@ -24,69 +24,11 @@ if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/libraries/omise-plugin/Omise.php';
     require_once _PS_MODULE_DIR_ . 'omise/checkout_form.php';
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
+    require_once _PS_MODULE_DIR_ . 'omise/payment_methods/_all.php';
 }
 
 class Omise extends PaymentModule
 {
-    /**
-     * The name that used as the identifier of card payment option.
-     *
-     * A payment module can has more than one payment option. At the front office, each payment options can be
-     * identified by using module name (@see PaymentOption::setModuleName()).
-     *
-     * The module name is displayed at front office as an attribute of the payment option.
-     *
-     * @var string
-     */
-    const CARD_PAYMENT_OPTION_NAME = 'omise-card-payment';
-
-    /**
-     * The default title of card payment.
-     *
-     * This constant will be saved to the database at the module installation step. (@see Omise::install())
-     *
-     * @var string
-     */
-    const DEFAULT_CARD_PAYMENT_TITLE = 'Pay by Credit / Debit Card';
-
-    /**
-     * The default title of internet banking payment.
-     *
-     * @var string
-     */
-    const DEFAULT_INTERNET_BANKING_PAYMENT_TITLE = 'Internet Banking';
-
-    /**
-     * The default title of alipay payment.
-     *
-     * @var string
-     */
-    const DEFAULT_ALIPAY_PAYMENT_TITLE = 'Alipay';
-
-    /**
-     * The name that used as the identifier of internet banking payment option.
-     *
-     * A payment module can has more than one payment option. At the front office, each payment options can be
-     * identified by using module name (@see PaymentOption::setModuleName()).
-     *
-     * The module name is displayed at front office as an attribute of the payment option.
-     *
-     * @var string
-     */
-    const INTERNET_BANKING_PAYMENT_OPTION_NAME = 'omise-internet-banking-payment';
-
-    /**
-     * The name that used as the identifier of alipay payment option.
-     *
-     * A payment module can has more than one payment option. At the front office, each payment options can be
-     * identified by using module name (@see PaymentOption::setModuleName()).
-     *
-     * The module name is displayed at front office as an attribute of the payment option.
-     *
-     * @var string
-     */
-    const ALIPAY_PAYMENT_OPTION_NAME = 'omise-alipay-payment';
-
     /**
      * The name that will be display to the user at the back-end.
      *
@@ -113,7 +55,7 @@ class Omise extends PaymentModule
      *
      * @var \CheckoutForm
      */
-    protected $checkout_form;
+    public $checkout_form;
 
     /**
      * The instance of class, OmiseTransactionModel.
@@ -129,7 +71,7 @@ class Omise extends PaymentModule
      *
      * @var \Setting
      */
-    protected $setting;
+    public $setting;
 
     public function __construct()
     {
@@ -151,6 +93,9 @@ class Omise extends PaymentModule
         $this->setCheckoutForm(new CheckoutForm());
         $this->setOmiseTransactionModel(new OmiseTransactionModel());
         $this->setSetting(new Setting());
+
+        OmisePaymentMethod::$payModule = $this;
+        OmisePaymentMethod::$smarty = $this->smarty;
     }
 
     /**
@@ -166,43 +111,6 @@ class Omise extends PaymentModule
     }
 
     /**
-     * Display the internet banking checkout form.
-     *
-     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
-     */
-    protected function displayInternetBankingPayment()
-    {
-        return $this->versionSpecificDisplay(__FILE__, 'internet_banking_payment.tpl');
-    }
-
-    /**
-     * Display the alipay checkout form.
-     *
-     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
-     */
-    protected function displayAlipayPayment()
-    {
-        return $this->versionSpecificDisplay(__FILE__, 'alipay.tpl');
-    }
-
-    /**
-     * Display the checkout form.
-     *
-     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
-     */
-    protected function displayCardPayment()
-    {
-        $this->smarty->assign(array(
-            'action' => $this->getAction(),
-            'list_of_expiration_year' => $this->checkout_form->getListOfExpirationYear(),
-            'omise_public_key' => $this->setting->getPublicKey(),
-            'omise_title' => $this->setting->getTitle()
-        ));
-
-        return $this->versionSpecificDisplay(__FILE__, 'card_payment.tpl');
-    }
-
-    /**
      * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
      */
     protected function generateCardPaymentOption()
@@ -211,10 +119,10 @@ class Omise extends PaymentModule
         $payment_option = new $payment_option_class();
 
         $payment_option->setCallToActionText($this->setting->getTitle());
-        $payment_option->setModuleName(self::CARD_PAYMENT_OPTION_NAME);
+        $payment_option->setModuleName(OmisePaymentMethod_Card::PAYMENT_OPTION_NAME);
 
         if ($this->isCurrentCurrencyApplicable()) {
-            $payment_option->setForm($this->displayCardPayment());
+            $payment_option->setForm(OmisePaymentMethod_Card::display());
         } else {
             $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
         }
@@ -230,11 +138,11 @@ class Omise extends PaymentModule
         $payment_option_class = PRESTASHOP_PAYMENT_OPTION_CLASS;
         $payment_option = new $payment_option_class();
 
-        $payment_option->setCallToActionText(self::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE);
-        $payment_option->setModuleName(self::INTERNET_BANKING_PAYMENT_OPTION_NAME);
+        $payment_option->setCallToActionText(OmisePaymentMethod_InternetBanking::DEFAULT_TITLE);
+        $payment_option->setModuleName(OmisePaymentMethod_InternetBanking::PAYMENT_OPTION_NAME);
 
         if ($this->isCurrentCurrencyApplicable()) {
-            $payment_option->setForm($this->displayInternetBankingPayment());
+            $payment_option->setForm(OmisePaymentMethod_InternetBanking::display());
         } else {
             $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
         }
@@ -250,11 +158,11 @@ class Omise extends PaymentModule
         $payment_option_class = PRESTASHOP_PAYMENT_OPTION_CLASS;
         $payment_option = new $payment_option_class();
 
-        $payment_option->setCallToActionText(self::DEFAULT_ALIPAY_PAYMENT_TITLE);
-        $payment_option->setModuleName(self::ALIPAY_PAYMENT_OPTION_NAME);
+        $payment_option->setCallToActionText(OmisePaymentMethod_Alipay::DEFAULT_TITLE);
+        $payment_option->setModuleName(OmisePaymentMethod_Alipay::PAYMENT_OPTION_NAME);
 
         if ($this->isCurrentCurrencyApplicable()) {
-            $payment_option->setForm($this->displayAlipayPayment());
+            $payment_option->setForm(OmisePaymentMethod_Alipay::display());
         } else {
             $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
         }
@@ -304,7 +212,7 @@ class Omise extends PaymentModule
 
         $this->smarty->assign('order_reference', $params[PRESTASHOP_HOOK_DISPLAYORDERCONFIRM_ORDER_PARAM]->reference);
 
-        return $this->versionSpecificDisplay(__FILE__, 'confirmation.tpl');
+        return $this->versionSpecificDisplay('confirmation.tpl');
     }
 
     public function hookHeader()
@@ -350,20 +258,20 @@ class Omise extends PaymentModule
 
         if ($this->setting->isModuleEnabled()) {
             $payment .= $this->isCurrentCurrencyApplicable() ? 
-                $this->displayCardPayment() :
+                OmisePaymentMethod_Card::display() :
                 $this->displayInapplicablePayment($this->setting->getTitle());
         }
 
         if ($this->setting->isInternetBankingEnabled()) {
             $payment .= $this->isCurrentCurrencyApplicable() ? 
-                $this->displayInternetBankingPayment() :
-                $this->displayInapplicablePayment($this->l(self::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE));
+                OmisePaymentMethod_InternetBanking::display() :
+                $this->displayInapplicablePayment($this->l(OmisePaymentMethod_InternetBanking::DEFAULT_TITLE));
         }
 
         if ($this->setting->isAlipayEnabled()) {
             $payment .= $this->isCurrentCurrencyApplicable() ? 
-                $this->displayAlipayPayment() :
-                $this->displayInapplicablePayment($this->l(self::DEFAULT_ALIPAY_PAYMENT_TITLE));
+                OmisePaymentMethod_Alipay::display() :
+                $this->displayInapplicablePayment($this->l(OmisePaymentMethod_Alipay::DEFAULT_TITLE));
         }
 
         return $payment;
@@ -375,7 +283,7 @@ class Omise extends PaymentModule
         if (parent::install() == false
             || $this->applyToHooks(array($this, 'registerHook')) == false
             || $this->omise_transaction_model->createTable() == false
-            || $this->setting->saveTitle(self::DEFAULT_CARD_PAYMENT_TITLE) == false
+            || $this->setting->saveTitle(OmisePaymentMethod_Card::DEFAULT_TITLE) == false
         ) {
             $this->uninstall();
 
@@ -390,9 +298,9 @@ class Omise extends PaymentModule
      *
      * @return see parent 'display' method
      */
-    protected function versionSpecificDisplay($file, $template)
+    public function versionSpecificDisplay($template)
     {
-        return $this->display($file, PRESTASHOP_VERSION_VIEW_PATH . $template);
+        return $this->display(__FILE__, PRESTASHOP_VERSION_VIEW_PATH . $template);
     }    
 
     /**
@@ -427,7 +335,7 @@ class Omise extends PaymentModule
      *
      * @see LinkCore::getModuleLink()
      */
-    protected function getAction()
+    public function getAction()
     {
         $controller = $this->setting->isThreeDomainSecureEnabled() ? 'threedomainsecurepayment' :'payment';
 
