@@ -10,4 +10,10 @@ class OmisePaymentMethod_Alipay extends OmisePaymentMethod
 		TEMPLATE = 'alipay_payment'
 	;
 
+	public static
+		$usedSettings = array(
+			'alipay_status'
+		)
+	;
+
 }

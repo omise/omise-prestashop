@@ -29,49 +29,21 @@ if (defined('_PS_MODULE_DIR_')) {
 
 class Omise extends PaymentModule
 {
-    /**
-     * The name that will be display to the user at the back-end.
-     *
-     * @var string
-     */
-    const MODULE_DISPLAY_NAME = 'Omise';
+    const
+        MODULE_DISPLAY_NAME = 'Omise', // The name that will be display to the user at the back-end
+        MODULE_NAME = 'omise', // The name that used to reference in the program
+        MODULE_VERSION = '1.7.7' // The version of the module
+    ;
 
-    /**
-     * The name that used to reference in the program.
-     *
-     * @var string
-     */
-    const MODULE_NAME = 'omise';
+    public
+        $checkout_form, // CheckoutForm instance
+        $setting // Setting instance
+    ;
 
-    /**
-     * The version of the module.
-     *
-     * @var string
-     */
-    const MODULE_VERSION = '1.7.7';
-
-    /**
-     * The instance of class, CheckoutForm.
-     *
-     * @var \CheckoutForm
-     */
-    public $checkout_form;
-
-    /**
-     * The instance of class, OmiseTransactionModel.
-     *
-     * @var \OmiseTransactionModel
-     */
-    protected $omise_transaction_model;
-
-    /**
-     * The instance of class, Setting.
-     *
-     * The Setting class is used to manipulate the configuration of module.
-     *
-     * @var \Setting
-     */
-    public $setting;
+    protected
+        $omise_transaction_model, // OmiseTransactionModel instance
+        $paymentMethodClassList = array()
+    ;
 
     public function __construct()
     {
@@ -93,9 +65,22 @@ class Omise extends PaymentModule
         $this->checkout_form = new CheckoutForm();
         $this->omise_transaction_model = new OmiseTransactionModel();
         $this->setting = new Setting();
+        $this->buildPaymentMethodList();
+        $this->storePaymentMethodSettings();
 
         OmisePaymentMethod::$payModule = $this;
         OmisePaymentMethod::$smarty = $this->smarty;
+    }
+
+
+    protected function buildPaymentMethodList()
+    {
+        foreach(OmisePaymentMethods::$list as $method) $this->paymentMethodClassList[] = OmisePaymentMethods::className($method);
+    }
+
+    protected function storePaymentMethodSettings()
+    {
+        foreach($this->paymentMethodClassList as $class) $this->setting->addUsedSettings($class::$usedSettings);
     }
 
     /**
@@ -150,9 +135,7 @@ class Omise extends PaymentModule
     }
 
     /**
-     * Generate the URL to receive the requests from Omise server when events are triggered.
-     *
-     * The examples of events such as charge has been created, updated or charge is completed.
+     * Generate URL to receive requests from Omise server when events are triggered.
      *
      * @return string Return the URL that link to front module controller.
      *
@@ -194,8 +177,7 @@ class Omise extends PaymentModule
     {
         $payment_options = array();
 
-        foreach(OmisePaymentMethods::$list as $method) {
-            $class = OmisePaymentMethods::className($method);
+        foreach($this->paymentMethodClassList as $class) {
             if ($class::isEnabled()) $payment_options[] = $this->generatePaymentOption($method);
         }
 
@@ -209,8 +191,7 @@ class Omise extends PaymentModule
 
         $payment = '';
 
-        foreach(OmisePaymentMethods::$list as $method) {
-            $class = OmisePaymentMethods::className($method);
+        foreach($this->paymentMethodClassList as $class) {
             if ($class::isEnabled()) {
                 $payment .= $this->isCurrentCurrencyApplicable() ?
                     $class::display() :
@@ -270,11 +251,7 @@ class Omise extends PaymentModule
     }
 
     /**
-     * Generate the URL that used for receive the payment information that submit from checkout form.
-     *
-     * The URL will be used at the attribute, action, of HTML, form.
-     *
-     * @return string Return the URL that link to module controller.
+     * Generate the URL to be used for receiving payment info submitted from checkout form
      *
      * @see LinkCore::getModuleLink()
      */

@@ -10,6 +10,14 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
 		TEMPLATE = "card_payment"
 	;
 
+	public static
+		$usedSettings = array(
+			'module_status',
+			'title',
+			'three_domain_secure_status'
+		)
+	;
+
 	public static function display()
 	{
 		$pm = OmisePaymentMethod::$payModule;

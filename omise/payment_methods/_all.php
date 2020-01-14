@@ -16,7 +16,8 @@ class OmisePaymentMethod
 
 	public static
 		$payModule,
-		$smarty
+		$smarty,
+		$usedSettings = array()
 	;
 
 	public static function display()

@@ -19,22 +19,16 @@ class Setting
             'test_secret_key',
             'live_public_key',
             'live_secret_key',
-            'title',
-            'three_domain_secure_status',
-            'internet_banking_status',
-            'alipay_status'
+            'title'
         )
     ;
-    
+
     protected
         $callToCFG = array(
-
             // retrieve normal xxx_yyy_zzz config values by calling getXxxYyyZzz
             array( 'match'=>'%^get[A-Z].*$%', 'find'=>array('%([A-Z])([a-z])%', '%get_%'), 'repl'=>array('_\1\2', '') ),
-
             // retrieve status xxx_yyy_zzz config values by calling isXxxYyyZzzEnabled
             array( 'match'=>'%^is[A-Z].*Enabled$%', 'find'=>array('%([A-Z])([a-z])%', '%^is_(.*)%', '%_Enabled$%'), 'repl'=>array('_\1\2', '\1', '_status')),
-
             // temp to return setting values just using their internal config name
             array( 'match'=>'%^.*$%', 'find'=>array(), 'repl'=>array() )
         )
@@ -60,6 +54,14 @@ class Setting
     protected function getConfig($settingName)
     {
         return Configuration::get(Setting::PREFIX.$settingName);
+    }
+
+    /**
+     * Add setting names to list to be saved/used
+     */
+    public function addUsedSettings($settings)
+    {
+        $this->all_settings = array_unique(array_merge($this->all_settings, $settings));
     }
 
     /**

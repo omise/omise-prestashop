@@ -10,4 +10,10 @@ class OmisePaymentMethod_InternetBanking extends OmisePaymentMethod
 		TEMPLATE = 'internet_banking_payment'
 	;
 
+	public static
+		$usedSettings = array(
+			'internet_banking_status'
+		)
+	;
+
 }
