@@ -4,6 +4,7 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
 {
 
 	const
+		NAME = 'Card',
 		PAYMENT_OPTION_NAME = 'omise-card-payment',
 		DEFAULT_TITLE = 'Pay by Credit / Debit Card',
 		TEMPLATE = "card_payment"
@@ -20,6 +21,17 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
     ));
 
     return $pm->versionSpecificDisplay(self::TEMPLATE . '.tpl');
-	}	
+	}
+
+	public static function getCallToActionText()
+	{
+		return OmisePaymentMethod::$payModule->setting->getTitle();
+	}
+
+	public static function isEnabled()
+	{
+		$enabledMethod = 'isModuleEnabled';
+		return self::$payModule->setting->$enabledMethod();
+	}
 
 }

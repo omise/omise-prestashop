@@ -7,6 +7,8 @@ class OmisePaymentMethods
 		'InternetBanking',
 		'Alipay'
 	);
+
+	public static function className($method) { return 'OmisePaymentMethod_'.$method; } 
 }
 
 class OmisePaymentMethod
@@ -20,6 +22,17 @@ class OmisePaymentMethod
 	public static function display()
 	{
 		return self::$payModule->versionSpecificDisplay(static::TEMPLATE . '.tpl');
+	}
+
+	public static function getCallToActionText()
+	{
+		return static::DEFAULT_TITLE;
+	}
+
+	public static function isEnabled()
+	{
+		$enabledMethod = 'is'.static::NAME.'Enabled';
+		return self::$payModule->setting->$enabledMethod();
 	}
 
 }

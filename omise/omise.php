@@ -90,9 +90,9 @@ class Omise extends PaymentModule
         $this->displayName            = self::MODULE_DISPLAY_NAME;
         $this->confirmUninstall       = $this->l('Are you sure you want to uninstall the ' . self::MODULE_DISPLAY_NAME . ' module?');
 
-        $this->setCheckoutForm(new CheckoutForm());
-        $this->setOmiseTransactionModel(new OmiseTransactionModel());
-        $this->setSetting(new Setting());
+        $this->checkout_form = new CheckoutForm();
+        $this->omise_transaction_model = new OmiseTransactionModel();
+        $this->setting = new Setting();
 
         OmisePaymentMethod::$payModule = $this;
         OmisePaymentMethod::$smarty = $this->smarty;
@@ -106,63 +106,23 @@ class Omise extends PaymentModule
     protected function displayInapplicablePayment($title = null)
     {
         if ($title) $this->smarty->assign('title', $title);
-
         return $this->display(__FILE__, 'inapplicable_payment.tpl');
     }
 
     /**
      * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
      */
-    protected function generateCardPaymentOption()
+    protected function generatePaymentOption($method)
     {
         $payment_option_class = PRESTASHOP_PAYMENT_OPTION_CLASS;
         $payment_option = new $payment_option_class();
+        $class = OmisePaymentMethods::className($method);
 
-        $payment_option->setCallToActionText($this->setting->getTitle());
-        $payment_option->setModuleName(OmisePaymentMethod_Card::PAYMENT_OPTION_NAME);
-
-        if ($this->isCurrentCurrencyApplicable()) {
-            $payment_option->setForm(OmisePaymentMethod_Card::display());
-        } else {
-            $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
-        }
-
-        return $payment_option;
-    }
-
-    /**
-     * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
-     */
-    protected function generateInternetBankingPaymentOption()
-    {
-        $payment_option_class = PRESTASHOP_PAYMENT_OPTION_CLASS;
-        $payment_option = new $payment_option_class();
-
-        $payment_option->setCallToActionText(OmisePaymentMethod_InternetBanking::DEFAULT_TITLE);
-        $payment_option->setModuleName(OmisePaymentMethod_InternetBanking::PAYMENT_OPTION_NAME);
+        $payment_option->setCallToActionText($class::getCallToActionText());
+        $payment_option->setModuleName($class::PAYMENT_OPTION_NAME);
 
         if ($this->isCurrentCurrencyApplicable()) {
-            $payment_option->setForm(OmisePaymentMethod_InternetBanking::display());
-        } else {
-            $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
-        }
-
-        return $payment_option;
-    }
-
-    /**
-     * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
-     */
-    protected function generateAlipayPaymentOption()
-    {
-        $payment_option_class = PRESTASHOP_PAYMENT_OPTION_CLASS;
-        $payment_option = new $payment_option_class();
-
-        $payment_option->setCallToActionText(OmisePaymentMethod_Alipay::DEFAULT_TITLE);
-        $payment_option->setModuleName(OmisePaymentMethod_Alipay::PAYMENT_OPTION_NAME);
-
-        if ($this->isCurrentCurrencyApplicable()) {
-            $payment_option->setForm(OmisePaymentMethod_Alipay::display());
+            $payment_option->setForm($class::display());
         } else {
             $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
         }
@@ -234,16 +194,9 @@ class Omise extends PaymentModule
     {
         $payment_options = array();
 
-        if ($this->setting->isModuleEnabled()) {
-            $payment_options[] = $this->generateCardPaymentOption();
-        }
-
-        if ($this->setting->isInternetBankingEnabled()) {
-            $payment_options[] = $this->generateInternetBankingPaymentOption();
-        }
-
-        if ($this->setting->isAlipayEnabled()) {
-            $payment_options[] = $this->generateAlipayPaymentOption();
+        foreach(OmisePaymentMethods::$list as $method) {
+            $class = OmisePaymentMethods::className($method);
+            if ($class::isEnabled()) $payment_options[] = $this->generatePaymentOption($method);
         }
 
         return count($payment_options) ? $payment_options : null;
@@ -256,22 +209,13 @@ class Omise extends PaymentModule
 
         $payment = '';
 
-        if ($this->setting->isModuleEnabled()) {
-            $payment .= $this->isCurrentCurrencyApplicable() ? 
-                OmisePaymentMethod_Card::display() :
-                $this->displayInapplicablePayment($this->setting->getTitle());
-        }
-
-        if ($this->setting->isInternetBankingEnabled()) {
-            $payment .= $this->isCurrentCurrencyApplicable() ? 
-                OmisePaymentMethod_InternetBanking::display() :
-                $this->displayInapplicablePayment($this->l(OmisePaymentMethod_InternetBanking::DEFAULT_TITLE));
-        }
-
-        if ($this->setting->isAlipayEnabled()) {
-            $payment .= $this->isCurrentCurrencyApplicable() ? 
-                OmisePaymentMethod_Alipay::display() :
-                $this->displayInapplicablePayment($this->l(OmisePaymentMethod_Alipay::DEFAULT_TITLE));
+        foreach(OmisePaymentMethods::$list as $method) {
+            $class = OmisePaymentMethods::className($method);
+            if ($class::isEnabled()) {
+                $payment .= $this->isCurrentCurrencyApplicable() ?
+                    $class::display() :
+                    $this->displayInapplicablePayment($this->l($class::getCallToActionText()));
+            }
         }
 
         return $payment;
@@ -286,7 +230,6 @@ class Omise extends PaymentModule
             || $this->setting->saveTitle(OmisePaymentMethod_Card::DEFAULT_TITLE) == false
         ) {
             $this->uninstall();
-
             return false;
         }
 
@@ -338,7 +281,6 @@ class Omise extends PaymentModule
     public function getAction()
     {
         $controller = $this->setting->isThreeDomainSecureEnabled() ? 'threedomainsecurepayment' :'payment';
-
         return $this->context->link->getModuleLink(self::MODULE_NAME, $controller, [], true);
     }
 
@@ -353,43 +295,4 @@ class Omise extends PaymentModule
             && $this->applyToHooks(array($this, 'unregisterHook'));
     }
 
-    /**
-     * @return \Setting
-     */
-    public function getSetting()
-    {
-        return $this->setting;
-    }
-
-    /**
-     * @param \CheckoutForm $checkout_form The instance of class, CheckoutForm.
-     */
-    public function setCheckoutForm($checkout_form)
-    {
-        $this->checkout_form = $checkout_form;
-    }
-
-    /**
-     * @param \OmiseTransactionModel $omise_transaction_model The instance of class, OmiseTransactionModel.
-     */
-    public function setOmiseTransactionModel($omise_transaction_model)
-    {
-        $this->omise_transaction_model = $omise_transaction_model;
-    }
-
-    /**
-     * @param \Setting $setting The instance of class, Setting.
-     */
-    public function setSetting($setting)
-    {
-        $this->setting = $setting;
-    }
-
-    /**
-     * @param \Smarty_Data $smarty The instance of class, Smarty_Data.
-     */
-    public function setSmarty($smarty)
-    {
-        $this->smarty = $smarty;
-    }
 }
