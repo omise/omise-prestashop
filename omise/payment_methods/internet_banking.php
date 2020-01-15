@@ -11,9 +11,9 @@ class OmisePaymentMethod_InternetBanking extends OmisePaymentMethod
     ;
 
     public static
-        $usedSettings = array(
-            'internet_banking_status'
-        )
+        $usedSettings = array('internet_banking_status'),
+        $cssFiles = array('omise_internet_banking.css'),
+        $jqueryPlugins = array('fancybox')
     ;
 
 }
