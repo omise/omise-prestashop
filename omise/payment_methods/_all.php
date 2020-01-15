@@ -2,39 +2,39 @@
 
 class OmisePaymentMethods
 {
-	static $list = array(
-		'Card',
-		'InternetBanking',
-		'Alipay'
-	);
+    static $list = array(
+        'Card',
+        'InternetBanking',
+        'Alipay'
+    );
 
-	public static function className($method) { return 'OmisePaymentMethod_'.$method; } 
+    public static function className($method) { return 'OmisePaymentMethod_'.$method; } 
 }
 
 class OmisePaymentMethod
 {
 
-	public static
-		$payModule,
-		$smarty,
-		$usedSettings = array()
-	;
+    public static
+        $payModule,
+        $smarty,
+        $usedSettings = array()
+    ;
 
-	public static function display()
-	{
-		return self::$payModule->versionSpecificDisplay(static::TEMPLATE . '.tpl');
-	}
+    public static function display()
+    {
+        return self::$payModule->versionSpecificDisplay(static::TEMPLATE . '.tpl');
+    }
 
-	public static function getCallToActionText()
-	{
-		return static::DEFAULT_TITLE;
-	}
+    public static function getCallToActionText()
+    {
+        return static::DEFAULT_TITLE;
+    }
 
-	public static function isEnabled()
-	{
-		$enabledMethod = 'is'.static::NAME.'Enabled';
-		return self::$payModule->setting->$enabledMethod();
-	}
+    public static function isEnabled()
+    {
+        $enabledMethod = 'is'.static::NAME.'Enabled';
+        return self::$payModule->setting->$enabledMethod();
+    }
 
 }
 
