@@ -160,6 +160,7 @@ class Omise extends PaymentModule
 
     public function hookHeader()
     {
+        // TODO - add a means for payment method specific JS, CSS, and JQuery plugins to be moved into relevant Payment Method Class
         if ($this->setting->isInternetBankingEnabled()) {
             $this->context->controller->addCSS($this->_path . 'css/omise_internet_banking.css', 'all');
             $this->context->controller->addJqueryPlugin('fancybox');
@@ -178,7 +179,7 @@ class Omise extends PaymentModule
         $payment_options = array();
 
         foreach($this->paymentMethodClassList as $class) {
-            if ($class::isEnabled()) $payment_options[] = $this->generatePaymentOption($method);
+            if ($class::isEnabled()) $payment_options[] = $this->generatePaymentOption($class::NAME);
         }
 
         return count($payment_options) ? $payment_options : null;
