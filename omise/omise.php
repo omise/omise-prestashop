@@ -70,6 +70,7 @@ class Omise extends PaymentModule
 
         OmisePaymentMethod::$payModule = $this;
         OmisePaymentMethod::$smarty = $this->smarty;
+
     }
 
 
@@ -160,18 +161,34 @@ class Omise extends PaymentModule
 
     public function hookHeader()
     {
-        // TODO - add a means for payment method specific JS, CSS, and JQuery plugins to be moved into relevant Payment Method Class
-        if ($this->setting->isInternetBankingEnabled()) {
-            $this->context->controller->addCSS($this->_path . 'css/omise_internet_banking.css', 'all');
-            $this->context->controller->addJqueryPlugin('fancybox');
-        }
+        $controller = $this->context->controller;
+
+        // add required resources into page
+        $resources = $this->getResourceLists();
+        if (count($resources['cssFiles'])) $controller->addCSS(array_map(function($a) { return $this->_path . 'css/' . $a; }, $resources['cssFiles']));
+        if (count($resources['jsFiles'])) $controller->addJS(array_map(function($a) { return $this->_path . 'js/' . $a; }, $resources['jsFiles']));
+        if (count($resources['jqueryPlugins'])) $controller->addJqueryPlugin($resources['jqueryPlugins']);
 
         // Test mode warning
-        if ($this->context->controller->php_self == 'order' && $this->setting->isModuleEnabled() && $this->setting->isSandboxEnabled()) {
-            $this->context->controller->addJS($this->_path . 'js/test_warn.js', true);
-            $this->context->controller->addCSS($this->_path . 'css/omise_test_mode.css', 'all');
+        if ($controller->php_self == 'order' && $this->setting->isModuleEnabled() && $this->setting->isSandboxEnabled()) {
+            $controller->addJS($this->_path . 'js/test_warn.js', true);
+            $controller->addCSS($this->_path . 'css/omise_test_mode.css', 'all');
             return $this->display(__FILE__, 'omise_warning_message.tpl');
         }
+    }
+
+    protected function getResourceLists()
+    {
+        $resTypes = array('jsFiles', 'cssFiles', 'jqueryPlugins');
+        $res = array_combine($resTypes, array_fill(0, count($resTypes), array()));
+        foreach($this->paymentMethodClassList as $class) {
+            if ($class::isEnabled()) {
+                foreach ($res as $type=>$list) {
+                    $res[$type] = count($class::$$type) ? array_merge($list, $class::$$type) : $list;
+                };
+            }
+        }
+        return array_combine($resTypes, array_map('array_unique', array_values($res)));
     }
 
     public function hookPaymentOptions()
