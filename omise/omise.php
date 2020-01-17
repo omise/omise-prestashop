@@ -104,7 +104,7 @@ class Omise extends PaymentModule
         $payment_option = new $payment_option_class();
         $class = OmisePaymentMethods::className($method);
 
-        $payment_option->setCallToActionText($class::getCallToActionText());
+        $payment_option->setCallToActionText($class::getTitle());
         $payment_option->setModuleName($class::PAYMENT_OPTION_NAME);
 
         if ($this->isCurrentCurrencyApplicable()) {
@@ -213,7 +213,7 @@ class Omise extends PaymentModule
             if ($class::isEnabled()) {
                 $payment .= $this->isCurrentCurrencyApplicable() ?
                     $class::display() :
-                    $this->displayInapplicablePayment($this->l($class::getCallToActionText()));
+                    $this->displayInapplicablePayment($this->l($class::getTitle()));
             }
         }
 

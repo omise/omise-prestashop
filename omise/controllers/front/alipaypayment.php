@@ -16,7 +16,7 @@ class OmiseAlipayPaymentModuleFrontController extends OmiseBasePaymentModuleFron
 
         $this->payment_order->save(
             $this->payment_order->getOrderStateProcessingInProgress(),
-            Omise::DEFAULT_ALIPAY_PAYMENT_TITLE
+            OmisePaymentMethod_Alipay::DEFAULT_TITLE
         );
 
         try {

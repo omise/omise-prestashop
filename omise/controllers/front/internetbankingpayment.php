@@ -16,7 +16,7 @@ class OmiseInternetBankingPaymentModuleFrontController extends OmiseBasePaymentM
 
         $this->payment_order->save(
             $this->payment_order->getOrderStateProcessingInProgress(),
-            Omise::DEFAULT_INTERNET_BANKING_PAYMENT_TITLE
+            OmisePaymentMethod_InternetBanking::DEFAULT_TITLE
         );
 
         try {

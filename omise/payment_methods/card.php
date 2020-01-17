@@ -31,7 +31,7 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
     return $pm->versionSpecificDisplay(self::TEMPLATE . '.tpl');
     }
 
-    public static function getCallToActionText()
+    public static function getTitle()
     {
         return OmisePaymentMethod::$payModule->setting->getTitle();
     }

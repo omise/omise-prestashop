@@ -28,7 +28,7 @@ class OmisePaymentMethod
         return self::$payModule->versionSpecificDisplay(static::TEMPLATE . '.tpl');
     }
 
-    public static function getCallToActionText()
+    public static function getTitle()
     {
         return static::DEFAULT_TITLE;
     }
