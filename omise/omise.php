@@ -183,9 +183,7 @@ class Omise extends PaymentModule
         $res = array_combine($resTypes, array_fill(0, count($resTypes), array()));
         foreach($this->paymentMethodClassList as $class) {
             if ($class::isEnabled()) {
-                foreach ($res as $type=>$list) {
-                    $res[$type] = count($class::$$type) ? array_merge($list, $class::$$type) : $list;
-                };
+                foreach ($res as $type=>$list) $res[$type] = array_merge($list, $class::$$type);
             }
         }
         return array_combine($resTypes, array_map('array_unique', array_values($res)));
