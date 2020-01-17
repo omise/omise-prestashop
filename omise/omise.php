@@ -165,8 +165,8 @@ class Omise extends PaymentModule
 
         // add required resources into page
         $resources = $this->getResourceLists();
-        if (count($resources['cssFiles'])) $controller->addCSS(array_map(function($a) { return $this->_path . 'css/' . $a; }, $resources['cssFiles']));
-        if (count($resources['jsFiles'])) $controller->addJS(array_map(function($a) { return $this->_path . 'js/' . $a; }, $resources['jsFiles']));
+        if (count($resources['cssFiles'])) $controller->addCSS(preg_replace('%(.+)%', $this->_path.'css/\1', $resources['cssFiles']));
+        if (count($resources['jsFiles'])) $controller->addJS(preg_replace('%(.+)%', $this->_path.'js/\1', $resources['jsFiles']));
         if (count($resources['jqueryPlugins'])) $controller->addJqueryPlugin($resources['jqueryPlugins']);
 
         // Test mode warning
