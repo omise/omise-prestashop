@@ -23,12 +23,11 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
         $pm = OmisePaymentMethod::$payModule;
         OmisePaymentMethod::$smarty->assign(array(
             'action' => $pm->getAction(),
-            'list_of_expiration_year' => $pm->checkout_form->getListOfExpirationYear(),
+            'list_of_expiration_year' => range($d=date('Y'), $d+10),
             'omise_public_key' => $pm->setting->getPublicKey(),
             'omise_title' => $pm->setting->getTitle()
         ));
-
-    return $pm->versionSpecificDisplay(self::TEMPLATE . '.tpl');
+        return $pm->versionSpecificDisplay(self::TEMPLATE . '.tpl');
     }
 
     public static function getTitle()

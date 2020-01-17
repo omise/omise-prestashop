@@ -22,7 +22,6 @@ if (IS_VERSION_17) {
 if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
     require_once _PS_MODULE_DIR_ . 'omise/libraries/omise-plugin/Omise.php';
-    require_once _PS_MODULE_DIR_ . 'omise/checkout_form.php';
     require_once _PS_MODULE_DIR_ . 'omise/setting.php';
     require_once _PS_MODULE_DIR_ . 'omise/payment_methods/_all.php';
 }
@@ -36,7 +35,6 @@ class Omise extends PaymentModule
     ;
 
     public
-        $checkout_form, // CheckoutForm instance
         $setting // Setting instance
     ;
 
@@ -62,7 +60,6 @@ class Omise extends PaymentModule
         $this->displayName            = self::MODULE_DISPLAY_NAME;
         $this->confirmUninstall       = $this->l('Are you sure you want to uninstall the ' . self::MODULE_DISPLAY_NAME . ' module?');
 
-        $this->checkout_form = new CheckoutForm();
         $this->omise_transaction_model = new OmiseTransactionModel();
         $this->setting = new Setting();
         $this->buildPaymentMethodList();
