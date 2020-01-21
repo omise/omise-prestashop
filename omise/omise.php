@@ -105,7 +105,7 @@ class Omise extends PaymentModule
         $payment_option->setCallToActionText($class::getTitle());
         $payment_option->setModuleName($class::PAYMENT_OPTION_NAME);
 
-        if ($this->isCurrentCurrencyApplicable()) {
+        if ($this->isCurrentCurrencyApplicable($class)) {
             $payment_option->setForm($class::display());
         } else {
             $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
@@ -207,7 +207,7 @@ class Omise extends PaymentModule
 
         foreach($this->paymentMethodClassList as $class) {
             if ($class::isEnabled()) {
-                $payment .= $this->isCurrentCurrencyApplicable() ?
+                $payment .= $this->isCurrentCurrencyApplicable($class) ?
                     $class::display() :
                     $this->displayInapplicablePayment($this->l($class::getTitle()));
             }
@@ -255,13 +255,13 @@ class Omise extends PaymentModule
     }    
 
     /**
-     * Check whether the current currency is supported by the Omise API.
+     * Check whether the current currency is supported by the Omise API and the given payment method
      *
      * @return bool
      */
-    protected function isCurrentCurrencyApplicable()
+    protected function isCurrentCurrencyApplicable($paymentMethodClass)
     {
-        return OmisePluginHelperCharge::isCurrentCurrencyApplicable($this->context->currency->iso_code);
+        return OmisePluginHelperCharge::isCurrentCurrencyApplicable($code=$this->context->currency->iso_code) && $paymentMethodClass::availableForCurrency($code);
     }
 
 

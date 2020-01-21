@@ -21,7 +21,8 @@ class OmisePaymentMethod
         $usedSettings = array(),
         $jsFiles = array(),
         $cssFiles = array(),
-        $jqueryPlugins = array()
+        $jqueryPlugins = array(),
+        $restrictedToCurrencies = array()
     ;
 
     public static function display()
@@ -47,6 +48,12 @@ class OmisePaymentMethod
     public static function getTitle()
     {
         return static::DEFAULT_TITLE;
+    }
+
+    public static function availableForCurrency($code)
+    {
+        $curr = strToLower($code);
+        return count(static::$restrictedToCurrencies) ? in_array($curr, static::$restrictedToCurrencies) : true;
     }
 
     public static function getLink($controller, $params = []) 
