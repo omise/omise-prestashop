@@ -66,6 +66,7 @@ class Omise extends PaymentModule
         $this->storePaymentMethodSettings();
 
         OmisePaymentMethod::$payModule = $this;
+        OmisePaymentMethod::$context = $this->context;
         OmisePaymentMethod::$smarty = $this->smarty;
 
     }
@@ -263,16 +264,6 @@ class Omise extends PaymentModule
         return OmisePluginHelperCharge::isCurrentCurrencyApplicable($this->context->currency->iso_code);
     }
 
-    /**
-     * Generate the URL to be used for receiving payment info submitted from checkout form
-     *
-     * @see LinkCore::getModuleLink()
-     */
-    public function getAction()
-    {
-        $controller = $this->setting->isThreeDomainSecureEnabled() ? 'threedomainsecurepayment' :'payment';
-        return $this->context->link->getModuleLink(self::MODULE_NAME, $controller, [], true);
-    }
 
     /**
      * @return bool

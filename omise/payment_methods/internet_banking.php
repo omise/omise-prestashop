@@ -7,7 +7,8 @@ class OmisePaymentMethod_InternetBanking extends OmisePaymentMethod
         NAME = 'InternetBanking',
         PAYMENT_OPTION_NAME = 'omise-internet-banking-payment',
         DEFAULT_TITLE = 'Internet Banking',
-        TEMPLATE = 'internet_banking_payment'
+        TEMPLATE = 'internet_banking_payment',
+        CONTROLLER = 'internetbankingpayment'
     ;
 
     public static

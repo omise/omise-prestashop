@@ -18,21 +18,22 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
         )
     ;
 
-    public static function display()
+    public static function getSmartyVars()
     {
-        $pm = OmisePaymentMethod::$payModule;
-        OmisePaymentMethod::$smarty->assign(array(
-            'action' => $pm->getAction(),
-            'list_of_expiration_year' => range($d=date('Y'), $d+10),
-            'omise_public_key' => $pm->setting->getPublicKey(),
-            'omise_title' => $pm->setting->getTitle()
+        return array_merge(parent::getSmartyVars(), array(
+            'list_of_expiration_year' => range($d=date('Y'), $d+10)
         ));
-        return $pm->versionSpecificDisplay(self::TEMPLATE . '.tpl');
+    }
+
+    public static function getAction()
+    {
+        $controller = self::$payModule->setting->isThreeDomainSecureEnabled() ? 'threedomainsecurepayment' :'payment';
+        return self::getLink($controller);
     }
 
     public static function getTitle()
     {
-        return OmisePaymentMethod::$payModule->setting->getTitle();
+        return self::$payModule->setting->getTitle();
     }
 
     public static function isEnabled()

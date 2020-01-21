@@ -16,6 +16,7 @@ class OmisePaymentMethod
 
     public static
         $payModule,
+        $context,
         $smarty,
         $usedSettings = array(),
         $jsFiles = array(),
@@ -25,12 +26,37 @@ class OmisePaymentMethod
 
     public static function display()
     {
+        self::setSmartyVars();
         return self::$payModule->versionSpecificDisplay(static::TEMPLATE . '.tpl');
+    }
+
+    public static function setSmartyVars()
+    {
+        self::$smarty->assign(static::getSmartyVars());
+    }
+
+    public static function getSmartyVars()
+    {
+        return array(
+            'omise_title' => static::getTitle(),
+            'action' => static::getAction(),
+            'omise_public_key' => self::$payModule->setting->getPublicKey()
+        );
     }
 
     public static function getTitle()
     {
         return static::DEFAULT_TITLE;
+    }
+
+    public static function getLink($controller, $params = []) 
+    {
+        return self::$context->link->getModuleLink(Omise::MODULE_NAME, $controller, $params, true);
+    }
+
+    public static function getAction() {
+        // TODO - make this work properly
+        return self::getLink(static::CONTROLLER);
     }
 
     public static function isEnabled()
