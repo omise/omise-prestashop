@@ -27,8 +27,9 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
 
     public static function getAction()
     {
-        $controller = self::$payModule->setting->isThreeDomainSecureEnabled() ? 'threedomainsecurepayment' :'payment';
-        return self::getLink($controller);
+        ////// $controller = self::$payModule->setting->isThreeDomainSecureEnabled() ? 'threedomainsecurepayment' :'payment';
+        $is3DS = self::$payModule->setting->isThreeDomainSecureEnabled() ? '1' : '0';
+        return self::getLink(static::NAME, array('threedomainsecure' => $is3DS));
     }
 
     public static function getTitle()

@@ -6,10 +6,11 @@ if (! defined('_PS_VERSION_')) {
 if (!defined('IS_VERSION_17')) define('IS_VERSION_17', _PS_VERSION_ >= '1.7');
 
 if (defined('_PS_MODULE_DIR_')) {
+    require_once _PS_MODULE_DIR_ . 'omise/omise.php';
     require_once _PS_MODULE_DIR_ . 'omise/classes/omise_charge_class.php';
-    require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
+    ////// require_once _PS_MODULE_DIR_ . 'omise/classes/omise_transaction_model.php';
     require_once _PS_MODULE_DIR_ . 'omise/classes/payment_order.php';
-    require_once _PS_MODULE_DIR_ . 'omise/setting.php';
+    ////// require_once _PS_MODULE_DIR_ . 'omise/setting.php';
 }
 
 /**
