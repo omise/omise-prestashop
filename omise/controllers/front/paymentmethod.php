@@ -14,4 +14,9 @@ class OmisePaymentMethodModuleFrontController extends OmiseBasePaymentModuleFron
         $class = OmisePaymentMethods::className(Tools::getValue('type'));
         $class::processPayment($this, $this->context);
     }
+
+    public function parentPostProcess()
+    {
+        parent::postProcess();
+    }
 }

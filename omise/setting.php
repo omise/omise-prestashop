@@ -34,6 +34,14 @@ class Setting
         )
     ;
 
+    public function __construct()
+    {
+        foreach(OmisePaymentMethods::$list as $method) {
+            $class = OmisePaymentMethods::className($method);
+            $this->addUsedSettings($class::$usedSettings);
+        }
+    }
+
     /**
      * Get a setting based on the name of the method called if there is no explicitly declared method
      */

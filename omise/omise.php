@@ -63,7 +63,6 @@ class Omise extends PaymentModule
         $this->omise_transaction_model = new OmiseTransactionModel();
         $this->setting = new Setting();
         $this->buildPaymentMethodList();
-        $this->storePaymentMethodSettings();
 
         OmisePaymentMethod::$payModule = $this;
         OmisePaymentMethod::$context = $this->context;
@@ -75,11 +74,6 @@ class Omise extends PaymentModule
     protected function buildPaymentMethodList()
     {
         foreach(OmisePaymentMethods::$list as $method) $this->paymentMethodClassList[] = OmisePaymentMethods::className($method);
-    }
-
-    protected function storePaymentMethodSettings()
-    {
-        foreach($this->paymentMethodClassList as $class) $this->setting->addUsedSettings($class::$usedSettings);
     }
 
     /**

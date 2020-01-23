@@ -25,7 +25,7 @@ class OmisePaymentMethod_Alipay extends OmisePaymentMethod
 
         $c->payment_order->save(
             $c->payment_order->getOrderStateProcessingInProgress(),
-            self::DEFAULT_TITLE
+            self::getTitle()
         );
 
         try {

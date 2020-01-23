@@ -58,13 +58,10 @@ class OmisePaymentMethod
 
     public static function getLink($method, $params = []) 
     {
-        ////// return self::$context->link->getModuleLink(Omise::MODULE_NAME, $controller, $params, true);
         return self::$context->link->getModuleLink(Omise::MODULE_NAME, 'paymentmethod', array_merge($params, array('type' => $method)));
     }
 
     public static function getAction() {
-        // TODO - make this work properly
-        ////// return self::getLink(static::CONTROLLER);
         return self::getLink(static::NAME);
     }
 
@@ -72,11 +69,6 @@ class OmisePaymentMethod
     {
         $enabledMethod = 'is'.static::NAME.'Enabled';
         return self::$payModule->setting->$enabledMethod();
-    }
-
-    public static function processPayment($controllerObj, $contextObj)
-    {
-        die('Greetings from payment processing for type \'' . static::NAME . '\'');
     }
 
 }
