@@ -38,19 +38,22 @@ if (! defined('OMISE_USER_AGENT_SUFFIX')) {
 
 abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontController
 {
-    protected $charge;
-    public $display_column_left = false;
-    protected $error_message;
-    protected $omise_charge;
-    protected $omise_transaction_model;
-    protected $order_reference;
-    protected $payment_order;
-    protected $setting;
+    public 
+        $charge,
+        $display_column_left = false,
+        $error_message,
+        $omise_charge,
+        $payment_order
+    ;
+    protected
+        $omise_transaction_model,
+        $order_reference,
+        $setting
+    ;
 
     public function __construct()
     {
         parent::__construct();
-
         $this->omise_charge = new OmiseChargeClass();
         $this->omise_transaction_model = new OmiseTransactionModel();
         $this->payment_order = new PaymentOrder();
@@ -70,7 +73,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
      *
      * @return bool
      */
-    protected function addOmiseTransaction($id_charge, $id_order)
+    public function addOmiseTransaction($id_charge, $id_order)
     {
         $this->omise_transaction_model->id_charge = $id_charge;
         $this->omise_transaction_model->id_order = $id_order;
@@ -122,7 +125,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
      * The function used to check cart information to prevent directly access the payment URL or payment controller
      * without the cart information or the order of cart has been processed.
      */
-    protected function validateCart()
+    public function validateCart()
     {
         if (Validate::isLoadedObject($this->context->cart) == false
             || $this->context->cart->OrderExists() == true

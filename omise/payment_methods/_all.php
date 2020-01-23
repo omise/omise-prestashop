@@ -74,7 +74,7 @@ class OmisePaymentMethod
         return self::$payModule->setting->$enabledMethod();
     }
 
-    public static function processPayment($controllerObj)
+    public static function processPayment($controllerObj, $contextObj)
     {
         die('Greetings from payment processing for type \'' . static::NAME . '\'');
     }
