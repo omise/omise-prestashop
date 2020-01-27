@@ -123,3 +123,4 @@
     </div>
   </div>
 </form>
+{include file="{$method_admintemplate_path}test.tpl"}

@@ -122,6 +122,8 @@ class Omise extends PaymentModule
 
         foreach ($this->setting->all_settings as $settingName) $smartyVars[$settingName] = $this->setting->{$settingName}();
 
+        $smartyVars['method_admintemplate_path'] = dirname(__FILE__).'/payment_methods/templates/';
+
         $this->smarty->assign($smartyVars);
 
         return $this->display(__FILE__, 'views/templates/admin/setting.tpl');
