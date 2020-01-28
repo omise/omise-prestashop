@@ -14,6 +14,10 @@ class OmisePaymentMethods
 class OmisePaymentMethod
 {
 
+    const
+        ADMIN_TEMPLATE = ''
+    ;
+
     public static
         $payModule,
         $context,
@@ -31,7 +35,8 @@ class OmisePaymentMethod
             'name' => static::NAME,
             'title' => static::DEFAULT_TITLE,
             'usedSettings' => static::$usedSettings,
-            'switchDescription' => static::SWITCH_DESCRIPTION
+            'switchDescription' => static::SWITCH_DESCRIPTION,
+            'adminTemplate' => static::ADMIN_TEMPLATE
         );
     }
 

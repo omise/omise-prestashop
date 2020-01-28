@@ -1,8 +1,8 @@
-{$d = $obj->getAdminDetails()}
-{$enabled_var_name = $d['usedSettings'][0]}
+{* First 'Used Setting' is always the one for enabled/disabled *}
+{$enabled_var_name = $dets['usedSettings'][0]}
 
 <div class="form-group">
-  <label class="control-label col-lg-3"><b>{l s=$d['title'] mode='omise'}</b></label>
+  <label class="control-label col-lg-3"><b>{l s=$dets['title'] mode='omise'}</b></label>
 </div>
 
 <div class="form-group">
@@ -15,6 +15,6 @@
       <label for="{$enabled_var_name}_disabled">{l s='No' mode='omise'}</label>
       <a class="slide-button btn"></a>
     </span>
-    <p class="help-block">{l s=$d['switchDescription'] mode='omise'}</p>
+    <p class="help-block">{l s=$dets['switchDescription'] mode='omise'}</p>
   </div>
 </div>
