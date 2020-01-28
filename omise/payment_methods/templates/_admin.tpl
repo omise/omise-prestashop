@@ -2,7 +2,10 @@
 {$enabled_var_name = $dets['usedSettings'][0]}
 
 <div class="form-group">
-  <label class="control-label col-lg-3"><b>{l s=$dets['title'] mode='omise'}</b></label>
+  <label class="control-label col-lg-3"><b>
+	  {l s=$dets['title'] mode='omise'} 
+	  {if $dets['currencies']|count gt 0}({', '|implode:$dets['currencies']|upper}){/if} 
+	</b></label>
 </div>
 
 <div class="form-group">

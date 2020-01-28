@@ -36,7 +36,8 @@ class OmisePaymentMethod
             'title' => static::DEFAULT_TITLE,
             'usedSettings' => static::$usedSettings,
             'switchDescription' => static::SWITCH_DESCRIPTION,
-            'adminTemplate' => static::ADMIN_TEMPLATE
+            'adminTemplate' => static::ADMIN_TEMPLATE,
+            'currencies' => static::$restrictedToCurrencies
         );
     }
 
