@@ -118,10 +118,15 @@ class Omise extends PaymentModule
         $smartyVars = array(
             'submit_action' => $this->setting->getSubmitAction(),
             'webhooks_endpoint' => $this->getWebhooksEndpoint(),
-            'cfg' => array()
+            'cfg' => array(),
+            'methodObjects' => array()
         );
 
         foreach ($this->setting->all_settings as $settingName) $smartyVars['cfg'][$settingName] = $this->setting->{$settingName}();
+        foreach(OmisePaymentMethods::$list as $method) {
+            $className = OmisePaymentMethods::className($method);
+            $smartyVars['methodObjects'][$method] = new $className();
+        }
 
         $smartyVars['method_admintemplate_path'] = dirname(__FILE__).'/payment_methods/templates/';
 

@@ -25,6 +25,16 @@ class OmisePaymentMethod
         $restrictedToCurrencies = array()
     ;
 
+    // necessary for dealing with a deficiency in older Smarty version in PrestaShop 1.6
+    public static function getAdminDetails() {
+        return array(
+            'name' => static::NAME,
+            'title' => static::DEFAULT_TITLE,
+            'usedSettings' => static::$usedSettings,
+            'switchDescription' => static::SWITCH_DESCRIPTION
+        );
+    }
+
     public static function display()
     {
         self::setSmartyVars();

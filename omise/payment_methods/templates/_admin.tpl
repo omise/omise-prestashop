@@ -1,7 +1,8 @@
-{$enabled_var_name = $class::$usedSettings[0]}
+{$d = $obj->getAdminDetails()}
+{$enabled_var_name = $d['usedSettings'][0]}
 
 <div class="form-group">
-  <label class="control-label col-lg-3"><b>{l s=$class::DEFAULT_TITLE mode='omise'}</b></label>
+  <label class="control-label col-lg-3"><b>{l s=$d['title'] mode='omise'}</b></label>
 </div>
 
 <div class="form-group">
@@ -14,6 +15,6 @@
       <label for="{$enabled_var_name}_disabled">{l s='No' mode='omise'}</label>
       <a class="slide-button btn"></a>
     </span>
-    <p class="help-block">{l s='Enables customers of a bank to easily conduct financial transactions through a bank-operated website (only available in Thailand).' mode='omise'}</p>
+    <p class="help-block">{l s=$d['switchDescription'] mode='omise'}</p>
   </div>
 </div>
