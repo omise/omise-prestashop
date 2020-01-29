@@ -5,7 +5,8 @@ class OmisePaymentMethods
     static $list = array(
         'Card',
         'InternetBanking',
-        'Alipay'
+        'Alipay',
+        'CitiPoints'
     );
 
     public static function className($method) { return 'OmisePaymentMethod_'.$method; } 

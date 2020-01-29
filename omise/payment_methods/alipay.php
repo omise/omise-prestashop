@@ -12,7 +12,6 @@ class OmisePaymentMethod_Alipay extends OmiseOffsitePaymentMethod
         PAYMENT_OPTION_NAME = 'omise-alipay-payment',
         DEFAULT_TITLE = 'Alipay',
         TEMPLATE = 'alipay_payment',
-        CONTROLLER = 'alipaypayment',
         SWITCH_DESCRIPTION = 'Enables payments by Alipay (currently only available in Thailand).'
     ;
 
