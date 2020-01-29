@@ -61,7 +61,7 @@ class OmiseChargeClass
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),
             'metadata' => $this->getMetadata(),
-            'offsite' => $offsiteType,
+            'source' => array('type' => $offsiteType),
             'return_uri' => $this->getReturnUri(),
         );
 
