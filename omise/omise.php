@@ -77,17 +77,6 @@ class Omise extends PaymentModule
     }
 
     /**
-     * Display the message about the inapplicable checkout condition.
-     *
-     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
-     */
-    protected function displayInapplicablePayment($title = null)
-    {
-        if ($title) $this->smarty->assign('title', $title);
-        return $this->display(__FILE__, 'inapplicable_payment.tpl');
-    }
-
-    /**
      * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
      */
     protected function generatePaymentOption($method)
@@ -99,11 +88,7 @@ class Omise extends PaymentModule
         $payment_option->setCallToActionText($class::getTitle());
         $payment_option->setModuleName($class::PAYMENT_OPTION_NAME);
 
-        if ($this->isCurrentCurrencyApplicable($class)) {
-            $payment_option->setForm($class::display());
-        } else {
-            $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
-        }
+        $payment_option->setForm($class::display());
 
         return $payment_option;
     }
@@ -194,7 +179,7 @@ class Omise extends PaymentModule
         $payment_options = array();
 
         foreach($this->paymentMethodClassList as $class) {
-            if ($class::isEnabled()) $payment_options[] = $this->generatePaymentOption($class::NAME);
+            if ($class::isEnabled() && $this->isCurrentCurrencyApplicable($class)) $payment_options[] = $this->generatePaymentOption($class::NAME);
         }
 
         return count($payment_options) ? $payment_options : null;
@@ -211,7 +196,7 @@ class Omise extends PaymentModule
             if ($class::isEnabled()) {
                 $payment .= $this->isCurrentCurrencyApplicable($class) ?
                     $class::display() :
-                    $this->displayInapplicablePayment($this->l($class::getTitle()));
+                    '';
             }
         }
 
