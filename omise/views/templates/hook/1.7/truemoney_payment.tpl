@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box">
+      <div class="row">
+        <div class="col-sm-12">
+          <form id="omiseTrueMoneyCheckoutForm" method="post" action="{$action|escape:'html'}">
+            <div class="row">
+              <div class="form-group col-sm-4">
+                <label for="true_number">{l s='Phone number' mod='omise'}</label>
+                <input class="form-control" id="true_number" type="text" maxlength="10" placeholder="{l s='Phone number' mod='omise'}">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
