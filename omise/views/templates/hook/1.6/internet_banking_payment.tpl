@@ -66,22 +66,6 @@
   // dynamically created script blocks do not run in the global context
   
   window.omise_msg_select_bank = "{l s='Please select a bank before continuing.' js=1 mod='omise'}";
-  window.omiseDisplayMessage = function omiseDisplayMessage(message) {
-    if ($.prototype.fancybox) {
-      $.fancybox.open([
-          {
-            type: 'inline',
-            autoScale: true,
-            minHeight: 30,
-            content: '<p class="fancybox-error">' + message + '</p>',
-          }],
-        {
-          padding: 0,
-        });
-    } else {
-      alert(message);
-    }
-  }
 
   window.omiseHasAnyBankSelected = function omiseHasAnyBankSelected() {
     var selectedBank = document.getElementsByName('offsite');

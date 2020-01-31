@@ -50,28 +50,8 @@
   </div>
 </div>
 
-<div id="omise-message" hidden="hidden">
-  <p class="fancybox-error">{l s='Please select a bank before continuing.' js=1 mod='omise'}</p>
-</div>
-
 <script>
   (function() {
-    var omiseDisplayMessage = function omiseDisplayMessage(message) {
-      if ($.prototype.fancybox) {
-        $.fancybox.open([
-            {
-              type: 'inline',
-              autoScale: true,
-              minHeight: 30,
-              content: $('#omise-message').html(),
-            }],
-          {
-            padding: 0,
-          });
-      } else {
-        alert(message);
-      }
-    };
 
     var omiseHasAnyBankSelected = function omiseHasAnyBankSelected() {
       var selectedBank = document.getElementsByName('offsite');
