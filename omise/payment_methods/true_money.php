@@ -15,10 +15,20 @@ class OmisePaymentMethod_TrueMoney extends OmiseOffsitePaymentMethod
         SWITCH_DESCRIPTION = 'Enables payments by True Money (currently only available in Thailand).'
     ;
 
+
     public static
         $usedSettings = array('true_money_status'),
         $restrictedToCurrencies = array('thb')
     ;
+
+    public static function getSmartyVars()
+    {
+        $address = new Address(self::$context->cart->id_address_invoice);
+        $phone = $address->phone_mobile ?: $address->phone ?: '';
+        return array_merge(parent::getSmartyVars(), array(
+            'initialPhone' => $phone
+        ));
+    }
 
     public static function processPayment($controller, $context)
     {

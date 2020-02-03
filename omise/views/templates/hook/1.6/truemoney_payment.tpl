@@ -10,7 +10,7 @@
             <form id="omiseTrueMoneyCheckoutForm" method="post" action="{$action|escape:'html'}">
               <div class="row">
                 <div class="form-group col-sm-3">
-                  <input class="form-control" id="true_number" type="text" maxlength="10" placeholder="{l s='Phone number' mod='omise'}">
+                  <input class="form-control" id="true_number" type="text" {if $initialPhone ne ''}value="{$initialPhone|escape:'html'}" {/if}maxlength="10" placeholder="{l s='Phone number' mod='omise'}">
                 </div>
               </div>
               <button class="button btn btn-default standard-checkout button-medium" id="omiseInternetBankingCheckoutButton">
