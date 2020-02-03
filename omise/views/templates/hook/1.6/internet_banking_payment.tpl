@@ -69,20 +69,17 @@
 
   window.omiseHasAnyBankSelected = function omiseHasAnyBankSelected() {
     var selectedBank = document.getElementsByName('offsite');
-
     for (var i = 0; i < selectedBank.length; i++) {
       if (selectedBank[i].checked == true) {
         return true;
       }
     }
-
     return false;
   }
 
   window.omiseInternetBankingCheckout = function omiseInternetBankingCheckout(event) {
     event.preventDefault();
-
-    if (omiseHasAnyBankSelected() == false) {
+    if (!omiseHasAnyBankSelected()) {
       omiseDisplayMessage(omise_msg_select_bank);
       return false;
     }
