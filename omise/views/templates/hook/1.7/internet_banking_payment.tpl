@@ -54,7 +54,7 @@
   (function() {
 
     function omiseHasAnyBankSelected() {
-      Array.prototype.slice.call(document.getElementsByName('offsite')).some(function(el){return el.checked;});
+      return Array.prototype.slice.call(document.getElementsByName('offsite')).some(function(el){ return el.checked; });
     }
 
     function isOmiseInternetBankingOptionSelected() {
@@ -69,7 +69,7 @@
       if (isOmiseInternetBankingOptionSelected()) {
         event.preventDefault();
         event.stopPropagation();
-        
+
         if (!omiseHasAnyBankSelected()) {
           omiseDisplayMessage('{l s='Please select a bank before continuing.' js=1 mod='omise'}');
           return false;
