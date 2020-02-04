@@ -68,13 +68,7 @@
   window.omise_msg_select_bank = "{l s='Please select a bank before continuing.' js=1 mod='omise'}";
 
   window.omiseHasAnyBankSelected = function omiseHasAnyBankSelected() {
-    var selectedBank = document.getElementsByName('offsite');
-    for (var i = 0; i < selectedBank.length; i++) {
-      if (selectedBank[i].checked == true) {
-        return true;
-      }
-    }
-    return false;
+    return Array.prototype.slice.call(document.getElementsByName('offsite')).some(function(el){return el.checked;});
   }
 
   window.omiseInternetBankingCheckout = function omiseInternetBankingCheckout(event) {
@@ -83,7 +77,6 @@
       omiseDisplayMessage(omise_msg_select_bank);
       return false;
     }
-
     document.getElementById('omiseInternetBankingCheckoutForm').submit();
   }
 
@@ -108,17 +101,9 @@
     $.uniform.restore('.no-uniform');
   }
 
-  document.getElementById('omiseInternetBankingCheckoutButton').addEventListener('click', function(event) {
-    window.omiseInternetBankingCheckout(event);
-  });
-
-  window.addEventListener('load', function() {
-    window.omiseRestoreUniformStyle();
-  });
-
-  window.addEventListener('resize', function() {
-    window.omiseRestoreUniformStyle();
-  });
-
+  document.getElementById('omiseInternetBankingCheckoutButton').addEventListener('click', window.omiseInternetBankingCheckout);
+  window.addEventListener('load', window.omiseRestoreUniformStyle);
+  window.addEventListener('resize', window.omiseRestoreUniformStyle);
   window.setTimeout(window.omiseRestoreUniformStyle, 100);
+  
 </script>
