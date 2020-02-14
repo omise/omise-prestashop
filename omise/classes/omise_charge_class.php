@@ -54,7 +54,7 @@ class OmiseChargeClass
      *
      * @return $this
      */
-    public function createOffsite($offsiteType)
+    public function createOffsite($offsiteType, $returnUri = '')
     {
         $charge_request = array(
             'amount' => $this->getAmount(),
@@ -62,6 +62,7 @@ class OmiseChargeClass
             'description' => $this->getChargeDescription(),
             'metadata' => $this->getMetadata(),
             'source' => is_array($offsiteType) ? $offsiteType : array('type' => $offsiteType),
+            // 'return_uri' => $returnUri ?: $this->getReturnUri(),
             'return_uri' => $this->getReturnUri(),
         );
 

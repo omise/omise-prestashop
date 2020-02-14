@@ -54,7 +54,17 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
             self::getTitle()
         );
 
-        $c->parentPostProcess();
+        try {
+            $c->charge = $c->omise_charge->create(Tools::getValue('omise_card_token'));
+        } catch (Exception $e) {
+            $c->error_message = $e->getMessage();
+            return;
+        }
+
+        if ($c->charge->isFailed()) {
+            $c->error_message = $c->charge->getErrorMessage();
+            return;
+        }
 
         $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}($context->cart->id);
 

@@ -92,26 +92,6 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
     /**
      * Override parent method.
      *
-     * @see FrontControllerCore::postProcess()
-     */
-    public function postProcess()
-    {
-        try {
-            $this->charge = $this->omise_charge->create(Tools::getValue('omise_card_token'));
-        } catch (Exception $e) {
-            $this->error_message = $e->getMessage();
-            return;
-        }
-
-        if ($this->charge->isFailed()) {
-            $this->error_message = $this->charge->getErrorMessage();
-            return;
-        }
-    }
-
-    /**
-     * Override parent method.
-     *
      * @see FrontControllerCore::redirect()
      */
     public function redirect()

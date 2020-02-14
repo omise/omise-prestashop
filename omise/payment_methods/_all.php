@@ -76,13 +76,25 @@ class OmisePaymentMethod
         return count(static::$restrictedToCurrencies) ? in_array($curr, static::$restrictedToCurrencies) : true;
     }
 
-    public static function getLink($method, $params = []) 
+    public static function getLink($method, $params = [], $isReturn = false) 
     {
-        return self::$context->link->getModuleLink(Omise::MODULE_NAME, 'paymentmethod', array_merge($params, array('type' => $method)));
+        return self::$context->link->getModuleLink(Omise::MODULE_NAME, $isReturn ? 'paymentreturn' : 'paymentmethod', array_merge($params, array('type' => $method)), $isReturn ? true : null);
     }
 
     public static function getAction() {
         return self::getLink(static::NAME);
+    }
+
+    public static function getReturnUri($cartId, $key) {
+        $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}($cartId);
+        $module = Module::getInstanceByName(Omise::MODULE_NAME);
+        return self::getLink(static::NAME, array(
+            'id_cart' => $cartId,
+            'id_module' => $module->id,
+            'id_order' => $id_order,
+            'key' => $key
+        ), true);
+
     }
 
     public static function isEnabled()

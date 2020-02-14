@@ -18,7 +18,8 @@ class OmiseOffsitePaymentMethod extends OmisePaymentMethod
         );
 
         try {
-            $c->charge = $c->omise_charge->createOffsite(self::getOffsiteSourceDetail());
+            $returnUri = self::getReturnUri($context->cart->id, $context->customer->secure_key);
+            $c->charge = $c->omise_charge->createOffsite(self::getOffsiteSourceDetail(), $returnUri);
         } catch (Exception $e) {
             $c->error_message = $e->getMessage();
             return;
