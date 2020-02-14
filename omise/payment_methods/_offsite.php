@@ -5,9 +5,9 @@ class OmiseOffsitePaymentMethod extends OmisePaymentMethod
 
     const TEMPLATE = 'simple_offsite_payment';
 
-    public static function processOffsitePayment($offsiteType, $controller, $context)
+    public static function processPayment($controller, $context)
     {
-        
+
         $c = $controller;
 
         $c->validateCart();
@@ -18,7 +18,7 @@ class OmiseOffsitePaymentMethod extends OmisePaymentMethod
         );
 
         try {
-            $c->charge = $c->omise_charge->createOffsite($offsiteType);
+            $c->charge = $c->omise_charge->createOffsite(self::getOffsiteSourceDetail());
         } catch (Exception $e) {
             $c->error_message = $e->getMessage();
             return;
@@ -39,6 +39,10 @@ class OmiseOffsitePaymentMethod extends OmisePaymentMethod
 
         $c->addOmiseTransaction($c->charge->getId(), $id_order);
         $c->setRedirectAfter($c->charge->getAuthorizeUri());
+    }
+
+    public static function getOffsiteSourceDetail() {
+        return method_exists(get_called_class(), 'getSource') ? static::getSource() : static::SOURCE;
     }
 
 }

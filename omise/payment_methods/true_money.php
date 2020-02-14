@@ -15,7 +15,6 @@ class OmisePaymentMethod_TrueMoney extends OmiseOffsitePaymentMethod
         SWITCH_DESCRIPTION = 'Enables payments by True Money (currently only available in Thailand).'
     ;
 
-
     public static
         $usedSettings = array('true_money_status'),
         $restrictedToCurrencies = array('thb')
@@ -30,9 +29,8 @@ class OmisePaymentMethod_TrueMoney extends OmiseOffsitePaymentMethod
         ));
     }
 
-    public static function processPayment($controller, $context)
-    {
-        parent::processOffsitePayment(array('type'=>'truemoney', 'phone_number'=>Tools::getValue('true_number')) , $controller, $context);
+    public static function getSource() {
+        return array('type'=>'truemoney', 'phone_number'=>Tools::getValue('true_number'));
     }
 
 }

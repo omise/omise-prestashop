@@ -11,17 +11,13 @@ class OmisePaymentMethod_CitiPoints extends OmiseOffsitePaymentMethod
         NAME = 'CitiPoints',
         PAYMENT_OPTION_NAME = 'omise-citipoints-payment',
         DEFAULT_TITLE = 'Citi Pay with Points',
-        SWITCH_DESCRIPTION = 'Enables payments by Citi Points (currently only available in Thailand).'
+        SWITCH_DESCRIPTION = 'Enables payments by Citi Points (currently only available in Thailand).',
+        SOURCE = 'points_citi'
     ;
 
     public static
         $usedSettings = array('citi_points_status'),
         $restrictedToCurrencies = array('thb')
     ;
-
-    public static function processPayment($controller, $context)
-    {
-        parent::processOffsitePayment('points_citi', $controller, $context);
-    }
 
 }

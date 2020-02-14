@@ -11,17 +11,13 @@ class OmisePaymentMethod_Alipay extends OmiseOffsitePaymentMethod
         NAME = 'Alipay',
         PAYMENT_OPTION_NAME = 'omise-alipay-payment',
         DEFAULT_TITLE = 'Alipay',
-        SWITCH_DESCRIPTION = 'Enables payments by Alipay (currently only available in Thailand).'
+        SWITCH_DESCRIPTION = 'Enables payments by Alipay (currently only available in Thailand).',
+        SOURCE = 'alipay'
     ;
 
     public static
         $usedSettings = array('alipay_status'),
         $restrictedToCurrencies = array('thb')
     ;
-
-    public static function processPayment($controller, $context)
-    {
-        parent::processOffsitePayment('alipay', $controller, $context);
-    }
 
 }
