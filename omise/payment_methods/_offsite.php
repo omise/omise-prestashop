@@ -3,6 +3,8 @@
 class OmiseOffsitePaymentMethod extends OmisePaymentMethod
 {
 
+    const TEMPLATE = 'simple_offsite_payment';
+
     public static function processOffsitePayment($offsiteType, $controller, $context)
     {
         

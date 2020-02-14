@@ -57,6 +57,8 @@ class OmisePaymentMethod
     public static function getSmartyVars()
     {
         return array(
+            'payment_method_name' => static::NAME,
+            'payment_option_name' => static::PAYMENT_OPTION_NAME,
             'omise_title' => static::getTitle(),
             'action' => static::getAction(),
             'omise_public_key' => self::$payModule->setting->getPublicKey()

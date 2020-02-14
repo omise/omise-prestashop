@@ -11,7 +11,6 @@ class OmisePaymentMethod_CitiPoints extends OmiseOffsitePaymentMethod
         NAME = 'CitiPoints',
         PAYMENT_OPTION_NAME = 'omise-citipoints-payment',
         DEFAULT_TITLE = 'Citi Pay with Points',
-        TEMPLATE = 'citipoints_payment',
         SWITCH_DESCRIPTION = 'Enables payments by Citi Points (currently only available in Thailand).'
     ;
 
