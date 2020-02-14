@@ -55,7 +55,8 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
         );
 
         try {
-            $c->charge = $c->omise_charge->create(Tools::getValue('omise_card_token'));
+            $returnUri = self::getReturnUri($context->cart->id, $context->customer->secure_key);
+            $c->charge = $c->omise_charge->create(Tools::getValue('omise_card_token'), $returnUri);
         } catch (Exception $e) {
             $c->error_message = $e->getMessage();
             return;
