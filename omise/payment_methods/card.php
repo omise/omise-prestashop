@@ -80,11 +80,7 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
 
         if (Tools::getValue('threedomainsecure') == '0') {
             $c->payment_order->updateStateToBeSuccess(new Order($id_order));
-            $uri = 'index.php?controller=order-confirmation' .
-                '&id_cart=' . $context->cart->id .
-                '&id_module=' . $c->module->id .
-                '&id_order=' . $c->module->currentOrder .
-                '&key=' . $context->customer->secure_key;
+            $uri = self::getOrderConfirmationUri($context->cart->id, $c->module->id, $c->module->currentOrder, $context->customer->secure_key);
         } else {
             $c->addOmiseTransaction($c->charge->getId(), $id_order);
             $uri = $c->charge->getAuthorizeUri();

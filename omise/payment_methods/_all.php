@@ -76,9 +76,9 @@ class OmisePaymentMethod
         return count(static::$restrictedToCurrencies) ? in_array($curr, static::$restrictedToCurrencies) : true;
     }
 
-    public static function getLink($method, $params = [], $isReturn = false) 
+    public static function getLink($method, $params = [], $controller = 'paymentmethod', $ssl = false) 
     {
-        return self::$context->link->getModuleLink(Omise::MODULE_NAME, $isReturn ? 'paymentreturn' : 'paymentmethod', array_merge($params, array('type' => $method)), $isReturn ? true : null);
+        return self::$context->link->getModuleLink(Omise::MODULE_NAME, $controller, array_merge($params, array('type' => $method)), $ssl);
     }
 
     public static function getAction() {
@@ -93,7 +93,7 @@ class OmisePaymentMethod
             'id_module' => $module->id,
             'id_order' => $id_order,
             'key' => $key
-        ), true);
+        ), 'paymentreturn', true);
 
     }
 
@@ -101,6 +101,16 @@ class OmisePaymentMethod
     {
         $enabledMethod = 'is'.static::NAME.'Enabled';
         return self::$payModule->setting->$enabledMethod();
+    }
+
+    public static function getOrderConfirmationUri($cartId, $moduleId, $orderId, $key)
+    {
+        return "index.php?controller=order-confirmation&id_cart=$cartId&id_module=$moduleId&id_order=$orderId&key=$key";
+    }
+
+    public static function handleReturn($controller, $context)
+    {
+
     }
 
 }

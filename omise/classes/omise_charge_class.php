@@ -41,7 +41,8 @@ class OmiseChargeClass
         );
 
         if ($this->setting->isThreeDomainSecureEnabled()) {
-            $charge_request['return_uri'] = $returnUri ?: $this->getReturnUri();
+            ////// $charge_request['return_uri'] = $returnUri ?: $this->getReturnUri();
+            $charge_request['return_uri'] = $this->getReturnUri();
         }
 
         $this->charge_response = OmiseCharge::create($charge_request, '', $this->getSecretKey());
@@ -62,7 +63,8 @@ class OmiseChargeClass
             'description' => $this->getChargeDescription(),
             'metadata' => $this->getMetadata(),
             'source' => is_array($offsiteType) ? $offsiteType : array('type' => $offsiteType),
-            'return_uri' => $returnUri ?: $this->getReturnUri(),
+            ////// 'return_uri' => $returnUri ?: $this->getReturnUri()
+            'return_uri' => $this->getReturnUri()
         );
 
         $this->charge_response = OmiseCharge::create($charge_request, '', $this->getSecretKey());
