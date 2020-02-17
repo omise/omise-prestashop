@@ -41,11 +41,11 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         $display_column_left = false,
         $error_message,
         $omise_charge,
+        $order_reference,
         $payment_order
     ;
     protected
         $omise_transaction_model,
-        $order_reference,
         $setting
     ;
 
@@ -112,11 +112,4 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         }
     }
 
-    /**
-     * @param \OmiseTransactionModel $omise_transaction_model The instance of class, OmiseTransactionModel.
-     */
-    public function setOmiseTransactionModel($omise_transaction_model)
-    {
-        $this->omise_transaction_model = $omise_transaction_model;
-    }
 }

@@ -108,8 +108,82 @@ class OmisePaymentMethod
         return "index.php?controller=order-confirmation&id_cart=$cartId&id_module=$moduleId&id_order=$orderId&key=$key";
     }
 
+    public static function getValidOrder($orderId, &$error, &$orderRef)
+    {
+        $order = new Order($orderId);
+
+        if (!Validate::isLoadedObject($order)) {
+            $error = 'Order not found.';
+            return false;
+        }
+
+        $orderRef = $order->reference;
+
+        if ($order->module != Omise::MODULE_NAME) {
+            $error = 'Payment method is invalid.';
+            return false;
+        }
+
+        return $order;
+
+    }
+
+    public static function getValidCharge($orderId, &$error)
+    {
+
+        $omiseTransaction = new OmiseTransactionModel();
+        $omiseCharge = new OmiseChargeClass();
+
+        $idCharge = $omiseTransaction->getIdCharge($orderId);
+
+        try {
+            $charge = $omiseCharge->retrieve($idCharge);
+        } catch (Exception $e) {
+            $error = $e->getMessage();
+            return false;
+        }
+
+        return $charge;
+
+    }
+
     public static function handleReturn($controller, $context)
     {
+        $cartId = Tools::getValue('id_cart');
+        $moduleId = Tools::getValue('id_module');
+        $orderId = Tools::getValue('id_order');
+        $key = Tools::getValue('key');  
+        $error = '';
+        $orderRef = '';
+
+        // check we have a valid order
+        $order = static::getValidOrder($orderId, $error, $orderRef);
+        $controller->order_reference = $orderRef;
+        if ( !$order ) {
+            $controller->error_message = $controller->l($error);
+            return;
+        }
+
+        // check we have a valid charge
+        if ( !($charge = static::getValidCharge($orderId, $error)) ) {
+            $controller->error_message = $error;
+            return;
+        }
+
+        // check if charge failed
+        if ($charge->isFailed()) {
+            $controller->payment_order->updateStateToBeCanceled($order);
+            $controller->error_message = $charge->getErrorMessage();
+            return;
+        }
+
+        // check if charge paid
+        if ($charge->isPaid()) {
+            $controller->payment_order->updateStateToBeSuccess($order);
+        }
+
+        // redirect to confirmation
+        $controller->setRedirectAfter(self::getOrderConfirmationUri($cartId, $moduleId, $orderId, $key));
 
     }
 
