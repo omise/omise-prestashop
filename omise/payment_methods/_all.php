@@ -156,6 +156,8 @@ class OmisePaymentMethod
         $error = '';
         $orderRef = '';
 
+        $paymentOrder = new PaymentOrder();
+
         // check we have a valid order
         $order = static::getValidOrder($orderId, $error, $orderRef);
         $controller->order_reference = $orderRef;
@@ -172,14 +174,14 @@ class OmisePaymentMethod
 
         // check if charge failed
         if ($charge->isFailed()) {
-            $controller->payment_order->updateStateToBeCanceled($order);
+            $paymentOrder->updateStateToBeCanceled($order);
             $controller->error_message = $charge->getErrorMessage();
             return;
         }
 
         // check if charge paid
         if ($charge->isPaid()) {
-            $controller->payment_order->updateStateToBeSuccess($order);
+            $paymentOrder->updateStateToBeSuccess($order);
         }
 
         // redirect to confirmation

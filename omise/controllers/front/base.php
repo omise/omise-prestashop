@@ -40,9 +40,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         $charge,
         $display_column_left = false,
         $error_message,
-        $omise_charge,
-        $order_reference,
-        $payment_order
+        $order_reference
     ;
     protected
         $omise_transaction_model,
@@ -52,9 +50,7 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
     public function __construct()
     {
         parent::__construct();
-        $this->omise_charge = new OmiseChargeClass();
         $this->omise_transaction_model = new OmiseTransactionModel();
-        $this->payment_order = new PaymentOrder();
         $this->setting = new Setting();
     }
 

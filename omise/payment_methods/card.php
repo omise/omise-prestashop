@@ -47,16 +47,19 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
     public static function processPayment($controller, $context)
     {
         $c = $controller;
+        $omiseCharge = new OmiseChargeClass();
+        $paymentOrder = new PaymentOrder();
+
         $c->validateCart();
 
-        $c->payment_order->save(
-            $c->payment_order->getOrderStateProcessingInProgress(),
+        $paymentOrder->save(
+            $paymentOrder->getOrderStateProcessingInProgress(),
             self::getTitle()
         );
 
         try {
             $returnUri = self::getReturnUri($context->cart->id, $context->customer->secure_key);
-            $c->charge = $c->omise_charge->create(Tools::getValue('omise_card_token'), $returnUri);
+            $c->charge = $omiseCharge->create(Tools::getValue('omise_card_token'), $returnUri);
         } catch (Exception $e) {
             $c->error_message = $e->getMessage();
             return;
@@ -70,16 +73,16 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
         $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}($context->cart->id);
 
         if (!empty($c->charge)) {
-            $c->payment_order->updatePaymentTransactionId($id_order, $c->charge->getId());
+            $paymentOrder->updatePaymentTransactionId($id_order, $c->charge->getId());
         }
 
         if (!empty($c->error_message)) {
-            $c->payment_order->updateStateToBeCanceled(new Order($id_order));
+            $paymentOrder->updateStateToBeCanceled(new Order($id_order));
             return;
         }
 
         if (Tools::getValue('threedomainsecure') == '0') {
-            $c->payment_order->updateStateToBeSuccess(new Order($id_order));
+            $paymentOrder->updateStateToBeSuccess(new Order($id_order));
             $uri = self::getOrderConfirmationUri($context->cart->id, $c->module->id, $c->module->currentOrder, $context->customer->secure_key);
         } else {
             $c->addOmiseTransaction($c->charge->getId(), $id_order);
