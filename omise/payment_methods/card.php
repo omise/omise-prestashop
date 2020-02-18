@@ -77,7 +77,7 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
         }
 
         if (!empty($c->error_message)) {
-            $paymentOrder->updateStateToBeCanceled(new Order($id_order));
+            $paymentOrder->updateStateToBeCanceled(new Order($id_order)); // TODO - check if this the right thing to be doing - can we not return to checkout?
             return;
         }
 

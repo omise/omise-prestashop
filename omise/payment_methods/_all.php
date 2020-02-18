@@ -174,7 +174,7 @@ class OmisePaymentMethod
 
         // check if charge failed
         if ($charge->isFailed()) {
-            $paymentOrder->updateStateToBeCanceled($order);
+            $paymentOrder->updateStateToBeCanceled($order); // TODO - check if this the right thing to be doing - can we not return to checkout?
             $controller->error_message = $charge->getErrorMessage();
             return;
         }
