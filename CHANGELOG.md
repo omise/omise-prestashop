@@ -1,5 +1,12 @@
 # Change Log
 
+## [[1.7.7] 2020-03-0x](https://github.com/omise/omise-prestashop/releases/tag/v1.7.7)
+- *`Added`* Fairly major rewrite of the plugin
+- *`Fixed`* Issue with Internet Banking images not appearing on PrestaShop 1.6
+- *`Added`* 'Citi Pay with Points' payment method
+- *`Added`* 'True Money' payment method
+- *`Fixed`* Issue with 'Omise Test Mode' banner disappearing when credit card payment option switched off
+
 ## [[1.7.6] 2019-11-07](https://github.com/omise/omise-prestashop/releases/tag/v1.7.6)
 - *`Fixed`* A small typo in the previous update was causing big issues. Fixed
 
