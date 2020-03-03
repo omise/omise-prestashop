@@ -50,7 +50,7 @@ class OmiseChargeClass
     }
 
     /**
-     * @param string/array $offsite The parameter used to specify simple offsite type, or array of type and additional params
+     * @param string|array $offsite The parameter used to specify simple offsite type, or array of type and additional params
      *
      * @return $this
      */
