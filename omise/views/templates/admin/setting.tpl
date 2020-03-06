@@ -56,7 +56,7 @@
 
       {foreach from=OmisePaymentMethods::$list item=method}
         {$dets = $methodObjects[$method]->getAdminDetails()}
-        {include file="{$method_admintemplate_path}_admin.tpl"}
+        {include file="{$method_admintemplate_path}_all.tpl"}
         {$adminTpl = $dets['adminTemplate']}
         {if $adminTpl ne ''}
           {include file="$method_admintemplate_path$adminTpl.tpl"}
