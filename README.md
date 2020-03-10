@@ -1,4 +1,4 @@
-<p align="center"><a href='https://www.omise.co'><img src='https://cdn.omise.co/assets/omise-logo-with-text.svg' height='60'></a></p>
+<p align="center"><a href='https://www.omise.co'><img style="max-height:60px; max-width:100%;" src='https://cdn.omise.co/assets/omise-logo-with-text.svg' height='60'></a></p>
 
 **Omise PrestaShop** is the official payment extension which provides support for Omise payment gateway for store builders working on the PrestaShop platform.
 
