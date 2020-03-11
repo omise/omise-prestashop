@@ -10,9 +10,9 @@ class OmisePaymentMethod_TrueMoney extends OmiseOffsitePaymentMethod
     const
         NAME = 'TrueMoney',
         PAYMENT_OPTION_NAME = 'omise-truemoney-payment',
-        DEFAULT_TITLE = 'True Money',
+        DEFAULT_TITLE = 'TrueMoney',
         TEMPLATE = 'truemoney_payment',
-        SWITCH_DESCRIPTION = 'Enables payments by True Money (currently only available in Thailand).'
+        SWITCH_DESCRIPTION = 'Enables payments by TrueMoney (currently only available in Thailand).'
     ;
 
     public static
