@@ -13,7 +13,7 @@
                   <input class="form-control" id="true_number" type="text" {if $initialPhone ne ''}value="{$initialPhone|escape:'html'}" {/if}maxlength="10" placeholder="{l s='Phone number' mod='omise'}">
                 </div>
               </div>
-              <button class="button btn btn-default standard-checkout button-medium" id="omiseInternetBankingCheckoutButton">
+              <button class="button btn btn-default standard-checkout button-medium" id="omiseTrueMoneyCheckoutButton">
                 <span>{l s='Submit Payment' mod='omise'}</span>
               </button>
             </form>
