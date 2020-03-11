@@ -10,7 +10,7 @@
             <form id="omiseTrueMoneyCheckoutForm" method="post" action="{$action|escape:'html'}">
               <div class="row">
                 <div class="form-group col-sm-3">
-                  <input class="form-control" id="true_number" type="text" {if $initialPhone ne ''}value="{$initialPhone|escape:'html'}" {/if}maxlength="10" placeholder="{l s='Phone number' mod='omise'}">
+                  <input class="form-control" id="truemoney_number" type="text" {if $initialPhone ne ''}value="{$initialPhone|escape:'html'}" {/if}maxlength="10" placeholder="{l s='Phone number' mod='omise'}">
                 </div>
               </div>
               <button class="button btn btn-default standard-checkout button-medium" id="omiseTrueMoneyCheckoutButton">
@@ -26,7 +26,7 @@
 
 <script>
   document.getElementById('omiseTrueMoneyCheckoutForm').onsubmit = function(event) {
-    var gotPhoneNumber = !!document.getElementById('true_number').value.trim();
+    var gotPhoneNumber = !!document.getElementById('truemoney_number').value.trim();
     gotPhoneNumber || window.omiseDisplayMessage('{l s='Please enter phone number before continuing.' js=1 mod='omise'}');
     return gotPhoneNumber;
   }

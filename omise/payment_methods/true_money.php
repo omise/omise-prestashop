@@ -30,7 +30,7 @@ class OmisePaymentMethod_TrueMoney extends OmiseOffsitePaymentMethod
     }
 
     public static function getSource() {
-        return array('type'=>'truemoney', 'phone_number'=>Tools::getValue('true_number'));
+        return array('type'=>'truemoney', 'phone_number'=>Tools::getValue('truemoney_number'));
     }
 
 }
