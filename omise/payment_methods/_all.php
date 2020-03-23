@@ -14,6 +14,10 @@ class OmisePaymentMethods
 class OmisePaymentMethod
 {
 
+    const
+        ADMIN_TEMPLATE = ''
+    ;
+
     public static
         $payModule,
         $context,
@@ -24,6 +28,18 @@ class OmisePaymentMethod
         $jqueryPlugins = array(),
         $restrictedToCurrencies = array()
     ;
+
+    // necessary for dealing with a deficiency in older Smarty version in PrestaShop 1.6
+    public static function getAdminDetails() {
+        return array(
+            'name' => static::NAME,
+            'title' => static::DEFAULT_TITLE,
+            'usedSettings' => static::$usedSettings,
+            'switchDescription' => static::SWITCH_DESCRIPTION,
+            'adminTemplate' => static::ADMIN_TEMPLATE,
+            'currencies' => static::$restrictedToCurrencies
+        );
+    }
 
     public static function display()
     {

@@ -7,7 +7,9 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
         NAME = 'Card',
         PAYMENT_OPTION_NAME = 'omise-card-payment',
         DEFAULT_TITLE = 'Pay by Credit / Debit Card',
-        TEMPLATE = "card_payment"
+        TEMPLATE = "card_payment",
+        ADMIN_TEMPLATE = 'card_admin',
+        SWITCH_DESCRIPTION = "Enable payments by credit and debit cards."
     ;
 
     public static

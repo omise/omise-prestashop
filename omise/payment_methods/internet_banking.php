@@ -12,7 +12,7 @@ class OmisePaymentMethod_InternetBanking extends OmiseOffsitePaymentMethod
         PAYMENT_OPTION_NAME = 'omise-internet-banking-payment',
         DEFAULT_TITLE = 'Internet Banking',
         TEMPLATE = 'internet_banking_payment',
-        CONTROLLER = 'internetbankingpayment'
+        SWITCH_DESCRIPTION = 'Enables customers of a bank to easily conduct financial transactions through a bank-operated website (only available in Thailand).'
     ;
 
     public static
