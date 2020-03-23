@@ -3,7 +3,7 @@
     <div class="box">
       <div class="row">
         <div class="col-sm-12">
-          <form id="omise-internet-banking-payment-form" method="post" action="{$link->getModuleLink('omise', 'internetbankingpayment', [], true)|escape:'html'}">
+          <form id="omise-internet-banking-payment-form" method="post" action="{$action|escape:'html'}">
             <ul class="omise-internet-banking">
               <li class="item">
                 <input id="omise-internet-banking-scb" name="offsite" type="radio" value="internet_banking_scb" autocomplete="off">
