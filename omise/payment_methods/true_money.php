@@ -16,7 +16,7 @@ class OmisePaymentMethod_TrueMoney extends OmiseOffsitePaymentMethod
     ;
 
     public static
-        $usedSettings = array('true_money_status'),
+        ////// $usedSettings = array('true_money_status')
         $restrictedToCurrencies = array('thb')
     ;
 

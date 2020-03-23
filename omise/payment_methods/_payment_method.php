@@ -4,7 +4,8 @@ class OmisePaymentMethod
 {
 
     const
-        ADMIN_TEMPLATE = ''
+        ADMIN_TEMPLATE = '',
+        STATUS_SETTING_KEY = ''
     ;
 
     public static
@@ -23,7 +24,7 @@ class OmisePaymentMethod
         return array(
             'name' => static::NAME,
             'title' => static::DEFAULT_TITLE,
-            'usedSettings' => static::$usedSettings,
+            'usedSettings' => self::allSettingKeys(),
             'switchDescription' => static::SWITCH_DESCRIPTION,
             'adminTemplate' => static::ADMIN_TEMPLATE,
             'currencies' => static::$restrictedToCurrencies
@@ -50,6 +51,14 @@ class OmisePaymentMethod
             'action' => static::getAction(),
             'omise_public_key' => self::$payModule->setting->getPublicKey()
         );
+    }
+
+    public static function statusSettingKey() {
+        return static::STATUS_SETTING_KEY ?: substr(strToLower(preg_replace('%([A-Z])([a-z])%', '_\1\2', static::NAME)),1) . '_status';
+    }
+
+    public static function allSettingKeys() {
+        return array_merge(array(static::statusSettingKey()), static::$usedSettings);
     }
 
     public static function getTitle()

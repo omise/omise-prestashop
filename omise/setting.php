@@ -38,7 +38,7 @@ class Setting
     {
         foreach(OmisePaymentMethods::$list as $method) {
             $class = OmisePaymentMethods::className($method);
-            $this->addUsedSettings($class::$usedSettings);
+            $this->addUsedSettings($class::allSettingKeys());
         }
     }
 

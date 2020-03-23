@@ -16,7 +16,6 @@ class OmisePaymentMethod_Alipay extends OmiseOffsitePaymentMethod
     ;
 
     public static
-        $usedSettings = array('alipay_status'),
         $restrictedToCurrencies = array('thb')
     ;
 

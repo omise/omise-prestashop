@@ -16,7 +16,6 @@ class OmisePaymentMethod_CitiPoints extends OmiseOffsitePaymentMethod
     ;
 
     public static
-        $usedSettings = array('citi_points_status'),
         $restrictedToCurrencies = array('thb')
     ;
 
