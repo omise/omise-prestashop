@@ -19,7 +19,7 @@ if (defined('_PS_MODULE_DIR_')) {
  * @see OmiseApiResource::genOptions() The function in library, Omise PHP, that uses this constant.
  */
 if (! defined('OMISE_API_VERSION')) {
-    define('OMISE_API_VERSION', '2015-11-17');
+    define('OMISE_API_VERSION', '2017-11-02');
 }
 
 /**

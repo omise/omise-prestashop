@@ -8,23 +8,24 @@
     "packages": [
         {
             "name": "omise/omise-php",
-            "version": "v2.9.1",
+            "version": "v2.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/omise/omise-php.git",
-                "reference": "707ac8614ea30a8bde1338f89dcff16129051ffd"
+                "reference": "5845e62c2580888f214b39eefb5cadf1a9d072a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/omise/omise-php/zipball/707ac8614ea30a8bde1338f89dcff16129051ffd",
-                "reference": "707ac8614ea30a8bde1338f89dcff16129051ffd",
+                "url": "https://api.github.com/repos/omise/omise-php/zipball/5845e62c2580888f214b39eefb5cadf1a9d072a2",
+                "reference": "5845e62c2580888f214b39eefb5cadf1a9d072a2",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": ">=5.4.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.4.*"
+                "phpunit/phpunit": "4.4.*",
+                "squizlabs/php_codesniffer": "3.*"
             },
             "type": "library",
             "autoload": {
@@ -38,18 +39,22 @@
             ],
             "authors": [
                 {
-                    "name": "omise",
-                    "email": "apps@omise.co"
+                    "name": "Omise and contributors",
+                    "homepage": "https://github.com/omise/omise-php/graphs/contributors"
                 }
             ],
-            "description": "Omise API PHP Lib",
-            "homepage": "https://github.com/omise/omise-php.git",
+            "description": "A PHP library designed specifically to connect with Omise API.",
+            "homepage": "https://www.omise.co",
             "keywords": [
-                "creditcard",
+                "alipay payment",
+                "credit card payment",
+                "internet banking payment",
+                "konbini payment",
                 "omise",
-                "payment"
+                "payment",
+                "payment processing"
             ],
-            "time": "2018-03-21T09:41:52+00:00"
+            "time": "2019-05-08T09:40:16+00:00"
         }
     ],
     "packages-dev": [],

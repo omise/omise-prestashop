@@ -50,7 +50,7 @@ class OmiseChargeClass
     }
 
     /**
-     * @param string $offsite The parameter used to specify a bank to create Omise internet banking charge.
+     * @param string/array $offsite The parameter used to specify simple offsite type, or array of type and additional params
      *
      * @return $this
      */
@@ -61,7 +61,7 @@ class OmiseChargeClass
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),
             'metadata' => $this->getMetadata(),
-            'offsite' => $offsiteType,
+            'source' => is_array($offsiteType) ? $offsiteType : array('type' => $offsiteType),
             'return_uri' => $this->getReturnUri(),
         );
 
