@@ -1,9 +1,0 @@
-{
-    "require-dev": {
-        "mockery/mockery": "dev-master"
-    },
-    "autoload": {
-        "classmap": ["omise/"],
-        "exclude-from-classmap": ["/omise/libraries/"]
-    }
-}

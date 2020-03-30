@@ -7,7 +7,9 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
         NAME = 'Card',
         PAYMENT_OPTION_NAME = 'omise-card-payment',
         DEFAULT_TITLE = 'Pay by Credit / Debit Card',
-        TEMPLATE = "card_payment"
+        TEMPLATE = "card_payment",
+        ADMIN_TEMPLATE = 'card_admin',
+        SWITCH_DESCRIPTION = "Enable payments by credit and debit cards."
     ;
 
     public static
@@ -45,33 +47,43 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
     public static function processPayment($controller, $context)
     {
         $c = $controller;
+        $omiseCharge = new OmiseChargeClass();
+        $paymentOrder = new PaymentOrder();
+
         $c->validateCart();
 
-        $c->payment_order->save(
-            $c->payment_order->getOrderStateProcessingInProgress(),
+        $paymentOrder->save(
+            $paymentOrder->getOrderStateProcessingInProgress(),
             self::getTitle()
         );
 
-        $c->parentPostProcess();
+        try {
+            $returnUri = self::getReturnUri($context->cart->id, $context->customer->secure_key);
+            $c->charge = $omiseCharge->create(Tools::getValue('omise_card_token'), $returnUri);
+        } catch (Exception $e) {
+            $c->error_message = $e->getMessage();
+            return;
+        }
+
+        if ($c->charge->isFailed()) {
+            $c->error_message = $c->charge->getErrorMessage();
+            return;
+        }
 
         $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}($context->cart->id);
 
         if (!empty($c->charge)) {
-            $c->payment_order->updatePaymentTransactionId($id_order, $c->charge->getId());
+            $paymentOrder->updatePaymentTransactionId($id_order, $c->charge->getId());
         }
 
         if (!empty($c->error_message)) {
-            $c->payment_order->updateStateToBeCanceled(new Order($id_order));
+            $paymentOrder->updateStateToBeCanceled(new Order($id_order)); // TODO - check if this the right thing to be doing - can we not return to checkout?
             return;
         }
 
         if (Tools::getValue('threedomainsecure') == '0') {
-            $c->payment_order->updateStateToBeSuccess(new Order($id_order));
-            $uri = 'index.php?controller=order-confirmation' .
-                '&id_cart=' . $context->cart->id .
-                '&id_module=' . $c->module->id .
-                '&id_order=' . $c->module->currentOrder .
-                '&key=' . $context->customer->secure_key;
+            $paymentOrder->updateStateToBeSuccess(new Order($id_order));
+            $uri = self::getOrderConfirmationUri($context->cart->id, $c->module->id, $c->module->currentOrder, $context->customer->secure_key);
         } else {
             $c->addOmiseTransaction($c->charge->getId(), $id_order);
             $uri = $c->charge->getAuthorizeUri();

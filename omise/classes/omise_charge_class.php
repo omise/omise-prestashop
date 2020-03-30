@@ -29,7 +29,7 @@ class OmiseChargeClass
      *
      * @return $this
      */
-    public function create($card_token)
+    public function create($card_token, $returnUri = '')
     {
         $charge_request = array(
             'amount' => $this->getAmount(),
@@ -41,7 +41,7 @@ class OmiseChargeClass
         );
 
         if ($this->setting->isThreeDomainSecureEnabled()) {
-            $charge_request['return_uri'] = $this->getReturnUri();
+            $charge_request['return_uri'] = $returnUri;
         }
 
         $this->charge_response = OmiseCharge::create($charge_request, '', $this->getSecretKey());
@@ -50,7 +50,7 @@ class OmiseChargeClass
     }
 
     /**
-     * @param string $offsite The parameter used to specify a bank to create Omise internet banking charge.
+     * @param string/array $offsite The parameter used to specify simple offsite type, or array of type and additional params
      *
      * @return $this
      */
@@ -61,8 +61,8 @@ class OmiseChargeClass
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),
             'metadata' => $this->getMetadata(),
-            'offsite' => $offsiteType,
-            'return_uri' => $this->getReturnUri(),
+            'source' => is_array($offsiteType) ? $offsiteType : array('type' => $offsiteType),
+            'return_uri' => $returnUri
         );
 
         $this->charge_response = OmiseCharge::create($charge_request, '', $this->getSecretKey());
@@ -128,23 +128,6 @@ class OmiseChargeClass
     protected function getMetadata()
     {
         return array('order_id' => Order::{PRESTASHOP_GET_ORDER_ID_METHOD}($this->context->cart->id));
-    }
-
-    /**
-     * Generate a PrestaShop site URL that is used to receive the redirect back from Omise API.
-     *
-     * @return string
-     */
-    protected function getReturnUri()
-    {
-        $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}($this->context->cart->id);
-        $module = Module::getInstanceByName(Omise::MODULE_NAME);
-
-        return $this->context->link->getModuleLink(Omise::MODULE_NAME, 'return', [], true) .
-            '?id_cart=' . $this->context->cart->id .
-            '&id_module=' . $module->id .
-            '&id_order=' . $id_order .
-            '&key=' . $this->context->customer->secure_key;
     }
 
     /**

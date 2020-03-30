@@ -3,20 +3,25 @@
 class OmiseOffsitePaymentMethod extends OmisePaymentMethod
 {
 
-    public static function processOffsitePayment($offsiteType, $controller, $context)
+    const TEMPLATE = 'simple_offsite_payment';
+
+    public static function processPayment($controller, $context)
     {
-        
+
         $c = $controller;
+        $omiseCharge = new OmiseChargeClass();
+        $paymentOrder = new PaymentOrder();
 
         $c->validateCart();
 
-        $c->payment_order->save(
-            $c->payment_order->getOrderStateProcessingInProgress(),
+        $paymentOrder->save(
+            $paymentOrder->getOrderStateProcessingInProgress(),
             self::getTitle()
         );
 
         try {
-            $c->charge = $c->omise_charge->createOffsite($offsiteType);
+            $returnUri = self::getReturnUri($context->cart->id, $context->customer->secure_key);
+            $c->charge = $omiseCharge->createOffsite(self::getOffsiteSourceDetail(), $returnUri);
         } catch (Exception $e) {
             $c->error_message = $e->getMessage();
             return;
@@ -24,7 +29,7 @@ class OmiseOffsitePaymentMethod extends OmisePaymentMethod
 
         $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}($context->cart->id);
 
-        $c->payment_order->updatePaymentTransactionId($id_order, $c->charge->getId());
+        $paymentOrder->updatePaymentTransactionId($id_order, $c->charge->getId());
 
         if ($c->charge->isFailed()) {
             $c->error_message = $c->charge->getErrorMessage();
@@ -37,6 +42,10 @@ class OmiseOffsitePaymentMethod extends OmisePaymentMethod
 
         $c->addOmiseTransaction($c->charge->getId(), $id_order);
         $c->setRedirectAfter($c->charge->getAuthorizeUri());
+    }
+
+    public static function getOffsiteSourceDetail() {
+        return method_exists(get_called_class(), 'getSource') ? static::getSource() : static::SOURCE;
     }
 
 }

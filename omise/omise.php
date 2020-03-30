@@ -77,17 +77,6 @@ class Omise extends PaymentModule
     }
 
     /**
-     * Display the message about the inapplicable checkout condition.
-     *
-     * @return string Return the rendered template output. (@see Smarty_Internal_TemplateBase::display())
-     */
-    protected function displayInapplicablePayment($title = null)
-    {
-        if ($title) $this->smarty->assign('title', $title);
-        return $this->display(__FILE__, 'inapplicable_payment.tpl');
-    }
-
-    /**
      * @return PrestaShop\PrestaShop\Core\Payment\PaymentOption
      */
     protected function generatePaymentOption($method)
@@ -99,11 +88,7 @@ class Omise extends PaymentModule
         $payment_option->setCallToActionText($class::getTitle());
         $payment_option->setModuleName($class::PAYMENT_OPTION_NAME);
 
-        if ($this->isCurrentCurrencyApplicable($class)) {
-            $payment_option->setForm($class::display());
-        } else {
-            $payment_option->setAdditionalInformation($this->displayInapplicablePayment());
-        }
+        $payment_option->setForm($class::display());
 
         return $payment_option;
     }
@@ -117,10 +102,18 @@ class Omise extends PaymentModule
 
         $smartyVars = array(
             'submit_action' => $this->setting->getSubmitAction(),
-            'webhooks_endpoint' => $this->getWebhooksEndpoint()
+            'webhooks_endpoint' => $this->getWebhooksEndpoint(),
+            'cfg' => array(),
+            'methodObjects' => array()
         );
 
-        foreach ($this->setting->all_settings as $settingName) $smartyVars[$settingName] = $this->setting->{$settingName}();
+        foreach ($this->setting->all_settings as $settingName) $smartyVars['cfg'][$settingName] = $this->setting->{$settingName}();
+        foreach(OmisePaymentMethods::$list as $method) {
+            $className = OmisePaymentMethods::className($method);
+            $smartyVars['methodObjects'][$method] = new $className();
+        }
+
+        $smartyVars['method_admintemplate_path'] = dirname(__FILE__).'/payment_methods/templates/';
 
         $this->smarty->assign($smartyVars);
 
@@ -162,7 +155,7 @@ class Omise extends PaymentModule
         if (count($resources['jqueryPlugins'])) $controller->addJqueryPlugin($resources['jqueryPlugins']);
 
         // Test mode warning
-        if ($controller->php_self == 'order' && $this->setting->isModuleEnabled() && $this->setting->isSandboxEnabled()) {
+        if ($controller->php_self == 'order' && $this->setting->isSandboxEnabled()) {
             $controller->addJS($this->_path . 'js/test_warn.js', true);
             $controller->addCSS($this->_path . 'css/omise_test_mode.css', 'all');
             return $this->display(__FILE__, 'omise_warning_message.tpl');
@@ -186,7 +179,7 @@ class Omise extends PaymentModule
         $payment_options = array();
 
         foreach($this->paymentMethodClassList as $class) {
-            if ($class::isEnabled()) $payment_options[] = $this->generatePaymentOption($class::NAME);
+            if ($class::isEnabled() && $this->isCurrentCurrencyApplicable($class)) $payment_options[] = $this->generatePaymentOption($class::NAME);
         }
 
         return count($payment_options) ? $payment_options : null;
@@ -203,7 +196,7 @@ class Omise extends PaymentModule
             if ($class::isEnabled()) {
                 $payment .= $this->isCurrentCurrencyApplicable($class) ?
                     $class::display() :
-                    $this->displayInapplicablePayment($this->l($class::getTitle()));
+                    '';
             }
         }
 
