@@ -8,13 +8,13 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
         PAYMENT_OPTION_NAME = 'omise-card-payment',
         DEFAULT_TITLE = 'Pay by Credit / Debit Card',
         TEMPLATE = "card_payment",
-        ADMIN_TEMPLATE = 'card_admin',
-        SWITCH_DESCRIPTION = "Enable payments by credit and debit cards."
+        ADMIN_TEMPLATE = 'card',
+        SWITCH_DESCRIPTION = "Enable payments by credit and debit cards.",
+        STATUS_SETTING_KEY = 'module_status'
     ;
 
     public static
         $usedSettings = array(
-            'module_status',
             'title',
             'three_domain_secure_status'
         )

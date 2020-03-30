@@ -113,7 +113,7 @@ class Omise extends PaymentModule
             $smartyVars['methodObjects'][$method] = new $className();
         }
 
-        $smartyVars['method_admintemplate_path'] = dirname(__FILE__).'/payment_methods/templates/';
+        $smartyVars['method_admintemplate_path'] = dirname(__FILE__).'/payment_methods/admin_templates/';
 
         $this->smarty->assign($smartyVars);
 
