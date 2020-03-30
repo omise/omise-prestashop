@@ -17,8 +17,8 @@
               </div>
               <div class="row">
                 <div class="form-group col-sm-12">
-                    <label for="omise_card_holder_name">{l s='Name on card' mod='omise'}</label>
-                    <input class="form-control" id="omise_card_holder_name" type="text" placeholder="{l s='Name on card' mod='omise'}">
+                    <label for="omise_card_name">{l s='Name on card' mod='omise'}</label>
+                    <input class="form-control" id="omise_card_name" type="text" placeholder="{l s='Name on card' mod='omise'}">
                   </div>
               </div>
               <div class="row">
@@ -59,8 +59,8 @@
                 </div>
               </div>
             </form>
-            <button class="button btn btn-default standard-checkout button-medium" id="omise_checkout_button" onclick="omiseCheckout();">
-              <span id="omise_checkout_text">{l s='Submit Payment' mod='omise'}</span>
+            <button class="button btn btn-default standard-checkout button-medium" id="omise_card_checkout_button" onclick="omiseCheckout();">
+              <span id="omise_card_checkout_text">{l s='Submit Payment' mod='omise'}</span>
             </button>
           </div>
         </div>
@@ -77,25 +77,30 @@
   // the JS work correctly when the checkout is in one-page mode. It would appear that
   // dynamically created script blocks do not run in the global context
 
+  window.omiseCardFields = [
+    'name',
+    'number',
+    'expiration_month',
+    'expiration_year',
+    'security_code'
+  ];
+
   window.omiseCheckout = function omiseCheckout() {
     if (typeof Omise === 'undefined') {
       alert('{l s='Unable to process the payment, loading the external card processing library is failed. Please contact the merchant.' mod='omise'}');
       return false;
     }
 
-    omiseLockCheckoutForm(omiseCheckoutForm);
+    omiseSetCardFormLockedState(omiseCheckoutForm, true);
 
-    const card = {
-      name: omiseCheckoutForm.name.value,
-      number: omiseCheckoutForm.number.value,
-      expiration_month: omiseCheckoutForm.expiration_month.value,
-      expiration_year: omiseCheckoutForm.expiration_year.value,
-      security_code: omiseCheckoutForm.security_code.value,
-    };
+    const card = window.omiseCardFields.reduce(function(obj, field) {
+      obj[field] = omiseCheckoutForm[field].value;
+      return obj;
+    }, {});
 
     Omise.setPublicKey('{$omise_public_key}');
     Omise.createToken('card', card, omiseCreateTokenCallback);
-  }
+  };
 
   window.omiseCreateTokenCallback = function omiseCreateTokenCallback(statusCode, response) {
     if (statusCode === 200) {
@@ -103,37 +108,18 @@
       document.getElementById('omise_checkout_form').submit();
     } else {
       alert(response.message);
-      omiseUnlockCheckoutForm(omiseCheckoutForm);
+      omiseSetCardFormLockedState(omiseCheckoutForm, false);
     }
   };
 
-  window.omiseCheckoutForm = {
-    name: document.getElementById('omise_card_holder_name'),
-    number: document.getElementById('omise_card_number'),
-    expiration_month: document.getElementById('omise_card_expiration_month'),
-    expiration_year: document.getElementById('omise_card_expiration_year'),
-    security_code: document.getElementById('omise_card_security_code'),
-    checkout_button: document.getElementById('omise_checkout_button'),
-    checkout_text: document.getElementById('omise_checkout_text'),
-  };
+  window.omiseCheckoutForm = window.omiseCardFields.concat(['checkout_button', 'checkout_text']).reduce(function(obj, field) {
+    obj[field] = document.getElementById('omise_card_' + field);
+    return obj;
+  }, {});
 
-  window.omiseLockCheckoutForm = function omiseLockCheckoutForm(form) {
-    form.name.disabled = true;
-    form.number.disabled = true;
-    form.expiration_month.disabled = true;
-    form.expiration_year.disabled = true;
-    form.security_code.disabled = true;
-    form.checkout_button.disabled = true;
-    form.checkout_text.innerHTML = '{l s='Processing' mod='omise'}';
-  };
+  window.omiseSetCardFormLockedState = function omiseSetCardFormLockedState(form, state) {
+    window.omiseCardFields.concat(['checkout_button']).map(function(field) { form[field].disabled = state; });
+    form.checkout_text.innerHTML = state ? '{l s='Processing' mod='omise'}' : '{l s='Submit Payment' mod='omise'}';
+  }
 
-  window.omiseUnlockCheckoutForm = function omiseUnlockCheckoutForm(form) {
-    form.name.disabled = false;
-    form.number.disabled = false;
-    form.expiration_month.disabled = false;
-    form.expiration_year.disabled = false;
-    form.security_code.disabled = false;
-    form.checkout_button.disabled = false;
-    form.checkout_text.innerHTML = '{l s='Submit Payment' mod='omise'}';
-  };
 </script>

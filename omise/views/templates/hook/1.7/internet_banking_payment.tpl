@@ -50,67 +50,36 @@
   </div>
 </div>
 
-<div id="omise-message" hidden="hidden">
-  <p class="fancybox-error">{l s='Please select a bank before continuing.' js=1 mod='omise'}</p>
-</div>
-
 <script>
   (function() {
-    var omiseDisplayMessage = function omiseDisplayMessage(message) {
-      if ($.prototype.fancybox) {
-        $.fancybox.open([
-            {
-              type: 'inline',
-              autoScale: true,
-              minHeight: 30,
-              content: $('#omise-message').html(),
-            }],
-          {
-            padding: 0,
-          });
-      } else {
-        alert(message);
-      }
-    };
 
-    var omiseHasAnyBankSelected = function omiseHasAnyBankSelected() {
-      var selectedBank = document.getElementsByName('offsite');
+    function omiseHasAnyBankSelected() {
+      return Array.prototype.slice.call(document.getElementsByName('offsite')).some(function(el){ return el.checked; });
+    }
 
-      for (var i = 0; i < selectedBank.length; i++) {
-        if (selectedBank[i].checked == true) {
-          return true;
+    function isOmiseInternetBankingOptionSelected() {
+      return document.querySelector('[data-module-name="omise-internet-banking-payment"]').checked;
+    }
+
+    function setup() {
+      document.getElementById('payment-confirmation').getElementsByTagName('button')[0].addEventListener('click', handlePaymentConfirmClick)
+    }
+
+    function handlePaymentConfirmClick(event) {
+      if (isOmiseInternetBankingOptionSelected()) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!omiseHasAnyBankSelected()) {
+          omiseDisplayMessage('{l s='Please select a bank before continuing.' js=1 mod='omise'}');
+          return false;
         }
+
+        document.getElementById('omise-internet-banking-payment-form').submit();
       }
+    }
 
-      return false;
-    };
+    document.addEventListener('DOMContentLoaded', setup);
 
-    var isOmiseInternetBankingOptionSelected = function isOmiseInternetBankingOptionSelected() {
-      var omiseInternetBankingOption = document.querySelector('[data-module-name="omise-internet-banking-payment"]');
-
-      if (omiseInternetBankingOption.checked) {
-        return true;
-      }
-
-      return false;
-    };
-
-    document.addEventListener('DOMContentLoaded', function () {
-      var paymentConfirmationButton = document.getElementById('payment-confirmation').getElementsByTagName('button')[0];
-
-      paymentConfirmationButton.addEventListener('click', function (event) {
-        if (isOmiseInternetBankingOptionSelected()) {
-          event.preventDefault();
-          event.stopPropagation();
-
-          if (omiseHasAnyBankSelected() == false) {
-            omiseDisplayMessage('{l s='Please select a bank before continuing.' js=1 mod='omise'}');
-            return false;
-          }
-
-          document.getElementById('omise-internet-banking-payment-form').submit();
-        }
-      });
-    });
   })();
 </script>
