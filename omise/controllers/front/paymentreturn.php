@@ -7,12 +7,12 @@ if (defined('_PS_MODULE_DIR_')) {
     require_once _PS_MODULE_DIR_ . 'omise/controllers/front/base.php';
 }
 
-class OmisePaymentMethodModuleFrontController extends OmiseBasePaymentModuleFrontController
+class OmisePaymentReturnModuleFrontController extends OmiseBasePaymentModuleFrontController
 {
     public function postProcess()
     {
         $class = OmisePaymentMethods::className(Tools::getValue('type'));
-        $class::processPayment($this, $this->context);
+        $class::handleReturn($this, $this->context);
     }
 
 }

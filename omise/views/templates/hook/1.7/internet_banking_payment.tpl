@@ -54,33 +54,32 @@
   (function() {
 
     function omiseHasAnyBankSelected() {
-      var selectedBank = document.getElementsByName('offsite');
-      for (var i = 0; i < selectedBank.length; i++) {
-        if (selectedBank[i].checked) return true;
-      }
-      return false;
+      return Array.prototype.slice.call(document.getElementsByName('offsite')).some(function(el){ return el.checked; });
     }
 
     function isOmiseInternetBankingOptionSelected() {
       return document.querySelector('[data-module-name="omise-internet-banking-payment"]').checked;
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-      var paymentConfirmationButton = document.getElementById('payment-confirmation').getElementsByTagName('button')[0];
+    function setup() {
+      document.getElementById('payment-confirmation').getElementsByTagName('button')[0].addEventListener('click', handlePaymentConfirmClick)
+    }
 
-      paymentConfirmationButton.addEventListener('click', function (event) {
-        if (isOmiseInternetBankingOptionSelected()) {
-          event.preventDefault();
-          event.stopPropagation();
+    function handlePaymentConfirmClick(event) {
+      if (isOmiseInternetBankingOptionSelected()) {
+        event.preventDefault();
+        event.stopPropagation();
 
-          if (!omiseHasAnyBankSelected()) {
-            omiseDisplayMessage('{l s='Please select a bank before continuing.' js=1 mod='omise'}');
-            return false;
-          }
-
-          document.getElementById('omise-internet-banking-payment-form').submit();
+        if (!omiseHasAnyBankSelected()) {
+          omiseDisplayMessage('{l s='Please select a bank before continuing.' js=1 mod='omise'}');
+          return false;
         }
-      });
-    });
+
+        document.getElementById('omise-internet-banking-payment-form').submit();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', setup);
+
   })();
 </script>

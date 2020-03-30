@@ -7,8 +7,8 @@
             <h3>{l s=$omise_title mod='omise'}</h3>
           </div>
           <div class="col-sm-12">
-            <form id="omiseAlipayCheckoutForm" method="post" action="{$action|escape:'html'}">
-              <button class="button btn btn-default standard-checkout button-medium" id="omiseAlipayCheckoutButton">
+            <form id="omise{$payment_method_name|escape:'html'}CheckoutForm" method="post" action="{$action|escape:'html'}">
+              <button class="button btn btn-default standard-checkout button-medium" id="omise{$payment_method_name|escape:'html'}CheckoutButton">
                 <span>{l s='Submit Payment' mod='omise'}</span>
               </button>
             </form>
