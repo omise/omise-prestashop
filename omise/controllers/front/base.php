@@ -19,7 +19,7 @@ if (defined('_PS_MODULE_DIR_')) {
  * @see OmiseApiResource::genOptions() The function in library, Omise PHP, that uses this constant.
  */
 if (! defined('OMISE_API_VERSION')) {
-    define('OMISE_API_VERSION', '2015-11-17');
+    define('OMISE_API_VERSION', '2017-11-02');
 }
 
 /**
@@ -40,21 +40,17 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         $charge,
         $display_column_left = false,
         $error_message,
-        $omise_charge,
-        $payment_order
+        $order_reference
     ;
     protected
         $omise_transaction_model,
-        $order_reference,
         $setting
     ;
 
     public function __construct()
     {
         parent::__construct();
-        $this->omise_charge = new OmiseChargeClass();
         $this->omise_transaction_model = new OmiseTransactionModel();
-        $this->payment_order = new PaymentOrder();
         $this->setting = new Setting();
     }
 
@@ -92,26 +88,6 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
     /**
      * Override parent method.
      *
-     * @see FrontControllerCore::postProcess()
-     */
-    public function postProcess()
-    {
-        try {
-            $this->charge = $this->omise_charge->create(Tools::getValue('omise_card_token'));
-        } catch (Exception $e) {
-            $this->error_message = $e->getMessage();
-            return;
-        }
-
-        if ($this->charge->isFailed()) {
-            $this->error_message = $this->charge->getErrorMessage();
-            return;
-        }
-    }
-
-    /**
-     * Override parent method.
-     *
      * @see FrontControllerCore::redirect()
      */
     public function redirect()
@@ -132,11 +108,4 @@ abstract class OmiseBasePaymentModuleFrontController extends ModuleFrontControll
         }
     }
 
-    /**
-     * @param \OmiseTransactionModel $omise_transaction_model The instance of class, OmiseTransactionModel.
-     */
-    public function setOmiseTransactionModel($omise_transaction_model)
-    {
-        $this->omise_transaction_model = $omise_transaction_model;
-    }
 }

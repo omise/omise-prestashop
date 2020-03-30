@@ -18,13 +18,13 @@ class OmisePaymentMethod_InternetBanking extends OmiseOffsitePaymentMethod
     public static
         $usedSettings = array('internet_banking_status'),
         $cssFiles = array('omise_internet_banking.css'),
+        $jsFiles = array('message.js'),
         $jqueryPlugins = array('fancybox'),
         $restrictedToCurrencies = array('thb')
     ;
 
-    public static function processPayment($controller, $context)
-    {
-        parent::processOffsitePayment(Tools::getValue('offsite'), $controller, $context);
+    public static function getSource() {
+        return Tools::getValue('offsite');
     }
-
+    
 }

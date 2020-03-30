@@ -155,7 +155,7 @@ class Omise extends PaymentModule
         if (count($resources['jqueryPlugins'])) $controller->addJqueryPlugin($resources['jqueryPlugins']);
 
         // Test mode warning
-        if ($controller->php_self == 'order' && $this->setting->isModuleEnabled() && $this->setting->isSandboxEnabled()) {
+        if ($controller->php_self == 'order' && $this->setting->isSandboxEnabled()) {
             $controller->addJS($this->_path . 'js/test_warn.js', true);
             $controller->addCSS($this->_path . 'css/omise_test_mode.css', 'all');
             return $this->display(__FILE__, 'omise_warning_message.tpl');
