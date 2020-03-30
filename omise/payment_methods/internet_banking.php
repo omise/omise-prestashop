@@ -23,9 +23,8 @@ class OmisePaymentMethod_InternetBanking extends OmiseOffsitePaymentMethod
         $restrictedToCurrencies = array('thb')
     ;
 
-    public static function processPayment($controller, $context)
-    {
-        parent::processOffsitePayment(Tools::getValue('offsite'), $controller, $context);
+    public static function getSource() {
+        return Tools::getValue('offsite');
     }
-
+    
 }
