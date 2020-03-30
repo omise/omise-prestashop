@@ -6,10 +6,12 @@ if (! defined('_PS_VERSION_')) {
 class Setting
 {
     
-    const PREFIX = 'omise_';
+    const
+        PREFIX = 'omise_',
+        SUBMIT_ACTION = 'omise_save_setting'
+    ;
 
-    protected
-        $submit_action = 'omise_save_setting',
+    public
         $all_settings = array(
             'module_status',
             'sandbox_status',
@@ -17,12 +19,42 @@ class Setting
             'test_secret_key',
             'live_public_key',
             'live_secret_key',
-            'title',
-            'three_domain_secure_status',
-            'internet_banking_status',
-            'alipay_status'
+            'title'
         )
     ;
+
+    protected
+        $callToCFG = array(
+            // retrieve normal xxx_yyy_zzz config values by calling getXxxYyyZzz
+            array( 'match'=>'%^get[A-Z].*$%', 'find'=>array('%([A-Z])([a-z])%', '%get_%'), 'repl'=>array('_\1\2', '') ),
+            // retrieve status xxx_yyy_zzz config values by calling isXxxYyyZzzEnabled
+            array( 'match'=>'%^is[A-Z].*Enabled$%', 'find'=>array('%([A-Z])([a-z])%', '%^is_(.*)%', '%_Enabled$%'), 'repl'=>array('_\1\2', '\1', '_status')),
+            // temp to return setting values just using their internal config name
+            array( 'match'=>'%^.*$%', 'find'=>array(), 'repl'=>array() )
+        )
+    ;
+
+    public function __construct()
+    {
+        foreach(OmisePaymentMethods::$list as $method) {
+            $class = OmisePaymentMethods::className($method);
+            $this->addUsedSettings($class::$usedSettings);
+        }
+    }
+
+    /**
+     * Get a setting based on the name of the method called if there is no explicitly declared method
+     */
+    public function __call($method, $args)
+    {
+        foreach ($this->callToCFG as $d) {
+            if (preg_match($d['match'], $method))  {
+                $settingName = strToLower(preg_replace($d['find'], $d['repl'], $method));
+                if (in_array($settingName, $this->all_settings)) return $this->getConfig($settingName);
+            }
+        }
+        trigger_error('Call to undefined method '.__CLASS__.'::'.$method.'()', E_USER_ERROR);
+    }
 
     /**
      * Get an Omise setting value from config
@@ -30,6 +62,14 @@ class Setting
     protected function getConfig($settingName)
     {
         return Configuration::get(Setting::PREFIX.$settingName);
+    }
+
+    /**
+     * Add setting names to list to be saved/used
+     */
+    public function addUsedSettings($settings)
+    {
+        $this->all_settings = array_unique(array_merge($this->all_settings, $settings));
     }
 
     /**
@@ -41,27 +81,7 @@ class Setting
     }
 
     /**
-     * @return string
-     */
-    public function getLivePublicKey()
-    {
-        return $this->getConfig('live_public_key');
-    }
-
-    /**
-     * @return string
-     */
-    public function getLiveSecretKey()
-    {
-        return $this->getConfig('live_secret_key');
-    }
-
-    /**
-     * Return the public key by checking whether
-     * the current setting for sandbox status is enabled or disabled.
-     *
-     * Return the TEST public key, if the sandbox status is enabled (testing mode).
-     * Return the LIVE public key, if the sandbox status is disabled (live mode).
+     * Return appropriate test/live public key based on sandbox setting
      *
      * @return string
      */
@@ -71,11 +91,7 @@ class Setting
     }
 
     /**
-     * Return the secret key by checking whether
-     * the current setting for sandbox status is enabled or disabled.
-     *
-     * Return the TEST secret key, if the sandbox status is enabled (testing mode).
-     * Return the LIVE secret key, if the sandbox status is disabled (live mode).
+     * Return appropriate test/live secret key based on sandbox setting
      *
      * @return string
      */
@@ -89,71 +105,7 @@ class Setting
      */
     public function getSubmitAction()
     {
-        return $this->submit_action;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTestPublicKey()
-    {
-        return $this->getConfig('test_public_key');
-    }
-
-    /**
-     * @return string
-     */
-    public function getTestSecretKey()
-    {
-        return $this->getConfig('test_secret_key');
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->getConfig('title');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isInternetBankingEnabled()
-    {
-        return !!$this->getConfig('internet_banking_status');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAlipayEnabled()
-    {
-        return !!$this->getConfig('alipay_status');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isModuleEnabled()
-    {
-        return !!$this->getConfig('module_status');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSandboxEnabled()
-    {
-        return !!$this->getConfig('sandbox_status');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isThreeDomainSecureEnabled()
-    {
-        return !!$this->getConfig('three_domain_secure_status');
+        return Setting::SUBMIT_ACTION;
     }
 
     /**
