@@ -5,7 +5,7 @@ class OmiseOffsitePaymentMethod extends OmisePaymentMethod
 
     const TEMPLATE = 'simple_offsite_payment';
 
-    public static function processPayment($controller, $context)
+    public static function processPayment($controller)
     {
 
         $c = $controller;
@@ -20,14 +20,14 @@ class OmiseOffsitePaymentMethod extends OmisePaymentMethod
         );
 
         try {
-            $returnUri = self::getReturnUri($context->cart->id, $context->customer->secure_key);
+            $returnUri = self::getReturnUri(self::$context->cart->id, self::$context->customer->secure_key);
             $c->charge = $omiseCharge->createOffsite(self::getOffsiteSourceDetail(), $returnUri);
         } catch (Exception $e) {
             $c->error_message = $e->getMessage();
             return;
         }
 
-        $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}($context->cart->id);
+        $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}(self::$context->cart->id);
 
         $paymentOrder->updatePaymentTransactionId($id_order, $c->charge->getId());
 
