@@ -20,7 +20,7 @@ Submit your requirement as an issue to [GitHub's issue channel](https://github.c
 
 The instructions below will guide you through all the steps in installing the module.
 
-1. Download the [latest version of Omise PrestaShop](https://github.com/omise/omise-prestashop/releases/download/v1.7.7/omise-prestashop-v1.7.7.zip).
+1. Download the [latest version of Omise PrestaShop](https://github.com/omise/omise-prestashop/releases/download/v1.7.8/omise-prestashop-v1.7.8.zip).
 
 2. Login to your PrestaShop back office and go to **Modules & Services**.
 

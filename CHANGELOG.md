@@ -1,6 +1,9 @@
 # Change Log
 
-## [[1.7.7] 2020-03-0x](https://github.com/omise/omise-prestashop/releases/tag/v1.7.7)
+## [[1.7.8] 2020-03-31](https://github.com/omise/omise-prestashop/releases/tag/v1.7.8)
+- *`Fixed`* Small issue with TrueMoney fixed
+
+## [[1.7.7] 2020-03-30](https://github.com/omise/omise-prestashop/releases/tag/v1.7.7)
 - *`Added`* Fairly major rewrite of the plugin
 - *`Fixed`* Issue with Internet Banking images not appearing on PrestaShop 1.6
 - *`Added`* 'Citi Pay with Points' payment method
