@@ -143,7 +143,7 @@ class OmisePaymentMethod
 
     }
 
-    public static function handleReturn($controller, $context)
+    public static function handleReturn($controller)
     {
         $cartId = Tools::getValue('id_cart');
         $moduleId = Tools::getValue('id_module');

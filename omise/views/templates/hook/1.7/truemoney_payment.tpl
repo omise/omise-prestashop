@@ -6,7 +6,7 @@
           <form id="omiseTrueMoneyCheckoutForm" method="post" action="{$action|escape:'html'}">
             <div class="row">
               <div class="form-group col-sm-4">
-                <input class="form-control" id="truemoney_number" type="text" {if $initialPhone ne ''}value="{$initialPhone|escape:'html'}" {/if}maxlength="10" placeholder="{l s='Phone number' mod='omise'}">
+                <input class="form-control" id="truemoney_number" name="truemoney_number" type="text" {if $initialPhone ne ''}value="{$initialPhone|escape:'html'}" {/if}maxlength="10" placeholder="{l s='Phone number' mod='omise'}">
               </div>
             </div>
           </form>
