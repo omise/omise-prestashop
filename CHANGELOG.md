@@ -1,5 +1,8 @@
 # Change Log
 
+## [[1.7.9] 2020-04-09](https://github.com/omise/omise-prestashop/releases/tag/v1.7.9)
+- *`Fixed`* Small issue with HTTPS at checkout
+
 ## [[1.7.8] 2020-03-31](https://github.com/omise/omise-prestashop/releases/tag/v1.7.8)
 - *`Fixed`* Small issue with TrueMoney fixed
 

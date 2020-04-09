@@ -72,7 +72,7 @@ class OmisePaymentMethod
         return count(static::$restrictedToCurrencies) ? in_array($curr, static::$restrictedToCurrencies) : true;
     }
 
-    public static function getLink($method, $params = [], $controller = 'paymentmethod', $ssl = false) 
+    public static function getLink($method, $params = [], $controller = 'paymentmethod', $ssl = true) 
     {
         return self::$context->link->getModuleLink(Omise::MODULE_NAME, $controller, array_merge($params, array('type' => $method)), $ssl);
     }
