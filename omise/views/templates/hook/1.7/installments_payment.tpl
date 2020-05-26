@@ -3,46 +3,55 @@
     <div class="box">
       <div class="row">
         <div class="col-sm-12">
-          <form id="omise-internet-banking-payment-form" method="post" action="{$action|escape:'html'}">
+          <form id="omise-installments-payment-form" method="post" action="{$action|escape:'html'}">
             <ul class="omise-internet-banking">
               <li class="item">
-                <input id="omise-internet-banking-scb" name="offsite" type="radio" value="internet_banking_scb" autocomplete="off">
-                <label for="omise-internet-banking-scb">
-                  <div class="omise-logo-wrapper scb">
-                    <img src="{$urls.base_url}/modules/omise/img/scb.svg" class="scb">
-                  </div>
-                  <span class="title">{l s='Siam Commercial Bank' mod='omise'}</span>
-                </label>
-              </li>
-              <li class="item">
-                <input id="omise-internet-banking-ktb" name="offsite" type="radio" value="internet_banking_ktb" autocomplete="off">
-                <label for="omise-internet-banking-ktb">
-                  <div class="omise-logo-wrapper ktb">
-                    <img src="{$urls.base_url}/modules/omise/img/ktb.svg" class="ktb">
-                  </div>
-                  <span class="title">{l s='Krungthai Bank' mod='omise'}</span>
-                </label>
-              </li>
-              <li class="item">
-                <input id="omise-internet-banking-bay" name="offsite" type="radio" value="internet_banking_bay" autocomplete="off">
-                <label for="omise-internet-banking-bay">
+                <input id="omise-installments-bay" name="offsite" type="radio" value="installment_bay" autocomplete="off">
+                <label for="omise-installments-bay">
                   <div class="omise-logo-wrapper bay">
                     <img src="{$urls.base_url}/modules/omise/img/bay.svg" class="bay">
                   </div>
-                  <span class="title">{l s='Krungsri Bank' mod='omise'}</span>
+                  <span class="title">{l s='Krungsri' mod='omise'}</span>
                 </label>
               </li>
               <li class="item">
-                <input id="omise-internet-banking-bbl" name="offsite" type="radio" value="internet_banking_bbl" autocomplete="off">
-                <label for="omise-internet-banking-bbl">
+                <input id="omise-installments-bbl" name="offsite" type="radio" value="installment_bbl" autocomplete="off">
+                <label for="omise-installments-bbl">
                   <div class="omise-logo-wrapper bbl">
                     <img src="{$urls.base_url}/modules/omise/img/bbl.svg" class="bbl">
                   </div>
                   <span class="title">{l s='Bangkok Bank' mod='omise'}</span>
                 </label>
               </li>
+              <li class="item">
+                <input id="omise-installments-firstchoice" name="offsite" type="radio" value="installment_first_choice" autocomplete="off">
+                <label for="omise-installments-firstchoice">
+                  <div class="omise-logo-wrapper firstchoice">
+                    <img src="{$urls.base_url}/modules/omise/img/firstchoice.svg" class="firstchoice">
+                  </div>
+                  <span class="title">{l s='First Choice' mod='omise'}</span>
+                </label>
+              </li>
+              <li class="item">
+                <input id="omise-installments-kbank" name="offsite" type="radio" value="installment_kbank" autocomplete="off">
+                <label for="omise-installments-kbank">
+                  <div class="omise-logo-wrapper kbank">
+                    <img src="{$urls.base_url}/modules/omise/img/kbank.svg" class="kbank">
+                  </div>
+                  <span class="title">{l s='KBank' mod='omise'}</span>
+                </label>
+              </li>
+              <li class="item">
+                <input id="omise-installments-ktc" name="offsite" type="radio" value="installment_ktc" autocomplete="off">
+                <label for="omise-installments-ktc">
+                  <div class="omise-logo-wrapper ktc">
+                    <img src="{$urls.base_url}/modules/omise/img/ktc.svg" class="ktc">
+                  </div>
+                  <span class="title">{l s='KTC' mod='omise'}</span>
+                </label>
+              </li>
             </ul>
-            <div class="fee-warning"><label>{l s='Your bank may charge a small fee for internet banking payments.' mod='omise'}</label></div>
+            {* <div class="fee-warning"><label>{l s='Your bank may charge a small fee for internet banking payments.' mod='omise'}</label></div> *}
           </form>
         </div>
       </div>

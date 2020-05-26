@@ -7,47 +7,58 @@
             <h3>{l s=$omise_title mod='omise'}</h3>
           </div>
           <div class="col-sm-12">
-            <form id="omiseInternetBankingCheckoutForm" method="post" action="{$action|escape:'html'}">
+            <form id="omiseInstallmentsCheckoutForm" method="post" action="{$action|escape:'html'}">
               <ul class="omise-internet-banking">
                 <li class="item">
-                  <input class="no-uniform" id="omiseInternetBankingScb" name="offsite" type="radio" value="internet_banking_scb" autocomplete="off">
-                  <label for="omiseInternetBankingScb">
-                    <div class="omise-logo-wrapper scb">
-                      <img src="{$base_dir}/modules/omise/img/scb.svg" class="scb">
-                    </div>
-                    <span class="title">{l s='Siam Commercial Bank' mod='omise'}</span><br>
-                  </label>
-                </li>
-                <li class="item">
-                  <input class="no-uniform" id="omiseInternetBankingKtb" name="offsite" type="radio" value="internet_banking_ktb" autocomplete="off">
-                  <label for="omiseInternetBankingKtb">
-                    <div class="omise-logo-wrapper ktb">
-                      <img src="{$base_dir}/modules/omise/img/ktb.svg" class="ktb">
-                    </div>
-                    <span class="title">{l s='Krungthai Bank' mod='omise'}</span><br>
-                  </label>
-                </li>
-                <li class="item">
-                  <input class="no-uniform" id="omiseInternetBankingBay" name="offsite" type="radio" value="internet_banking_bay" autocomplete="off">
-                  <label for="omiseInternetBankingBay">
+                  <input class="no-uniform" id="omiseInstallmentsBay" name="offsite" type="radio" value="installment_bay" autocomplete="off">
+                  <label for="omiseInstallmentsBay">
                     <div class="omise-logo-wrapper bay">
                       <img src="{$base_dir}/modules/omise/img/bay.svg" class="bay">
                     </div>
-                    <span class="title">{l s='Krungsri Bank' mod='omise'}</span><br>
+                    <span class="title">{l s='Krungsri' mod='omise'}</span><br>
                   </label>
                 </li>
                 <li class="item">
-                  <input class="no-uniform" id="omiseInternetBankingBbl" name="offsite" type="radio" value="internet_banking_bbl" autocomplete="off">
-                  <label for="omiseInternetBankingBbl">
+                  <input class="no-uniform" id="omiseInstallmentsBbl" name="offsite" type="radio" value="installment_bbl" autocomplete="off">
+                  <label for="omiseInstallmentsBbl">
                     <div class="omise-logo-wrapper bbl">
                       <img src="{$base_dir}/modules/omise/img/bbl.svg" class="bbl">
                     </div>
                     <span class="title">{l s='Bangkok Bank' mod='omise'}</span><br>
                   </label>
                 </li>
+                <li class="item">
+                  <input class="no-uniform" id="omiseInstallmentsFirstChoice" name="offsite" type="radio" value="installment_first_choice" autocomplete="off">
+                  <label for="omiseInstallmentsFirstChoice">
+                    <div class="omise-logo-wrapper first_choice">
+                      <img src="{$base_dir}/modules/omise/img/firstchoice.svg" class="firstchoice">
+                    </div>
+                    <span class="title">{l s='First Choice' mod='omise'}</span><br>
+                  </label>
+                </li>
+                <li class="item">
+                  <input class="no-uniform" id="omiseInstallmentsKbank" name="offsite" type="radio" value="installment_kbank" autocomplete="off">
+                  <label for="omiseInstallmentsKbank">
+                    <div class="omise-logo-wrapper kbank">
+                      <img src="{$base_dir}/modules/omise/img/kbank.svg" class="kbank">
+                    </div>
+                    <span class="title">{l s='KBank' mod='omise'}</span><br>
+                  </label>
+                </li>
+                <li class="item">
+                  <input class="no-uniform" id="omiseInstallmentsKtc" name="offsite" type="radio" value="installment_ktc" autocomplete="off">
+                  <label for="omiseInstallmentsKtc">
+                    <div class="omise-logo-wrapper ktc">
+                      <img src="{$base_dir}/modules/omise/img/ktc.svg" class="ktc">
+                    </div>
+                    <span class="title">{l s='KTC' mod='omise'}</span><br>
+                  </label>
+                </li>
               </ul>
-              <div class="fee-warning"><label>{l s='Your bank may charge a small fee for internet banking payments.' mod='omise'}</label></div>
-              <button class="button btn btn-default standard-checkout button-medium" id="omiseInternetBankingCheckoutButton">
+
+              {* <div class="fee-warning"><label>{l s='Your bank may charge a small fee for installment payments.' mod='omise'}</label></div> *}
+
+              <button class="button btn btn-default standard-checkout button-medium" id="omiseInstallmentsCheckoutButton">
                 <span>{l s='Submit Payment' mod='omise'}</span>
               </button>
             </form>
@@ -71,19 +82,19 @@
     return Array.prototype.slice.call(document.getElementsByName('offsite')).some(function(el) { return el.checked; });
   }
 
-  window.omiseInternetBankingCheckout = function omiseInternetBankingCheckout(event) {
+  window.omiseInstallmentsCheckout = function omiseInstallmentsCheckout(event) {
     event.preventDefault();
     if (!omiseHasAnyBankSelected()) {
       omiseDisplayMessage(omise_msg_select_bank);
       return false;
     }
-    document.getElementById('omiseInternetBankingCheckoutForm').submit();
+    document.getElementById('omiseInstallmentsCheckoutForm').submit();
   }
 
   /**
    * Remove the Uniform style.
    *
-   * To display the list of banks at the Omise internet banking payment method, currently, it uses the similar
+   * To display the list of banks at the Omise installment payment method, currently, it uses the similar
    * style sheet with others Omise plugins to remain the display consistency.
    *
    * But PrestaShop uses a jQuery plugin, Uniform, to style the elements. This plugin adds additional elements and it
@@ -101,7 +112,7 @@
     $.uniform.restore('.no-uniform');
   }
 
-  document.getElementById('omiseInternetBankingCheckoutButton').addEventListener('click', window.omiseInternetBankingCheckout);
+  document.getElementById('omiseInstallmentsCheckoutButton').addEventListener('click', window.omiseInstallmentsCheckout);
   window.addEventListener('load', window.omiseRestoreUniformStyle);
   window.addEventListener('resize', window.omiseRestoreUniformStyle);
   window.setTimeout(window.omiseRestoreUniformStyle, 100);
