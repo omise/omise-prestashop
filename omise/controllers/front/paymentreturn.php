@@ -12,7 +12,7 @@ class OmisePaymentReturnModuleFrontController extends OmiseBasePaymentModuleFron
     public function postProcess()
     {
         $class = OmisePaymentMethods::className(Tools::getValue('type'));
-        $class::handleReturn($this, $this->context);
+        $class::handleReturn($this);
     }
 
 }

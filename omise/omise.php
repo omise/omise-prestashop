@@ -31,7 +31,7 @@ class Omise extends PaymentModule
     const
         MODULE_DISPLAY_NAME = 'Omise', // The name that will be display to the user at the back-end
         MODULE_NAME = 'omise', // The name that used to reference in the program
-        MODULE_VERSION = '1.7.7' // The version of the module
+        MODULE_VERSION = '1.7.9' // The version of the module
     ;
 
     public
@@ -113,7 +113,7 @@ class Omise extends PaymentModule
             $smartyVars['methodObjects'][$method] = new $className();
         }
 
-        $smartyVars['method_admintemplate_path'] = dirname(__FILE__).'/payment_methods/templates/';
+        $smartyVars['method_admintemplate_path'] = dirname(__FILE__).'/payment_methods/admin_templates/';
 
         $this->smarty->assign($smartyVars);
 
