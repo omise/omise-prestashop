@@ -1,5 +1,5 @@
 {
     "require": {
-        "omise/omise-php": "^2.9"
+        "omise/omise-php": "2.12.0"
     }
 }
