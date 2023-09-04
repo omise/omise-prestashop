@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9ecbf1e35473e86ec7bc45bf5344cd15",
+    "content-hash": "455d53280d22f7bcd0b0d6ff3cd548d0",
     "packages": [
         {
             "name": "omise/omise-php",
-            "version": "v2.11.2",
+            "version": "v2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/omise/omise-php.git",
-                "reference": "5845e62c2580888f214b39eefb5cadf1a9d072a2"
+                "reference": "9e248f29283b5190d06644322c970cf591b956bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/omise/omise-php/zipball/5845e62c2580888f214b39eefb5cadf1a9d072a2",
-                "reference": "5845e62c2580888f214b39eefb5cadf1a9d072a2",
+                "url": "https://api.github.com/repos/omise/omise-php/zipball/9e248f29283b5190d06644322c970cf591b956bc",
+                "reference": "9e248f29283b5190d06644322c970cf591b956bc",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,13 @@
                 "payment",
                 "payment processing"
             ],
-            "time": "2019-05-08T09:40:16+00:00"
+            "support": {
+                "email": "support@omise.co",
+                "forum": "https://forum.omise.co",
+                "issues": "https://github.com/omise/omise-php/issues",
+                "source": "https://github.com/omise/omise-php/tree/master"
+            },
+            "time": "2019-08-26T00:34:45+00:00"
         }
     ],
     "packages-dev": [],
@@ -64,5 +70,6 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }
