@@ -1,5 +1,8 @@
 # Change Log
 
+## [[1.7.10] 2023-09-05](https://github.com/omise/omise-prestashop/releases/tag/v1.7.10)
+- *`Removed`* hard coded certificate.
+
 ## [[1.7.9] 2020-04-09](https://github.com/omise/omise-prestashop/releases/tag/v1.7.9)
 - *`Fixed`* Small issue with HTTPS at checkout
 
