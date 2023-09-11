@@ -38,11 +38,8 @@ class OmiseChargeClass
             'currency' => $this->getCurrencyCode(),
             'description' => $this->getChargeDescription(),
             'metadata' => $this->getMetadata(),
+            'return_uri' => $returnUri
         );
-
-        if ($this->setting->isThreeDomainSecureEnabled()) {
-            $charge_request['return_uri'] = $returnUri;
-        }
 
         $this->charge_response = OmiseCharge::create($charge_request, '', $this->getSecretKey());
 
@@ -166,5 +163,9 @@ class OmiseChargeClass
     public function setSetting($setting)
     {
         $this->setting = $setting;
+    }
+
+    public function getChargeResponse() {
+        return $this->charge_response;
     }
 }
