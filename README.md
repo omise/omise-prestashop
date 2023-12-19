@@ -1,11 +1,11 @@
 <!--- KEEP START --->
 [![Omise](https://cdn.omise.co/assets/omise.png)](https://www.omise.co/developers)
 
-[Omise](https://www.omise.co/) is a payment service provider operating in Thailand, Japan, and Singapore. 
+[Opn Payments](https://www.opn.ooo/) is a payment service provider operating in Thailand, Japan, and Singapore. 
 Omise provides a set of APIs that help merchants of any size accept payments online.  
 <!--- KEEP END --->
 
-**Omise PrestaShop** is our official plugin providing support for processing payments on PrestaShop through Omise.
+**Opn Payments PrestaShop** is our official plugin providing support for processing payments on PrestaShop through Opn Payments.
 
 ## Usage
 
@@ -13,5 +13,5 @@ See our [official docs](https://www.omise.co/prestashop-plugin) for details on i
 
 ## Contributing
 
-Thanks for your interest in contributing to Omise PrestaShop. 
+Thanks for your interest in contributing to Opn Payments PrestaShop. 
 Pull requests, issues, and bugfixes are welcome!
