@@ -7,6 +7,10 @@ Opn Payments provides a set of APIs that help merchants of any size accept payme
 
 **Omise PrestaShop** is our official plugin providing support for processing payments on PrestaShop through Opn Payments.
 
+## Security Warning
+
+**Please do NOT use Omise PrestaShop library versions less than 1.7.10, as they are outdated and have security vulnerabilities.**
+
 ## Usage
 
 See our [official docs](https://docs.opn.ooo/prestashop-plugin) for details on installation and configuration.
