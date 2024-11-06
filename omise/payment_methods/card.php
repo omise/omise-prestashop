@@ -62,18 +62,16 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
             $c->charge = $omiseCharge->create(Tools::getValue('omise_card_token'), $returnUri);
         } catch (Exception $e) {
             $c->error_message = $e->getMessage();
-            return;
-        }
-
-        if ($c->charge->isFailed()) {
-            $c->error_message = $c->charge->getErrorMessage();
+            $paymentOrder->updateStateToBeCanceled(new Order($id_order));
             return;
         }
 
         $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}(self::$context->cart->id);
 
-        if (!empty($c->charge)) {
-            $paymentOrder->updatePaymentTransactionId($id_order, $c->charge->getId());
+        $paymentOrder->updatePaymentTransactionId($id_order, $c->charge->getId());
+
+        if ($c->charge->isFailed()) {
+            $c->error_message = $c->charge->getErrorMessage();
         }
 
         if (!empty($c->error_message)) {
