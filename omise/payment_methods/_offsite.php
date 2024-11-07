@@ -34,9 +34,6 @@ class OmiseOffsitePaymentMethod extends OmisePaymentMethod
 
         if ($c->charge->isFailed()) {
             $c->error_message = $c->charge->getErrorMessage();
-        }
-
-        if (!empty($c->error_message)) {
             $paymentOrder->updateStateToBeCanceled(new Order($id_order));
             return;
         }

@@ -57,6 +57,8 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
             self::getTitle()
         );
 
+        $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}(self::$context->cart->id);
+
         try {
             $returnUri = self::getReturnUri(self::$context->cart->id, self::$context->customer->secure_key);
             $c->charge = $omiseCharge->create(Tools::getValue('omise_card_token'), $returnUri);
@@ -66,15 +68,10 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
             return;
         }
 
-        $id_order = Order::{PRESTASHOP_GET_ORDER_ID_METHOD}(self::$context->cart->id);
-
         $paymentOrder->updatePaymentTransactionId($id_order, $c->charge->getId());
 
         if ($c->charge->isFailed()) {
             $c->error_message = $c->charge->getErrorMessage();
-        }
-
-        if (!empty($c->error_message)) {
             $paymentOrder->updateStateToBeCanceled(new Order($id_order)); // TODO - check if this the right thing to be doing - can we not return to checkout?
             return;
         }
