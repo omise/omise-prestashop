@@ -1,5 +1,8 @@
 # Change Log
 
+## [[1.7.11] 2024-11-20](https://github.com/omise/omise-prestashop/releases/tag/v1.7.11)
+- Add transaction ID and set order status to canceled on failed payment. (PR: [#100](https://github.com/omise/omise-prestashop/pull/100))
+
 ## [[1.7.10] 2023-09-05](https://github.com/omise/omise-prestashop/releases/tag/v1.7.10)
 - *`Removed`* hard coded certificate.
 
