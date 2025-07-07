@@ -26,7 +26,7 @@ class OmiseEventChargeComplete extends OmiseBaseEvent
             $order = $this->getOrder($charge['id']);
             $omise_charge = $this->getOmiseCharge($charge['id']);
 
-            if ($order->id != $omise_charge->getOrderId()) {
+            if (strval($order->id) !== strval($omise_charge->getOrderId())) {
                 throw new Exception(
                     'Order ID (' . $order->id . ') mismatches with the charge ' . $charge['id'] . ' metadata (' . $omise_charge->getOrderId() . ').'
                 );
