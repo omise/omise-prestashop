@@ -60,13 +60,14 @@ class OmiseEventChargeComplete extends OmiseBaseEvent
         return $order;
     }
 
-    private function getOmiseCharge($id_charge, $message)
+    private function getOmiseCharge($id_charge, $base_message)
     {
+        $omise_charge = new OmiseChargeClass();
+
         try {
-            $omise_charge = new OmiseChargeClass();
             return $omise_charge->retrieve($id_charge);
         } catch (Exception $e) {
-            $message .= ' The charge, ' . $id_charge . ', cannot be retrieved (' . $e->getMessage() . ').';
+            $message = $base_message . ' The charge, ' . $id_charge . ', cannot be retrieved (' . $e->getMessage() . ').';
             $this->omise_logger->add($message, OmiseLogger::ERROR);
 
             throw $e;
