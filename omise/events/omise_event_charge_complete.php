@@ -24,8 +24,15 @@ class OmiseEventChargeComplete extends OmiseBaseEvent
 
         try {
             $order = $this->getOrder($charge['id']);
-            $omise_charge = $this->getOmiseCharge($charge['id'], $message);
+            $omise_charge = $this->getOmiseCharge($charge['id']);
+
+            if ($order->id != $omise_charge->getOrderId()) {
+                throw new Exception(
+                    'Order ID (' . $order->id . ') mismatches with the charge ' . $charge['id'] . ' metadata (' . $omise_charge->getOrderId() . ').'
+                );
+            }
         } catch (Exception $e) {
+            $this->omise_logger->add($message . ' ' . $e->getMessage(), OmiseLogger::ERROR);
             return false;
         }
 
@@ -45,6 +52,7 @@ class OmiseEventChargeComplete extends OmiseBaseEvent
                 break;
 
             default:
+                $this->omise_logger->add($message . ' Unhandled charge status: ' . $omise_charge->getStatus() . '.');
                 return false;
         }
 
@@ -63,17 +71,14 @@ class OmiseEventChargeComplete extends OmiseBaseEvent
         return $order;
     }
 
-    private function getOmiseCharge($id_charge, $base_message)
+    private function getOmiseCharge($id_charge)
     {
         $omise_charge = new OmiseChargeClass();
 
         try {
             return $omise_charge->retrieve($id_charge);
         } catch (Exception $e) {
-            $message = $base_message . ' The charge, ' . $id_charge . ', cannot be retrieved (' . $e->getMessage() . ').';
-            $this->omise_logger->add($message, OmiseLogger::ERROR);
-
-            throw $e;
+            throw new Exception('Failed to retrieve Omise charge ID: ' . $id_charge . '. Error: ' . $e->getMessage() . '.');
         }
     }
 }
