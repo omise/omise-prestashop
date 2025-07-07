@@ -43,6 +43,9 @@ class OmiseEventChargeComplete extends OmiseBaseEvent
                 $message .= ' The status of order, ' . $order->id . ', has been updated to be Payment accepted.';
                 $this->omise_logger->add($message);
                 break;
+
+            default:
+                return false;
         }
 
         return true;
