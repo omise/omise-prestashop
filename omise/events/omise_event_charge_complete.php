@@ -59,6 +59,13 @@ class OmiseEventChargeComplete extends OmiseBaseEvent
         return true;
     }
 
+    /**
+     * Get the order object by charge ID.
+     *
+     * @param string $id_charge
+     * @throws \Exception if the order cannot be found or loaded.
+     * @return Order
+     */
     private function getOrder($id_charge)
     {
         $id_order = $this->omise_transaction_model->getIdOrder($id_charge);
@@ -71,6 +78,13 @@ class OmiseEventChargeComplete extends OmiseBaseEvent
         return $order;
     }
 
+    /**
+     * Fetch charge details from Omise API by charge ID.
+     *
+     * @param string $id_charge
+     * @throws \Exception if API call fails or returns an error.
+     * @return OmiseChargeClass
+     */
     private function getOmiseCharge($id_charge)
     {
         $omise_charge = new OmiseChargeClass();
