@@ -148,6 +148,11 @@ class OmiseChargeClass
         return OmisePluginHelperCharge::isPaid($this->charge_response);
     }
 
+    public function getStatus()
+    {
+        return $this->charge_response['status'];
+    }
+
     /**
      * @param $id string The Omise charge ID.
      *

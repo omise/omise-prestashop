@@ -4,3 +4,4 @@
 vendor/
 .settings/
 .DS_Store
+.vscode/
