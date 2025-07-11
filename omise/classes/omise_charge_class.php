@@ -149,6 +149,22 @@ class OmiseChargeClass
     }
 
     /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->charge_response['status'];
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOrderId()
+    {
+        return isset($this->charge_response['metadata']['order_id']) ? $this->charge_response['metadata']['order_id'] : null;
+    }
+
+    /**
      * @param $id string The Omise charge ID.
      *
      * @return $this
