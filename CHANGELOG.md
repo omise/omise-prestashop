@@ -1,5 +1,8 @@
 # Change Log
 
+## [[1.7.12] 2025-07-22](https://github.com/omise/omise-prestashop/releases/tag/v1.7.12)
+- Improve webhook route. (PR: [#102](https://github.com/omise/omise-prestashop/pull/102))
+
 ## [[1.7.11] 2024-11-20](https://github.com/omise/omise-prestashop/releases/tag/v1.7.11)
 - Add transaction ID and set order status to canceled on failed payment. (PR: [#100](https://github.com/omise/omise-prestashop/pull/100))
 
