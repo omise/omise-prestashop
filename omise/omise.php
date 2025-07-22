@@ -31,7 +31,7 @@ class Omise extends PaymentModule
     const
         MODULE_DISPLAY_NAME = 'Omise', // The name that will be display to the user at the back-end
         MODULE_NAME = 'omise', // The name that used to reference in the program
-        MODULE_VERSION = '1.7.11' // The version of the module
+        MODULE_VERSION = '1.7.12' // The version of the module
     ;
 
     public
