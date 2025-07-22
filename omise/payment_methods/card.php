@@ -29,8 +29,7 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
 
     public static function getAction()
     {
-        $is3DS = self::$payModule->setting->isThreeDomainSecureEnabled() ? '1' : '0';
-        return self::getLink(static::NAME, array('threedomainsecure' => $is3DS));
+        return self::getLink(static::NAME, array('threedomainsecure' => true));
     }
 
     public static function getTitle()
@@ -76,12 +75,14 @@ class OmisePaymentMethod_Card extends OmisePaymentMethod
             return;
         }
 
-        if (Tools::getValue('threedomainsecure') == '0') {
-            $paymentOrder->updateStateToBeSuccess(new Order($id_order));
-            $uri = self::getOrderConfirmationUri(self::$context->cart->id, $c->module->id, $c->module->currentOrder, self::$context->customer->secure_key);
-        } else {
+        $charge = $omiseCharge->getChargeResponse();
+        $authorizeUri = $charge['authorize_uri'];
+        if ($charge['status'] === "pending" && !$charge['authorized'] && !$charge['paid'] && !empty($authorizeUri)/*Tools::getValue('threedomainsecure') == '0'*/) {
             $c->addOmiseTransaction($c->charge->getId(), $id_order);
             $uri = $c->charge->getAuthorizeUri();
+        } else {
+            $paymentOrder->updateStateToBeSuccess(new Order($id_order));
+            $uri = self::getOrderConfirmationUri(self::$context->cart->id, $c->module->id, $c->module->currentOrder, self::$context->customer->secure_key);
         }
 
         $c->setRedirectAfter($uri);
