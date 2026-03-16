@@ -16,6 +16,8 @@ class OmisePaymentMethod_TrueMoney extends OmiseOffsitePaymentMethod
     ;
 
     public static
+        $jsFiles = array('message.js'),
+        $jqueryPlugins = array('fancybox'),
         $restrictedToCurrencies = array('thb')
     ;
 
