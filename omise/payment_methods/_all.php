@@ -5,7 +5,6 @@ class OmisePaymentMethods
     static $list = array(
         'Card',
         'Alipay',
-        'CitiPoints',
         'TrueMoney'
     );
 
