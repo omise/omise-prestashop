@@ -4,13 +4,11 @@ class OmisePaymentMethods
 {
     static $list = array(
         'Card',
-        'InternetBanking',
         'Alipay',
-        'CitiPoints',
         'TrueMoney'
     );
 
-    public static function className($method) { return 'OmisePaymentMethod_'.$method; } 
+    public static function className($method) { return 'OmisePaymentMethod_'.$method; }
 }
 
 $path = _PS_MODULE_DIR_ . 'omise/payment_methods/';
