@@ -31,7 +31,7 @@ class Omise extends PaymentModule
     const
         MODULE_DISPLAY_NAME = 'Omise', // The name that will be display to the user at the back-end
         MODULE_NAME = 'omise', // The name that used to reference in the program
-        MODULE_VERSION = '1.7.12' // The version of the module
+        MODULE_VERSION = '1.8.0' // The version of the module
     ;
 
     public
@@ -226,7 +226,7 @@ class Omise extends PaymentModule
     public function versionSpecificDisplay($template)
     {
         return $this->display(__FILE__, PRESTASHOP_VERSION_VIEW_PATH . $template);
-    }    
+    }
 
     /**
      * Apply passed callable function to all hooks for the module, bailing if any function fails
@@ -239,7 +239,7 @@ class Omise extends PaymentModule
             if (!$res = call_user_func($callable, $hook)) break;
         }
         return $res;
-    }    
+    }
 
     /**
      * Check whether the current currency is supported by the Omise API and the given payment method

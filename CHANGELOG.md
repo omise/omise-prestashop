@@ -1,5 +1,8 @@
 # Change Log
 
+## [[1.8.0] 2026-04-22](https://github.com/omise/omise-prestashop/releases/tag/v1.8.0)
+- Remove Internet Banking. (PR: [#105](https://github.com/omise/omise-prestashop/pull/105))
+
 ## [[1.7.12] 2025-07-22](https://github.com/omise/omise-prestashop/releases/tag/v1.7.12)
 - Improve webhook route. (PR: [#102](https://github.com/omise/omise-prestashop/pull/102))
 
